@@ -1,0 +1,15 @@
+server:
+  port: 8080
+
+token:
+  secret: DZyGYXvH/pjHhyQbw8TIE+xNN8PA12yqW4n5Ah0kGQiOa4t/kdWIC9EV40Ymnd/z1ALADdFZT/Yt6R5AJOJ/gA=="
+  expiration_time: 86400000  # 1? (??? ??)
+
+spring:
+  application:
+    name: DDIS_Project
+
+  security:
+    user:
+      name: none
+      password: none

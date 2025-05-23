@@ -46,6 +46,10 @@ dependencies {
     // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
+    // AWS 설정 dependency
+    implementation 'software.amazon.awssdk:s3:2.25.30' // 최신 AWS SDK for Java v2
+    implementation 'software.amazon.awssdk:s3-presigner:2.25.30'
+
 }
 
 tasks.named('test') {

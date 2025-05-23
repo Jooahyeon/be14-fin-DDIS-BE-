@@ -27,10 +27,10 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String userId = authentication.getName();
+        String employeeId = authentication.getName();
         String userPwd = (String)authentication.getCredentials();
 
-        UserDetails userDetails = userService.loadUserByUsername(userId);
+        UserDetails userDetails = userService.loadUserByUsername(employeeId);
 
         if(!passwordEncoder.matches(userPwd, userDetails.getPassword())) {
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");

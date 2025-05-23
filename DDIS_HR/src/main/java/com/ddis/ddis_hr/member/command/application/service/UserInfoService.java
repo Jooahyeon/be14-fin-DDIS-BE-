@@ -1,8 +1,9 @@
 package com.ddis.ddis_hr.member.command.application.service;
 
-import com.samsung.dieat.member.command.application.dto.UserInfoDTO;
-import com.samsung.dieat.member.command.domain.aggregate.entity.UserInfoEntity;
-import com.samsung.dieat.member.command.domain.repository.UserInfoRepository;
+
+import com.ddis.ddis_hr.member.command.application.dto.UserInfoDTO;
+import com.ddis.ddis_hr.member.command.domain.aggregate.entity.UserInfoEntity;
+import com.ddis.ddis_hr.member.command.domain.repository.UserInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;

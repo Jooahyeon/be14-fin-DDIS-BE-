@@ -1,9 +1,10 @@
 package com.ddis.ddis_hr.member.command.application.controller;
 
-import com.samsung.dieat.member.command.application.dto.EmailSendRequestDTO;
-import com.samsung.dieat.member.command.application.dto.EmailVerificationRequestDTO;
-import com.samsung.dieat.member.command.application.dto.EmailVerificationResponseDTO;
-import com.samsung.dieat.member.command.application.service.EmailVerificationService;
+
+import com.ddis.ddis_hr.member.command.application.dto.EmailSendRequestDTO;
+import com.ddis.ddis_hr.member.command.application.dto.EmailVerificationRequestDTO;
+import com.ddis.ddis_hr.member.command.application.dto.EmailVerificationResponseDTO;
+import com.ddis.ddis_hr.member.command.application.service.EmailVerificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

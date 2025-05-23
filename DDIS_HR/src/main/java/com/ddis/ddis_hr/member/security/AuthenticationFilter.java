@@ -60,16 +60,27 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         // CustomUserDetails로 올바르게 캐스팅하여 사용
         CustomUserDetails userDetails = (CustomUserDetails) authResult.getPrincipal();
 
-        String userId = userDetails.getUsername();
+        String employeeId = userDetails.getUsername();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        Claims claims = Jwts.claims().setSubject(userId);
+        Claims claims = Jwts.claims().setSubject(employeeId);
         claims.put("auth", roles);
 
-        int userCode = userDetails.getUserCode();
-        claims.put("userCode", userCode);
+        int teamId = userDetails.getTeamId();
+        claims.put("teamId", teamId);
+        int positionId = userDetails.getPositionId();
+        claims.put("positionId", positionId);
+        int rankId = userDetails.getRankId();
+        claims.put("rankId", rankId);
+        int jobId = userDetails.getJobId();
+        claims.put("jobId", jobId);
+        int headId = userDetails.getHeadId();
+        claims.put("headId", headId);
+        int departmentId = userDetails.getDepartmentId();
+        claims.put("departmentId", departmentId);
+
 
         String token = Jwts.builder()
                 .setClaims(claims)

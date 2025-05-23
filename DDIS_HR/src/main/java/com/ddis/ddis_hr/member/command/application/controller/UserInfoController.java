@@ -1,8 +1,8 @@
 package com.ddis.ddis_hr.member.command.application.controller;
 
-import com.samsung.dieat.member.command.application.dto.UserInfoDTO;
-import com.samsung.dieat.member.command.application.service.UserInfoService;
-import com.samsung.dieat.member.command.domain.aggregate.entity.UserInfoEntity;
+
+import com.ddis.ddis_hr.member.command.application.dto.UserInfoDTO;
+import com.ddis.ddis_hr.member.command.application.service.UserInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

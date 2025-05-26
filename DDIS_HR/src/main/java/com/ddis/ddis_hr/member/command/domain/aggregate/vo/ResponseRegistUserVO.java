@@ -8,7 +8,6 @@ import lombok.*;
 @Setter
 @ToString
 public class ResponseRegistUserVO {
-    private String userName;
-    private String userNickname;
+    private String employeeName;
 
 }

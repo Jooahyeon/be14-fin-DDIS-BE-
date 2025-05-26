@@ -8,15 +8,21 @@ import java.util.Collection;
 @Getter
 public class CustomUserDetails extends User {
 
-    private final int userCode;  // 추가 필드 userCode
+    private final Long positionId;
+    private final Long rankId;
+    private final Long jobId;
+    private final Long headId;
+    private final Long departmentId;
+    private final Long teamId;
 
-    public CustomUserDetails(String username, String password, int userCode,
-                             Collection<? extends GrantedAuthority> authorities) {
-        super(username, password, authorities);
-        this.userCode = userCode;
+    public CustomUserDetails(String employeeId, String password, Long positionId, Long rankId, Long jobId, Long headId, Long departmentId, Long teamId, Collection<? extends GrantedAuthority> authorities) {
+        super(employeeId, password, authorities);
+        this.positionId = positionId;
+        this.rankId = rankId;
+        this.jobId = jobId;
+        this.headId = headId;
+        this.departmentId = departmentId;
+        this.teamId = teamId;
     }
 
-    public int getUserCode() {
-        return userCode;
-    }
 }

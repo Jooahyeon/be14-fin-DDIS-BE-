@@ -8,6 +8,6 @@ import lombok.*;
 @Setter
 @ToString
 public class ResponseFindUserVO {
-    private String userId;
-    private String userName;
+    private String employeeId;
+    private String employeeName;
 }

@@ -43,7 +43,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             RequestLoginVO creds = new ObjectMapper().readValue(request.getInputStream(), RequestLoginVO.class);
 
             return getAuthenticationManager().authenticate(
-                    new UsernamePasswordAuthenticationToken(creds.getUserId(), creds.getUserPwd(), new ArrayList<>())
+                    new UsernamePasswordAuthenticationToken(creds.getEmployeeId(), creds.getEmployeePwd(), new ArrayList<>())
             );
 
         } catch (IOException e) {
@@ -60,16 +60,27 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         // CustomUserDetails로 올바르게 캐스팅하여 사용
         CustomUserDetails userDetails = (CustomUserDetails) authResult.getPrincipal();
 
-        String userId = userDetails.getUsername();
+        String employeeId = userDetails.getUsername();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        Claims claims = Jwts.claims().setSubject(userId);
+        Claims claims = Jwts.claims().setSubject(employeeId);
         claims.put("auth", roles);
 
-        int userCode = userDetails.getUserCode();
-        claims.put("userCode", userCode);
+        Long teamId = userDetails.getTeamId();
+        claims.put("teamId", teamId);
+        Long positionId = userDetails.getPositionId();
+        claims.put("positionId", positionId);
+        Long rankId = userDetails.getRankId();
+        claims.put("rankId", rankId);
+        Long jobId = userDetails.getJobId();
+        claims.put("jobId", jobId);
+        Long headId = userDetails.getHeadId();
+        claims.put("headId", headId);
+        Long departmentId = userDetails.getDepartmentId();
+        claims.put("departmentId", departmentId);
+
 
         String token = Jwts.builder()
                 .setClaims(claims)

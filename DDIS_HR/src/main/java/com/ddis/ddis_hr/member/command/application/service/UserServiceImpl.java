@@ -1,15 +1,14 @@
 package com.ddis.ddis_hr.member.command.application.service;
 
-import com.samsung.dieat.member.command.application.dto.UserDTO;
-import com.samsung.dieat.member.command.domain.aggregate.entity.UserEntity;
-import com.samsung.dieat.member.command.domain.repository.UserRepository;
-import com.samsung.dieat.member.security.CustomUserDetails;
-import org.bouncycastle.crypto.generators.BCrypt;
+
+import com.ddis.ddis_hr.member.command.application.dto.EmployeeDTO;
+import com.ddis.ddis_hr.member.command.domain.repository.UserRepository;
+import com.ddis.ddis_hr.member.command.domain.aggregate.entity.Employee;
+import com.ddis.ddis_hr.member.security.CustomUserDetails;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -37,43 +36,51 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void registUser(UserDTO userDTO) {
-        userDTO.setUserEnrollDt(new java.util.Date());
+    public void registUser(EmployeeDTO employeeDTO) {
 
-        UserEntity registUser = modelMapper.map(userDTO, UserEntity.class);
-        registUser.setEncryptedPwd(bCryptPasswordEncoder.encode(userDTO.getUserPwd()));
+        Employee registUser = modelMapper.map(employeeDTO, Employee.class);
+        registUser.setEmployeePwd(bCryptPasswordEncoder.encode(employeeDTO.getEmployeePwd()));
 
         userRepository.save(registUser);
     }
 
     @Override
-    public UserDTO getUserById(String memNo) {
-        UserEntity foundUser = userRepository.findById(Long.parseLong(memNo)).get();
+    public EmployeeDTO getUserById(String employeeId) {
+        Employee foundUser = userRepository.findById(Long.parseLong(employeeId)).get();
 
-        UserDTO userDTO = modelMapper.map(foundUser, UserDTO.class);
+        EmployeeDTO employeeDTO = modelMapper.map(foundUser, EmployeeDTO.class);
 
-        return userDTO;
+        return employeeDTO;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String employeeId) throws UsernameNotFoundException {
 
-        UserEntity loginUser = userRepository.findByUserId(userId);
+        Employee loginUser = userRepository.findById(Long.parseLong(employeeId)).get();
 
         if(loginUser == null) {
-            throw new UsernameNotFoundException(userId + "아이디가 존재하지 않습니다.");
+            throw new UsernameNotFoundException(employeeId + "아이디가 존재하지 않습니다.");
         }
 
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        if("ADMIN".equals(loginUser.getRole())) {
-            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        if("팀장".equals(loginUser.getPosition().getPositionName())) {
+            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_TEAMLEADER"));
         } else {
             grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         }
+
+        if("인사팀".equals(loginUser.getTeam().getTeamName())) {
+            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_HR"));
+        }
         return new CustomUserDetails(
-                loginUser.getUserId(),
-                loginUser.getEncryptedPwd(),
-                loginUser.getUserCode(),
+                loginUser.getEmployeeId().toString(),
+                loginUser.getEmployeePwd(),
+                loginUser.getPosition().getPositionId(),
+                loginUser.getRank().getRankId(),
+                loginUser.getJob().getJobId(),
+                loginUser.getHeadquarters().getHeadId(),
+                loginUser.getDepartment().getDepartmentId(),
+                loginUser.getTeam().getTeamId(),
                 grantedAuthorities
         );
     }

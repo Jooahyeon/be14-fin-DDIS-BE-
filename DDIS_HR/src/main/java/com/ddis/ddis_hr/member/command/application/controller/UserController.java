@@ -1,10 +1,10 @@
 package com.ddis.ddis_hr.member.command.application.controller;
 
-import com.samsung.dieat.member.command.application.dto.UserDTO;
-import com.samsung.dieat.member.command.application.service.UserService;
-import com.samsung.dieat.member.command.domain.aggregate.vo.RequestRegistUserVO;
-import com.samsung.dieat.member.command.domain.aggregate.vo.ResponseFindUserVO;
-import com.samsung.dieat.member.command.domain.aggregate.vo.ResponseRegistUserVO;
+
+import com.ddis.ddis_hr.member.command.application.dto.EmployeeDTO;
+import com.ddis.ddis_hr.member.command.application.service.UserService;
+import com.ddis.ddis_hr.member.command.domain.aggregate.vo.ResponseFindUserVO;
+import com.ddis.ddis_hr.member.command.domain.aggregate.vo.ResponseRegistUserVO;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -37,26 +37,17 @@ public class UserController {
 
     @GetMapping("/health")
     public String status(){
-        return "살 빼!!!!" + env.getProperty("local.server.port");
+        return "응애!!!!" + env.getProperty("local.server.port");
     }
 
     @PostMapping("users")
-    public ResponseEntity<ResponseRegistUserVO> registUser(@RequestBody RequestRegistUserVO newUser) {
-        log.info("adminSecretCode: '{}'", adminSecretCode);
-        log.info("inviteCode: '{}'", newUser.getInviteCode());
+    public ResponseEntity<ResponseRegistUserVO> registUser(@RequestBody EmployeeDTO newUser) {
 
-        UserDTO userDTO = modelMapper.map(newUser, UserDTO.class);
+        EmployeeDTO employeeDTO = modelMapper.map(newUser, EmployeeDTO.class);
 
 
-        if(newUser.getInviteCode() != null && newUser.getInviteCode().trim().equals(adminSecretCode.trim())){
-            userDTO.setRole("ADMIN");
-        } else {
-            userDTO.setRole("USER");
-        }
-
-
-        userService.registUser(userDTO);
-        ResponseRegistUserVO successRegistUser = modelMapper.map(userDTO, ResponseRegistUserVO.class);
+        userService.registUser(employeeDTO);
+        ResponseRegistUserVO successRegistUser = modelMapper.map(employeeDTO, ResponseRegistUserVO.class);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                              .body(successRegistUser);
@@ -65,18 +56,18 @@ public class UserController {
 
     }
 
-    @GetMapping("/users/{memNo}")
-    public ResponseEntity<ResponseFindUserVO> getUsers(@PathVariable String memNo) {
+    @GetMapping("/users/{employeeId}")
+    public ResponseEntity<ResponseFindUserVO> getUsers(@PathVariable String employeeId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String loggedInUserId = auth.getName();
 
-        UserDTO userDTO = userService.getUserById(memNo);
+        EmployeeDTO employeeDTO = userService.getUserById(employeeId);
 
-        if (!loggedInUserId.equals(userDTO.getUserId())) {
+        if (!loggedInUserId.equals(employeeId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        ResponseFindUserVO findUserVO = modelMapper.map(userDTO, ResponseFindUserVO.class);
+        ResponseFindUserVO findUserVO = modelMapper.map(employeeDTO, ResponseFindUserVO.class);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(findUserVO);

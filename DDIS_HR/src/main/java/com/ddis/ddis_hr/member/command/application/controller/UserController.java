@@ -24,9 +24,6 @@ public class UserController {
     private UserService userService;
     private ModelMapper modelMapper;
 
-    @Value("${admin.secret}")
-    private String adminSecretCode;
-
     @Autowired
     public UserController(Environment env, UserService userService, ModelMapper modelMapper) {
         this.env = env;

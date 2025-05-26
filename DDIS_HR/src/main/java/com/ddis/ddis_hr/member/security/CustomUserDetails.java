@@ -8,14 +8,14 @@ import java.util.Collection;
 @Getter
 public class CustomUserDetails extends User {
 
-    private final int positionId;
-    private final int rankId;
-    private final int jobId;
-    private final int headId;
-    private final int departmentId;
-    private final int teamId;
+    private final Long positionId;
+    private final Long rankId;
+    private final Long jobId;
+    private final Long headId;
+    private final Long departmentId;
+    private final Long teamId;
 
-    public CustomUserDetails(String employeeId, String password, int positionId, int rankId, int jobId, int headId, int departmentId, int teamId, Collection<? extends GrantedAuthority> authorities) {
+    public CustomUserDetails(String employeeId, String password, Long positionId, Long rankId, Long jobId, Long headId, Long departmentId, Long teamId, Collection<? extends GrantedAuthority> authorities) {
         super(employeeId, password, authorities);
         this.positionId = positionId;
         this.rankId = rankId;

@@ -8,6 +8,6 @@ import lombok.*;
 @Setter
 @ToString
 public class RequestLoginVO {
-    private String userId;
-    private String userPwd;
+    private String employeeId;
+    private String employeePwd;
 }

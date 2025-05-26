@@ -1,12 +1,12 @@
 package com.ddis.ddis_hr.member.command.application.service;
 
 
-import com.ddis.ddis_hr.member.command.application.dto.UserDTO;
+import com.ddis.ddis_hr.member.command.application.dto.EmployeeDTO;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {
 
-    void registUser(UserDTO userDTO);
+    void registUser(EmployeeDTO employeeDTO);
 
-    UserDTO getUserById(String memNo);
+    EmployeeDTO getUserById(String memNo);
 }

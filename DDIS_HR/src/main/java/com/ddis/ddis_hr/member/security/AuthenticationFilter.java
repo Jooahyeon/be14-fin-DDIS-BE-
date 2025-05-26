@@ -43,7 +43,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             RequestLoginVO creds = new ObjectMapper().readValue(request.getInputStream(), RequestLoginVO.class);
 
             return getAuthenticationManager().authenticate(
-                    new UsernamePasswordAuthenticationToken(creds.getUserId(), creds.getUserPwd(), new ArrayList<>())
+                    new UsernamePasswordAuthenticationToken(creds.getEmployeeId(), creds.getEmployeePwd(), new ArrayList<>())
             );
 
         } catch (IOException e) {
@@ -68,17 +68,17 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         Claims claims = Jwts.claims().setSubject(employeeId);
         claims.put("auth", roles);
 
-        int teamId = userDetails.getTeamId();
+        Long teamId = userDetails.getTeamId();
         claims.put("teamId", teamId);
-        int positionId = userDetails.getPositionId();
+        Long positionId = userDetails.getPositionId();
         claims.put("positionId", positionId);
-        int rankId = userDetails.getRankId();
+        Long rankId = userDetails.getRankId();
         claims.put("rankId", rankId);
-        int jobId = userDetails.getJobId();
+        Long jobId = userDetails.getJobId();
         claims.put("jobId", jobId);
-        int headId = userDetails.getHeadId();
+        Long headId = userDetails.getHeadId();
         claims.put("headId", headId);
-        int departmentId = userDetails.getDepartmentId();
+        Long departmentId = userDetails.getDepartmentId();
         claims.put("departmentId", departmentId);
 
 

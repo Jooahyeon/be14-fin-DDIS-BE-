@@ -8,5 +8,5 @@ public interface UserService extends UserDetailsService {
 
     void registUser(EmployeeDTO employeeDTO);
 
-    EmployeeDTO getUserById(String memNo);
+    EmployeeDTO getUserById(String employeeId);
 }

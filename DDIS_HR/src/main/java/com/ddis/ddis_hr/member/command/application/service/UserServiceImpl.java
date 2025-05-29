@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     UserRepository userRepository;
@@ -69,11 +70,11 @@ public class UserServiceImpl implements UserService {
             grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         }
 
-        if("인사팀".equals(loginUser.getTeam().getTeamName())) {
+        if("인사평가팀".equals(loginUser.getTeam().getTeamName())) {
             grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_HR"));
         }
         return new CustomUserDetails(
-                loginUser.getEmployeeId().toString(),
+                loginUser.getEmployeeId(),
                 loginUser.getEmployeePwd(),
                 loginUser.getPosition().getPositionId(),
                 loginUser.getRank().getRankId(),

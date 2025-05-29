@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ddis.ddis_hr.goals.command.application.mapper.GoalsMapper">
+    <resultMap id="GoalsDTOResultMap" type="com.ddis.ddis_hr.goals.command.application.dto.GoalDTO">
+        <id property="goalId" column="goal_id"/>
+        <result property="goalTitle" column="goal_title"/>
+        <result property="goalContent" column="goal_content"/>
+        <result property="goalValue" column="goal_value"/>
+        <result property="goalWeight" column="goal_weight"/>
+        <result property="goalCreatedAt" column="goal_created_at"/>
+        <result property="employeeId" column="employee_id"/>
+        <result property="employeeName" column="employee_name" />
+    </resultMap>
+
+    <select id="findGoalsByEmployeeId" resultMap="GoalsDTOResultMap">
+        SELECT
+            g.goal_id, g.goal_title, g.goal_content, g.goal_value, g.goal_weight, g.goal_created_at, g.employee_id, e.employee_name
+        FROM goal g
+        JOIN employee e ON g.employee_id = e.employee_id
+        WHERE g.employee_id = #{employeeId}
+    </select>
+</mapper>

@@ -24,8 +24,6 @@ public class UserController {
     private UserService userService;
     private ModelMapper modelMapper;
 
-    @Value("${admin.secret}")
-    private String adminSecretCode;
 
     @Autowired
     public UserController(Environment env, UserService userService, ModelMapper modelMapper) {
@@ -72,4 +70,19 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(findUserVO);
     }
+
+    @GetMapping("/users/me")
+    public ResponseEntity<ResponseFindUserVO> getMyInfo() {
+        // 현재 인증된 사용자 정보 추출
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String employeeId = authentication.getName();
+
+        // userId로 유저 조회
+        EmployeeDTO userDTO = userService.getUserById(employeeId);
+
+        // VO로 변환 후 응답
+        ResponseFindUserVO response = modelMapper.map(userDTO, ResponseFindUserVO.class);
+        return ResponseEntity.ok(response);
+    }
+
 }

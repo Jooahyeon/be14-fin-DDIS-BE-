@@ -25,11 +25,11 @@ public class S3ServiceImpl implements S3Service {
 
     /* presigned URL을 발급해서 클라이언트가 직접 S3에 PUT 요청하여 업로드할 수 있게 함 */
     @Override
-    public String generateUploadUrl(String fileName) {
+    public String generateUploadUrl(String fileName,String contentType) {
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(fileName)
-                .contentType("application/octet-stream")  // 클라이언트가 어떤 파일이든 업로드 가능
+                .contentType(contentType)  // 클라이언트가 어떤 파일이든 업로드 가능
                 .build();
 
         PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
@@ -43,7 +43,7 @@ public class S3ServiceImpl implements S3Service {
 
     /* 다운로드용 presigned URL 발급 */
     @Override
-    public String generateDownloadUrl(String fileName) {
+    public String generateDownloadUrl(String fileName, String contentType) {
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(bucketName)
                 .key(fileName)
@@ -60,7 +60,7 @@ public class S3ServiceImpl implements S3Service {
 
     /* S3 객체 삭제 */
     @Override
-    public void deleteFile(String fileName) {
+    public void deleteFile(String fileName,String contentType) {
         DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
                 .bucket(bucketName)
                 .key(fileName)

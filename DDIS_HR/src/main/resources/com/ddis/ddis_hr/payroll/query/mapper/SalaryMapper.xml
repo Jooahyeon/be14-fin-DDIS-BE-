@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ddis.ddis_hr.payroll.query.dao.SalaryMapper">
+
+    <select id="searchSalarySummaries"
+            parameterType="com.ddis.ddis_hr.payroll.query.dto.SalarySearchCondition"
+            resultType="com.ddis.ddis_hr.payroll.query.dto.SalarySummaryDTO">
+        SELECT
+        s.employee_id,
+        e.employee_name,
+        s.salary_date,
+        s.total_income,
+        s.total_deductions,
+        s.net_salary
+        FROM salary s
+        JOIN employee e ON s.employee_id = e.employee_id
+        LEFT JOIN headquarters h ON e.head_id = h.head_id
+        LEFT JOIN department d ON e.department_id = d.department_id
+        LEFT JOIN team t ON e.team_id = t.team_id
+        LEFT JOIN rank r ON e.rank_id = r.rank_id
+        <where>
+            <if test="keyword != null and keyword != ''">
+                (e.employee_id LIKE CONCAT('%', #{keyword}, '%')
+                OR e.employee_name LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+            <if test="headName != null and headName != ''">
+                AND h.head_name = #{headName}
+            </if>
+            <if test="departmentName != null and departmentName != ''">
+                AND d.department_name = #{departmentName}
+            </if>
+            <if test="teamName != null and teamName != ''">
+                AND t.team_name = #{teamName}
+            </if>
+            <if test="rankName != null and rankName != ''">
+                AND r.rank_name = #{rankName}
+            </if>
+            <if test="fromMonth != null">
+                AND DATE_FORMAT(s.salary_date, '%Y-%m') &gt;= #{fromMonth}
+            </if>
+            <if test="toMonth != null">
+                AND DATE_FORMAT(s.salary_date, '%Y-%m') &lt;= #{toMonth}
+            </if>
+        </where>
+        ORDER BY s.salary_date DESC
+    </select>
+    <select id="findSalaryDetail"
+            resultType="com.ddis.ddis_hr.payroll.query.dto.SalaryDetailDTO">
+        SELECT
+        s.salary_id,
+        s.employee_id,
+        e.employee_name,
+        r.rank_name,
+        t.team_name,
+        h.head_name,
+        d.department_name,
+        DATE_FORMAT(s.salary_date, '%Y-%m') AS salary_date,
+        s.salary_basic,
+        s.salary_overtime,
+        s.salary_night,
+        s.salary_holiday,
+        s.salary_meal,
+        s.salary_transport,
+        s.salary_bonus,
+        s.income_tax,
+        s.local_income_tax,
+        s.national_pension,
+        s.employment_insurance,
+        s.health_insurance,
+        s.long_care_insurance,
+        s.total_income,
+        s.total_deductions,
+        s.net_salary
+        FROM salary s
+        JOIN employee e ON s.employee_id = e.employee_id
+        LEFT JOIN rank r ON e.rank_id = r.rank_id
+        LEFT JOIN team t ON e.team_id = t.team_id
+        LEFT JOIN headquarters h ON e.head_id = h.head_id
+        LEFT JOIN department d ON e.department_id = d.department_id
+        WHERE s.employee_id = #{employeeId}
+        AND DATE_FORMAT(s.salary_date, '%Y-%m') = #{month}
+    </select>
+
+</mapper>

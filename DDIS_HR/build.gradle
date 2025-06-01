@@ -24,38 +24,56 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+    // --------------------------------------------------
+    // 1. Spring Boot Starter 계열
+    // --------------------------------------------------
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4'
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-    testImplementation 'io.projectreactor:reactor-test'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
+
+    // --------------------------------------------------
+    // 2. Spring Batch
+    // --------------------------------------------------
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+    implementation 'org.springframework.batch:spring-batch-core:5.2.2'
+
+    // --------------------------------------------------
+    // 3. 기타 서드파티 라이브러리
+    // --------------------------------------------------
+    implementation 'org.modelmapper:modelmapper:3.2.0'              // 모델 매퍼
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'               // JJWT API
+    implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'              // JJWT 구현체
+    runtimeOnly   'io.jsonwebtoken:jjwt-jackson:0.11.5'            // JJWT JSON 처리
+    implementation 'software.amazon.awssdk:s3:2.25.30'              // AWS S3 SDK (Java v2)
+
+    // --------------------------------------------------
+    // 4. Lombok, DevTools (개발 편의용)
+    // --------------------------------------------------
     compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // --------------------------------------------------
+    // 5. RuntimeOnly (JDBC 드라이버 등)
+    // --------------------------------------------------
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
+    // --------------------------------------------------
+    // 6. Test 의존성
+    // --------------------------------------------------
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.4'
     testImplementation 'org.springframework.security:spring-security-test'
-    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    testImplementation 'io.projectreactor:reactor-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-    // https://mvnrepository.com/artifact/org.modelmapper/modelmapper
-    implementation 'org.modelmapper:modelmapper:3.2.0'
-
-    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
-    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-impl
-    implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
-    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson
-    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-
-    // AWS 설정 dependency
-    implementation 'software.amazon.awssdk:s3:2.25.30' // 최신 AWS SDK for Java v2
-
 }
+
+
 
 tasks.named('test') {
     useJUnitPlatform()

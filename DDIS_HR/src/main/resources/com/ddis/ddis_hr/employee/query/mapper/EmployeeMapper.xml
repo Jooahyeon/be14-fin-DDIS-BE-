@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ddis.ddis_hr.employee.query.dao.EmployeeMapper">
+
+    <select id="searchEmployees" parameterType="com.ddis.ddis_hr.payroll.query.dto.EmployeeSearchCondition"
+            resultType="com.ddis.ddis_hr.payroll.query.dto.EmployeeSummaryDTO">
+        SELECT
+        e.employee_id,
+        e.employee_name,
+        h.head_name,
+        d.department_name,
+        t.team_name,
+        r.rank_name,
+        e.bank_name,
+        e.bank_account,
+        e.bank_depositor
+        FROM employee e
+        LEFT JOIN headquarters h ON e.head_id = h.head_id
+        LEFT JOIN department d ON e.department_id = d.department_id
+        LEFT JOIN team t ON e.team_id = t.team_id
+        LEFT JOIN rank r ON e.rank_id = r.rank_id
+        <where>
+            <if test="keyword != null and keyword != ''">
+                (e.employee_id LIKE CONCAT('%', #{keyword}, '%')
+                OR e.employee_name LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+            <if test="headName != null and headName != ''">
+                AND h.head_name = #{headName}
+            </if>
+            <if test="departmentName != null and departmentName != ''">
+                AND d.department_name = #{departmentName}
+            </if>
+            <if test="teamName != null and teamName != ''">
+                AND t.team_name = #{teamName}
+            </if>
+            <if test="rankName != null and rankName != ''">
+                AND r.rank_name = #{rankName}
+            </if>
+        </where>
+        ORDER BY e.employee_id
+    </select>
+
+</mapper>

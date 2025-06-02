@@ -395,65 +395,99 @@ INSERT INTO work_status (work_status_id, work_status_name, label_color, sort_ord
     ('HALF_PM', '오후반차', '#B5E4F0', 8);
 
 -- 전자결재양식
-INSERT INTO `document_form` (`form_name`, `form_content`, `is_deleted`) VALUES
-    ('일반기안양식',
-    '<form>
-    <h2>일반 기안 양식</h2>
-    <label>제목:</label><input type="text" name="title"><br>
-    <label>내용:</label><textarea name="content" rows="6" cols="50"></textarea><br>
-    </form>',
-    false),
+INSERT INTO document_form (form_name, form_content, is_deleted) VALUES
+    ('사업기안',
+     '<form>
+       <h2>사업기안</h2>
+       <table>
+         <tr>
+           <td>기안부서</td>
+           <td><input type="text" name="department" readonly></td>
+           <td>직책</td>
+           <td><input type="text" name="position" readonly></td>
+         </tr>
+         <tr>
+           <td>기안자</td>
+           <td><input type="text" name="drafter" readonly></td>
+           <td>기안일자</td>
+           <td><input type="date" name="draftDate" readonly></td>
+         </tr>
+         <tr>
+           <td>문서번호</td>
+           <td>-</td>
+           <td>보존연한</td>
+           <td>
+             <select name="retentionPeriod">
+               <option value="1년">1년</option>
+               <option value="3년">3년</option>
+               <option value="5년">5년</option>
+             </select>
+           </td>
+         </tr>
+         <tr>
+           <td>수신자</td>
+           <td>
+             <input type="text" name="receiver">
+           </td>
+           <td>참조자</td>
+           <td>
+             <input type="text" name="reference">
+           </td>
+         </tr>
+       </table>
 
-    ('외근신청서',
-    '<form>
-    <h2>외근 신청서</h2>
-    <label>외근 일자:</label><input type="date" name="date"><br>
-    <label>외근 시간:</label><input type="time" name="time"><br>
-    <label>외근 장소:</label><input type="text" name="location"><br>
-    <label>사유:</label><textarea name="reason"></textarea><br>
-    </form>',
-    false),
+       <!-- 결재라인 테이블(직책 기준, 이름은 자동할당) -->
+       <h3>결재라인</h3>
+       <table border="1" style="border-collapse:collapse; width:100%; margin-bottom:16px;">
+         <thead>
+           <tr>
+             <th>단계</th>
+             <th>직책</th>
+             <th>이름(자동지정)</th>
+             <th>상태</th>
+           </tr>
+         </thead>
+         <tbody>
+           <tr>
+             <td>기안</td>
+             <td>사원 (position_id=1)</td>
+             <td>&nbsp;</td>
+             <td>기안</td>
+           </tr>
+           <tr>
+             <td>1차</td>
+             <td>팀장 (position_id=2)</td>
+             <td>&nbsp;</td>
+             <td>대기중</td>
+           </tr>
+           <tr>
+             <td>2차</td>
+             <td>부장 (position_id=3)</td>
+             <td>&nbsp;</td>
+             <td>대기중</td>
+           </tr>
+           <tr>
+             <td>3차</td>
+             <td>본부장 (position_id=4)</td>
+             <td>&nbsp;</td>
+             <td>대기중</td>
+           </tr>
+         </tbody>
+       </table>
 
-    ('출장신청서',
-    '<form>
-    <h2>출장 신청서</h2>
-    <label>출장지:</label><input type="text" name="destination"><br>
-    <label>출장 기간:</label><input type="date" name="start_date"> ~ <input type="date" name="end_date"><br>
-    <label>출장 목적:</label><textarea name="purpose"></textarea><br>
-    </form>',
-    false),
-
-    ('인사발령 결재요청서',
-    '<form>
-    <h2>인사발령 결재요청서</h2>
-    <label>발령 대상자:</label><input type="text" name="employee_name"><br>
-    <label>변경 전 부서/직책:</label><input type="text" name="before"><br>
-    <label>변경 후 부서/직책:</label><input type="text" name="after"><br>
-    <label>발령 사유:</label><textarea name="reason"></textarea><br>
-    </form>',
-    false),
-
-    ('초과근무신청서',
-    '<form>
-    <h2>초과근무 신청서</h2>
-    <label>근무 일자:</label><input type="date" name="work_date"><br>
-    <label>근무 시간:</label><input type="text" name="work_time"><br>
-    <label>사유:</label><textarea name="reason"></textarea><br>
-    </form>',
-    false),
-
-    ('휴가신청서',
-    '<form>
-    <h2>휴가 신청서</h2>
-    <label>휴가 종류:</label><select name="leave_type">
-    <option value="연차">연차</option>
-    <option value="병가">병가</option>
-    <option value="경조사">경조사</option>
-    </select><br>
-    <label>휴가 기간:</label><input type="date" name="start_date"> ~ <input type="date" name="end_date"><br>
-    <label>사유:</label><textarea name="reason"></textarea><br>
-    </form>',
-    false);
+       <div>
+         <label>제목</label>
+         <input type="text" name="title" placeholder="제목을 입력하세요">
+       </div>
+       <div>
+         <label>첨부파일</label>
+         <input type="file" name="files" multiple>
+       </div>
+       <div>
+         <label>본문</label>
+         <textarea name="body" placeholder="기안 내용을 작성하세요..."></textarea>
+       </div>
+     </form>', false);
 
 -- 사원
 INSERT INTO employee (employee_id, employee_name, employee_pwd, employee_profile, employee_nation, employee_gender, employee_birth, employee_resident, employee_contact, employee_email, employee_address, employment_date, retirement_date, work_type, bank_name, bank_depositor, bank_account, is_disorder, military_type, is_marriage, marriage_date, family_count, career_year_count, previous_company, final_academic, employee_school, employee_dept, graduation_year, is_four_insurances, position_id, rank_id, job_id, head_id, department_id, team_id)
@@ -527,12 +561,143 @@ VALUES
     (20160324035001, '우희원', '$2b$12$HmcjOKhUsbzI7aftpFz1K.PFxRsQdwmwAupOOWbmPdfLlKSbh9dqy', NULL, '대한민국', '여', '1991-03-24', '910324-2133126', '010-9759-3181', 'ni@daum.net', '경기도 청양군 강남대539거리', '2016-03-24', '2025-05-26', TRUE, '국민은행', '우희원', '448-7325-5106', TRUE, '군필', FALSE, NULL, 2, 8, '서구', '고졸', '광주고등학교', NULL, 2010, FALSE, 1, 1, 35, 3, 6, 12);
 
 -- 전자결재 기안문서
+INSERT INTO draft_documents (
+    doc_title,
+    doc_content,
+    preserve_period,
+    expiration_date,
+    doc_status,
+    created_at,
+    submitted_at,
+    draft_saved_at,
+    final_approval_at,
+    deleted_at,
+    draft_version,
+    form_id,
+    employee_id
+) VALUES
+    (
+        'ERP 시스템 도입 추진',
+        '{
+          "department": "기획팀",
+          "position": "대리",
+          "drafter": "남금륭",
+          "draftDate": "2025-06-02",
+          "receiver": ["이수빈"],
+          "reference": ["차승호"],
+          "approvalLines": [
+            {
+              "step": 0,
+              "name": "남금륭",
+              "team": "기획팀",
+              "position": "대리",
+              "status": "기안",
+              "type": "기안",
+              "viewedAt": null,
+              "approvedAt": null,
+              "comment": ""
+            },
+            {
+              "step": 1,
+              "name": "이수빈",
+              "team": "기획팀",
+              "position": "팀장",
+              "status": "대기중",
+              "type": "내부결재",
+              "viewedAt": null,
+              "approvedAt": null,
+              "comment": ""
+            },
+            {
+              "step": 2,
+              "name": "차승호",
+              "team": "기획팀",
+              "position": "부장",
+              "status": "대기중",
+              "type": "내부결재",
+              "viewedAt": null,
+              "approvedAt": null,
+              "comment": ""
+            },
+            {
+              "step": 3,
+              "name": "박미조",
+              "team": "기획팀",
+              "position": "본부장",
+              "status": "대기중",
+              "type": "내부결재",
+              "viewedAt": null,
+              "approvedAt": null,
+              "comment": ""
+            }
+          ],
+          "title": "ERP 시스템 도입 추진",
+          "files": [
+            {
+              "name": "ERP_사업계획서.pdf",
+              "size": 120456,
+              "type": "application/pdf"
+            }
+          ],
+          "body": "ERP 시스템 도입을 위한 사업기안입니다. 검토 부탁드립니다."
+        }',
+        3,                                  -- 보존기간 (1,3,5 중 택1)
+        '2028-06-01',                       -- 만료일(보존기간 기준)
+        '대기중',                           -- 문서상태
+        '2025-06-01 09:00:00',              -- 작성일
+        '2025-06-01 09:05:00',              -- 상신일
+        NULL,                               -- 임시저장일
+        NULL,                               -- 최종결재일
+        NULL,                               -- 삭제일
+        1,                                  -- 차수
+        1,                                  -- 문서양식번호
+        20150102013001                      -- 사원번호(기안자)
+    );
+
 
 -- 전자결재 파일 첨부
+INSERT INTO document_attachment (
+    file_name,
+    file_url,
+    file_size,
+    file_type,
+    is_deleted,
+    doc_id
+) VALUES
+-- PDF 첨부 예시
+('ERP_사업계획서.pdf', '/uploads/ERP_사업계획서.pdf', 120456, 'application/pdf', FALSE, 1),
+
+-- 엑셀 첨부 예시
+('예산_산정표.xlsx', '/uploads/예산_산정표.xlsx', 23844, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', FALSE, 1);
+
 
 -- 결재라인
+INSERT INTO approval_line (
+    step, status, approved_at, type, opinion,
+    department_id, position_id, job_id, team_id, rank_id,
+    employee_id, doc_id, form_id
+) VALUES
+      (0, '기안',      NULL, '기안',      NULL, NULL, 1, NULL, NULL, NULL, NULL, 1, 1),
+      (1, '대기중',    NULL, '내부', NULL, NULL, 2, NULL, NULL, NULL, NULL, 1, 1),
+      (2, '대기중',    NULL, '내부', NULL, NULL, 3, NULL, NULL, NULL, NULL, 1, 1),
+      (3, '대기중',    NULL, '내부', NULL, NULL, 4, NULL, NULL, NULL, NULL, 1, 1);
+
 
 -- 문서결재함
+-- 기안자: 남금륭
+INSERT INTO document_box (employee_id, doc_id, is_read, read_at, is_deleted, role)
+VALUES
+        (20150102013001, 1, FALSE, NULL, FALSE, '기안자'),
+
+-- 1단계 결재자: 이수빈 (팀장)
+       (20140816014001, 1, FALSE, NULL, FALSE, '결재자'),
+
+-- 2단계 결재자: 차승호 (부장)
+       (20031214015001, 1, FALSE, NULL, FALSE, '결재자'),
+
+-- 3단계 결재자: 박미조 (본부장)
+       (19931121014001, 1, FALSE, NULL, FALSE, '결재자');
+
 
 -- 급여 기초
 INSERT INTO salary_base (
@@ -1823,7 +1988,7 @@ INSERT INTO review_grade (
       (4, 80, 89, 'B', 20121215029001),
       (5, 90, 100, 'A', 20121215029001);
 
--- 평가
+# 평가
 INSERT INTO review (
     review_score, review_grade_id, employee_id, selfreview_id
 ) VALUES

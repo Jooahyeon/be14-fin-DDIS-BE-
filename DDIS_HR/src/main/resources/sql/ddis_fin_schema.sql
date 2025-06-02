@@ -528,7 +528,7 @@ CREATE TABLE `review_grade` (
 
 -- 평가
 CREATE TABLE `review` (
-    `review_id`        BIGINT NOT NULL AUTO_INCREMENT,
+    `review_id`        BIGINT NOT NULL auto_increment,
     `review_score`     INT         NOT NULL,
     `review_grade_id`  INT         NOT NULL,
     `employee_id`      BIGINT      NOT NULL,

@@ -3,6 +3,25 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.ddis.ddis_hr.employee.query.dao.EmployeeMapper">
+    <select id="findById" parameterType="long" resultType="com.ddis.ddis_hr.payroll.query.dto.EmployeeSummaryDTO">
+        SELECT
+            e.employee_id AS employeeId,
+            e.employee_name AS employeeName,
+            h.head_name AS headName,
+            d.department_name AS departmentName,
+            t.team_name AS teamName,
+            r.rank_name AS rankName,
+            e.bank_name AS bankName,
+            e.bank_account AS bankAccount,
+            e.bank_depositor AS bankDepositor
+        FROM employee e
+                 LEFT JOIN headquarters h ON e.head_id = h.head_id
+                 LEFT JOIN department d ON e.department_id = d.department_id
+                 LEFT JOIN team t ON e.team_id = t.team_id
+                 LEFT JOIN rank r ON e.rank_id = r.rank_id
+        WHERE e.employee_id = #{employeeId}
+    </select>
+
 
     <select id="searchEmployees" parameterType="com.ddis.ddis_hr.payroll.query.dto.EmployeeSearchCondition"
             resultType="com.ddis.ddis_hr.payroll.query.dto.EmployeeSummaryDTO">

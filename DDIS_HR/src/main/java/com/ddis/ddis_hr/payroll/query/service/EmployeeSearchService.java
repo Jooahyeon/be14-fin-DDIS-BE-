@@ -15,4 +15,12 @@ public class EmployeeSearchService {
     public List<EmployeeSummaryDTO> searchEmployees(EmployeeSearchCondition condition) {
         return employeeMapper.searchEmployees(condition);
     }
+
+    public EmployeeSummaryDTO findById(Long employeeId) {
+        EmployeeSummaryDTO result = employeeMapper.findById(employeeId);
+//        if (result == null) {
+//            throw new NoSuchElementException("사원 정보가 없습니다: " + employeeId);
+//        }
+        return result;
+    }
 }

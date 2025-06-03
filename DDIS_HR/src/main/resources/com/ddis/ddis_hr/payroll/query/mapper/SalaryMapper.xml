@@ -52,6 +52,7 @@
         s.salary_id,
         s.employee_id,
         e.employee_name,
+        e.employee_email,
         r.rank_name,
         t.team_name,
         h.head_name,

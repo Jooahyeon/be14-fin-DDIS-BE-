@@ -149,16 +149,6 @@ CREATE TABLE `work_status` (
     PRIMARY KEY (`work_status_id`)
 );
 
--- 전자결재양식
-CREATE TABLE `document_form` (
-    `form_id`      BIGINT NOT NULL AUTO_INCREMENT,
-    `form_name`    VARCHAR(255) NOT NULL,
-    `form_content` LONGTEXT   NOT NULL,
-    `is_deleted`   BOOLEAN DEFAULT FALSE,
-    PRIMARY KEY (`form_id`)
-);
-
-
 -- 4. 연결 테이블
 -- 사원
 CREATE TABLE `employee` (
@@ -207,6 +197,16 @@ CREATE TABLE `employee` (
     CHECK (`military_type` IN ('군필', '보충역', '면제', '미필'))
 );
 
+-- 전자결재양식
+CREATE TABLE `document_form` (
+     `form_id`      BIGINT NOT NULL AUTO_INCREMENT,
+     `form_name`    VARCHAR(255) NOT NULL,
+     `form_content` LONGTEXT   NOT NULL,
+     `is_deleted`   BOOLEAN DEFAULT FALSE,
+     `employee_id`  BIGINT,                          -- ✅ 컬럼 추가!
+     PRIMARY KEY (`form_id`),
+     FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`)
+);
 
 
 -- 5. 이어지는 자식 테이블들
@@ -249,25 +249,27 @@ CREATE TABLE `document_attachment` (
 
 -- 결재라인
 CREATE TABLE `approval_line` (
-    `approval_line_id` BIGINT      NOT NULL AUTO_INCREMENT,
-    `step`             INT         NOT NULL,
-    `status`           VARCHAR(255) NOT NULL DEFAULT '미결',
-    `approved_at`      DATETIME,
-    `type`             VARCHAR(255) NOT NULL DEFAULT '기안',
-    `opinion`          VARCHAR(255),
-    `department_id`    BIGINT,
-    `position_id`      BIGINT,
-    `job_id`           BIGINT,
-    `team_id`          BIGINT,
-    `rank_id`          BIGINT,
-    `employee_id`      BIGINT,
-    `doc_id`           BIGINT,
-    `form_id`          BIGINT      NOT NULL,
-    PRIMARY KEY (`approval_line_id`,`step`),
-    FOREIGN KEY (`doc_id`)  REFERENCES `draft_documents`(`doc_id`) ON DELETE CASCADE,
-    FOREIGN KEY (`form_id`) REFERENCES `document_form`(`form_id`) ON DELETE CASCADE,
-    CHECK(`status` IN ('기안', '미결', '대기중','승인','반려','회수됨')),
-    CHECK(`type` IN ('기안','협조', '내부'))
+     `approval_line_id` BIGINT      NOT NULL AUTO_INCREMENT,
+     `step`             INT         NOT NULL,
+     `status`           VARCHAR(20) NOT NULL DEFAULT '대기중'
+         CHECK(status IN ('기안','미결','대기중','승인','반려','회수됨')),
+     `approved_at`      DATETIME,
+     `type`             VARCHAR(20) NOT NULL DEFAULT '내부결재'
+         CHECK(type IN ('기안','협조결재','내부결재')),
+     `opinion`          VARCHAR(255),
+     `department_id`    BIGINT,
+     `position_id`      BIGINT,
+     `job_id`           BIGINT,
+     `team_id`          BIGINT,
+     `rank_id`          BIGINT,
+     `employee_id`      BIGINT,
+     `line_type`        VARCHAR(255) NOT NULL DEFAULT 'ACTUAL' CHECK(line_type IN('ACTUAL','TEMPLATE')),
+     `viewed_at`        DATETIME,
+     `doc_id`           BIGINT,
+     `form_id`          BIGINT      NOT NULL,
+     PRIMARY KEY (`approval_line_id`,`step`),
+     FOREIGN KEY (`doc_id`)  REFERENCES `draft_documents`(`doc_id`),
+     FOREIGN KEY (`form_id`) REFERENCES `document_form`(`form_id`)
 );
 
 -- 문서결재함
@@ -622,17 +624,3 @@ CREATE TABLE `board` (
     FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`)
 );
 
-# -- 메뉴: 잠시 sidebar 수정으로 멈춤
-# CREATE TABLE `menu` (
-#     `menu_id`        BIGINT NOT NULL AUTO_INCREMENT,
-#     `menu_name`      VARCHAR(255) NOT NULL,
-#     `parent_menu_id` BIGINT,
-#     `menu_path`      VARCHAR(255),
-#     PRIMARY KEY (`menu_id`),
-#     FOREIGN KEY (`parent_menu_id`) REFERENCES menu(`menu_id`)
-# );
-#
-# -- 자주찾는메뉴
-# CREATE TABLE `favorite_menu` (
-#
-# )

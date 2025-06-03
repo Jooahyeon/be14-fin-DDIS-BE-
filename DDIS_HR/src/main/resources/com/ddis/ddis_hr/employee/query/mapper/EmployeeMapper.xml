@@ -13,7 +13,8 @@
             r.rank_name AS rankName,
             e.bank_name AS bankName,
             e.bank_account AS bankAccount,
-            e.bank_depositor AS bankDepositor
+            e.bank_depositor AS bankDepositor,
+            e.employee_email AS employeeEmail
         FROM employee e
                  LEFT JOIN headquarters h ON e.head_id = h.head_id
                  LEFT JOIN department d ON e.department_id = d.department_id

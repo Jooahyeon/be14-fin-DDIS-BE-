@@ -10,7 +10,7 @@ import lombok.*;
 public class EmployeeSummaryDTO {
     private Long employeeId;
     private String employeeName;
-
+    private String employeeEmail;
     private String headName;
     private String departmentName;
     private String teamName;

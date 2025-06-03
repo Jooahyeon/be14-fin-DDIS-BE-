@@ -401,6 +401,8 @@ CREATE TABLE `attendance` (
     `requested_time_change` DATETIME,
     `approval_status` VARCHAR(255) DEFAULT '대기중',
     `processed_time` DATETIME,
+    `reason` VARCHAR(255),
+    `reject_reason` VARCHAR(255),
     PRIMARY KEY (`attendance_id`),
     FOREIGN KEY (`employee_id`)     REFERENCES `employee`(`employee_id`) ON DELETE CASCADE,
     FOREIGN KEY (`work_status_id`)  REFERENCES `work_status`(`work_status_id`) ON DELETE CASCADE,

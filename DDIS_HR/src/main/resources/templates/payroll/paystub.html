@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <style>
+        body {
+            font-family: 'NanumGothic', sans-serif;
+        }
+
+        h2 {
+            text-align: center;
+            font-weight: bold;
+            font-size: 20px;
+            /*margin-bottom: 20px;*/
+        }
+
+        table {
+            /*margin-top: 20px;*/
+            width: 100%;
+            border-collapse: collapse;
+            /*margin-bottom: 16px;*/
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 6px 8px;
+        }
+
+        .section-title {
+            background: #f8f9fa;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .slip-wrapper {
+            display: table;
+            width: 100%;
+        }
+
+        .table-side {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+        }
+
+        .sub-head th {
+            background: #f8f9fa;
+        }
+
+        .right-align {
+            text-align: right;
+        }
+
+        .bold-label {
+            font-weight: bold;
+        }
+
+        .gray-row {
+            background-color: #f8f9fa;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #00a8e8;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #f8f9fa;
+            font-weight: bold;
+            text-align: right;
+            border: 1px solid #ccc;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 20px;
+            font-weight: bold;
+
+        }
+    </style>
+</head>
+<body>
+<h2>급여명세서</h2>
+
+<!-- 사원 정보 -->
+<table>
+    <tr>
+        <th class="gray-row">사번</th>
+        <td th:text="${employeeId}">E123</td>
+        <th class="gray-row">성명</th>
+        <td th:text="${employeeName}">홍길동</td>
+    </tr>
+    <tr>
+        <th class="gray-row">본부</th>
+        <td th:text="${headName}">본부</td>
+        <th class="gray-row">부서</th>
+        <td th:text="${departmentName}">부서</td>
+    </tr>
+    <tr>
+        <th class="gray-row">팀</th>
+        <td th:text="${teamName}">팀</td>
+        <th class="gray-row">직급</th>
+        <td th:text="${rankName}">직급</td>
+    </tr>
+</table>
+
+<!-- 세부 내역 구분선 -->
+<table>
+    <tr><td colspan="2" class="section-title">세부 내역</td></tr>
+</table>
+
+<!-- 지급 / 공제 -->
+<div class="slip-wrapper">
+    <div class="table-side">
+        <table>
+            <thead>
+            <tr class="sub-head"><th colspan="2">지급</th></tr>
+            <tr><th>항목</th><th>금액</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${pays}">
+                <td th:text="${item.label}"
+                    th:classappend="${item.label == '총지급액'} ? 'bold-label gray-row' : ''"></td>
+                <td th:text="${#numbers.formatInteger(item.amount, 3, 'COMMA')}"
+                    th:classappend="'right-align ' + (item.label == '총지급액' ? 'highlight gray-row' : '')"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="table-side">
+        <table>
+            <thead>
+            <tr class="sub-head"><th colspan="2">공제</th></tr>
+            <tr><th>항목</th><th>금액</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${deductions}">
+                <td th:text="${item.label}"
+                    th:classappend="${item.label == '총공제액'} ? 'bold-label gray-row' : ''"></td>
+                <td th:text="${#numbers.formatInteger(item.amount, 3, 'COMMA')}"
+                    th:classappend="'right-align ' + (item.label == '총공제액' ? 'highlight gray-row' : '')"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- 실 수령액 -->
+<div class="summary-row">
+    <span>실 수령액(월)</span>
+    <span th:text="${#numbers.formatInteger(netSalary, 3, 'COMMA')}" class="highlight">3,000,000</span>
+</div>
+
+<!-- 지급일 -->
+<div class="footer">
+    <p th:text="${salaryDate}">2024년 05월 31일</p>
+</div>
+</body>
+</html>

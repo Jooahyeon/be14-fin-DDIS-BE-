@@ -4,21 +4,78 @@
 
 <mapper namespace="com.ddis.ddis_hr.goals.command.application.mapper.GoalsMapper">
     <resultMap id="GoalsDTOResultMap" type="com.ddis.ddis_hr.goals.command.application.dto.GoalDTO">
-        <id property="goalId" column="goal_id"/>
-        <result property="goalTitle" column="goal_title"/>
+        <id     property="goalId"      column="goal_id"/>
+        <result property="goalTitle"   column="goal_title"/>
         <result property="goalContent" column="goal_content"/>
-        <result property="goalValue" column="goal_value"/>
-        <result property="goalWeight" column="goal_weight"/>
-        <result property="goalCreatedAt" column="goal_created_at"/>
-        <result property="employeeId" column="employee_id"/>
-        <result property="employeeName" column="employee_name" />
+        <result property="goalValue"   column="goal_value"/>
+        <result property="goalWeight"  column="goal_weight"/>
+        <result property="goalCreatedAt" column="goal_created_at" jdbcType="TIMESTAMP"/>
+        <result property="employeeId"  column="employee_id"/>
+        <result property="employeeName" column="employee_name"/>
+
+        <!-- PerformanceDTO 매핑 시작 -->
+        <association property="performance" javaType="com.ddis.ddis_hr.goals.command.application.dto.PerformanceDTO">
+            <!-- 실적 필드 단일 매핑 -->
+            <id     column="selfreview_id"          property="performanceId" />
+            <result column="performance_value"      property="performanceValue" />
+            <result column="selfreview_content"     property="selfreviewContent" />
+            <result column="selfreview_created_at"  property="selfreviewCreateAt" jdbcType="TIMESTAMP"/>
+            <!-- (필요하다면 selfreview_status 등 다른 필드도 여기에 매핑) -->
+
+            <!-- 첨부파일은 여러 개이므로, 컬렉션으로 묶어서 매핑 -->
+            <collection property="attachmentKeys"
+                        ofType="java.lang.String"
+                        column="selfreview_file_url"/>
+            <collection property="attachmentFileNames"
+                        ofType="java.lang.String"
+                        column="selfreview_file_name"/>
+            <collection property="attachmentFileTypes"
+                        ofType="java.lang.String"
+                        column="selfreview_file_type"/>
+            <collection property="attachmentFileSizes"
+                        ofType="java.lang.Long"
+                        column="selfreview_file_size"/>
+        </association>
+        <!-- PerformanceDTO 매핑 끝 -->
     </resultMap>
 
     <select id="findGoalsByEmployeeId" resultMap="GoalsDTOResultMap">
         SELECT
-            g.goal_id, g.goal_title, g.goal_content, g.goal_value, g.goal_weight, g.goal_created_at, g.employee_id, e.employee_name
+            g.goal_id,
+            g.goal_title,
+            g.goal_content,
+            g.goal_value,
+            g.goal_weight,
+            g.goal_created_at,
+            g.employee_id,
+            e.employee_name,
+
+            p.selfreview_id,
+            p.performance_value,
+            p.selfreview_content,
+            p.selfreview_created_at,
+            p.selfreview_status,
+
+            f.selfreview_file_id,
+            f.selfreview_file_name,
+            f.selfreview_file_url,
+            f.selfreview_file_upload_date,
+            f.selfreview_file_size,
+            f.selfreview_file_type,
+
+            r.employee_name AS reviewer_name,
+            p.reviewer_scroe,
+            p.reviewer_content,
+            p.reviewer_created_at
+
         FROM goal g
-        JOIN employee e ON g.employee_id = e.employee_id
+                 JOIN employee e ON g.employee_id = e.employee_id
+                 LEFT JOIN selfreview p
+                           ON g.goal_id = p.goal_id
+                 LEFT JOIN selfreviewfile f
+                           ON p.selfreview_id = f.selfreview_id
+                 LEFT JOIN employee r
+                           ON p.employee_id_reviewer = r.employee_id
         WHERE g.employee_id = #{employeeId}
     </select>
 </mapper>

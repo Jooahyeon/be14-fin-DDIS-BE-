@@ -17,4 +17,6 @@ public class GoalDTO {
     private LocalDate goalCreatedAt;
     private Long employeeId;
     private String employeeName;
+
+    private PerformanceDTO performance;
 }

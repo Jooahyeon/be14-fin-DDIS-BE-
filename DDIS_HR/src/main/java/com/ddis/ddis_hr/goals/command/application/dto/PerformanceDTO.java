@@ -13,7 +13,7 @@ import java.util.List;
 public class PerformanceDTO {
     private Long performanceId;
     private LocalDateTime selfreviewCreateAt;
-    private     Integer performanceValue;
+    private Integer performanceValue;
     private String selfreviewContent;
 
     // S3에서 받아온 presigned GET URL 목록

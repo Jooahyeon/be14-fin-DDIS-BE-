@@ -3,7 +3,7 @@
     import lombok.RequiredArgsConstructor;
     import org.springframework.beans.factory.annotation.Value;
     import org.springframework.stereotype.Service;
-    import software.amazon.awssdk.regions.Region;
+    import java.nio.charset.StandardCharsets;
     import software.amazon.awssdk.services.s3.S3Client;
     import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
     import software.amazon.awssdk.services.s3.model.GetObjectRequest;
@@ -44,9 +44,23 @@
         /* 다운로드용 presigned URL 발급 */
         @Override
         public String generateDownloadUrl(String fileName, String contentType) {
+            // ① 실제 다운로드 받을 때 사용할 파일명만 추출
+            String actualFileName = fileName.contains("/")
+                    ? fileName.substring(fileName.lastIndexOf("/") + 1)
+                    : fileName;
+
+            // ② percent‐encode 된 UTF-8 한글 파일명 (예: “목표.png” → “%EB%AA%A9%ED%91%9C.png”)
+            String encodedName = java.net.URLEncoder.encode(actualFileName, StandardCharsets.UTF_8);
+
+            // ③ RFC5987 형식으로 Content-Disposition 헤더 값 생성
+            String disposition = "attachment; filename*=UTF-8''" + encodedName;
+            //    → 예시: "attachment; filename*=UTF-8''%EB%AA%A9%ED%91%9C.png"
+
+            // ④ GetObjectRequest 에 미리 responseContentDisposition 지정
             GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                     .bucket(bucketName)
                     .key(fileName)
+                    .responseContentDisposition(disposition)
                     .build();
 
             GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()

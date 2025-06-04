@@ -254,8 +254,8 @@ CREATE TABLE `approval_line` (
      `status`           VARCHAR(20) NOT NULL DEFAULT '대기중'
          CHECK(status IN ('기안','미결','대기중','승인','반려','회수됨')),
      `approved_at`      DATETIME,
-     `type`             VARCHAR(20) NOT NULL DEFAULT '내부결재'
-         CHECK(type IN ('기안','협조결재','내부결재')),
+     `type`             VARCHAR(20) NOT NULL DEFAULT '내부'
+         CHECK(type IN ('기안','협조','내부')),
      `opinion`          VARCHAR(255),
      `department_id`    BIGINT,
      `position_id`      BIGINT,

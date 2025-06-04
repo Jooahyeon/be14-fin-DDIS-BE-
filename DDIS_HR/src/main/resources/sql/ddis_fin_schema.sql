@@ -497,7 +497,7 @@ CREATE TABLE `selfreview` (
     `reviewer_score`   INT,
     `reviewer_created_at` DATETIME,
     `reviewer_content` TEXT,
-    `employee_id_reviewer` BIGINT NOT NULL,
+    `employee_id_reviewer` BIGINT,
     PRIMARY KEY (`selfreview_id`),
     FOREIGN KEY (`goal_id`)                 REFERENCES `goal`(`goal_id`),
     FOREIGN KEY (`employee_id_selfreviewer`) REFERENCES `employee`(`employee_id`),

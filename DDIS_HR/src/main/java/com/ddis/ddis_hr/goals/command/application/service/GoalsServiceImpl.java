@@ -7,11 +7,14 @@ import com.ddis.ddis_hr.goals.command.application.mapper.GoalsMapper;
 import com.ddis.ddis_hr.goals.command.domain.aggregate.Goals;
 import com.ddis.ddis_hr.goals.command.domain.repository.GoalsRepository;
 import com.ddis.ddis_hr.member.command.domain.aggregate.entity.Employee;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -50,4 +53,16 @@ public class GoalsServiceImpl implements GoalsService {
                         .build());
         return saved.getGoalId();
     }
+
+    @Override
+    public void deleteGoal(Long goalId) {
+        Goals goals = goalsRepository.findById(goalId).orElseThrow(() -> new EntityNotFoundException("Goal not found: " + goalId));
+
+        goalsRepository.delete(goals);
+
+
+
+    }
+
+
 }

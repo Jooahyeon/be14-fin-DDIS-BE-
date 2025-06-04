@@ -1,24 +1,127 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.ddis.ddis_hr.goals.command.application.mapper.GoalsMapper">
-    <resultMap id="GoalsDTOResultMap" type="com.ddis.ddis_hr.goals.command.application.dto.GoalDTO">
-        <id property="goalId" column="goal_id"/>
-        <result property="goalTitle" column="goal_title"/>
-        <result property="goalContent" column="goal_content"/>
-        <result property="goalValue" column="goal_value"/>
-        <result property="goalWeight" column="goal_weight"/>
-        <result property="goalCreatedAt" column="goal_created_at"/>
-        <result property="employeeId" column="employee_id"/>
-        <result property="employeeName" column="employee_name" />
+
+    <!-- ============================================== -->
+    <!-- 1) 자식 테이블(SELFREVIEWFILE) 전용 서브쿼리들  -->
+    <!-- ============================================== -->
+    <!-- a) 퍼포먼스 ID(selfreview_id)를 받아 URL만 모아주는 쿼리 -->
+    <select id="selectAttachmentFileUrls"
+            resultType="java.lang.String"
+            parameterType="java.lang.Long">
+        SELECT selfreview_file_url
+        FROM selfreviewfile
+        WHERE selfreview_id = #{selfreviewId}
+    </select>
+
+    <!-- b) 퍼포먼스 ID(selfreview_id)를 받아 파일명만 모아주는 쿼리 -->
+    <select id="selectAttachmentFileNames"
+            resultType="java.lang.String"
+            parameterType="java.lang.Long">
+        SELECT selfreview_file_name
+        FROM selfreviewfile
+        WHERE selfreview_id = #{selfreviewId}
+    </select>
+
+    <!-- c) 퍼포먼스 ID(selfreview_id)를 받아 파일타입만 모아주는 쿼리 -->
+    <select id="selectAttachmentFileTypes"
+            resultType="java.lang.String"
+            parameterType="java.lang.Long">
+        SELECT selfreview_file_type
+        FROM selfreviewfile
+        WHERE selfreview_id = #{selfreviewId}
+    </select>
+
+    <!-- d) 퍼포먼스 ID(selfreview_id)를 받아 파일크기만 모아주는 쿼리 -->
+    <select id="selectAttachmentFileSizes"
+            resultType="java.lang.Long"
+            parameterType="java.lang.Long">
+        SELECT selfreview_file_size
+        FROM selfreviewfile
+        WHERE selfreview_id = #{selfreviewId}
+    </select>
+
+
+    <!-- ============================================== -->
+    <!-- 2) GoalDTO와 PerformanceDTO를 매핑할 resultMap  -->
+    <!-- ============================================== -->
+    <resultMap id="GoalsDTOResultMap"
+               type="com.ddis.ddis_hr.goals.command.application.dto.GoalDTO">
+
+        <!-- Goal 테이블 컬럼 매핑 -->
+        <id     property="goalId"        column="goal_id"/>
+        <result property="goalTitle"     column="goal_title"/>
+        <result property="goalContent"   column="goal_content"/>
+        <result property="goalValue"     column="goal_value"/>
+        <result property="goalWeight"    column="goal_weight"/>
+        <result property="goalCreatedAt" column="goal_created_at"
+                jdbcType="TIMESTAMP"/>
+        <result property="employeeId"    column="employee_id"/>
+        <result property="employeeName"  column="employee_name"/>
+
+        <!-- ============================================== -->
+        <!--   PerformanceDTO 매핑 (nested select 사용)     -->
+        <!-- ============================================== -->
+        <association property="performance"
+                     javaType="com.ddis.ddis_hr.goals.command.application.dto.PerformanceDTO">
+            <!-- 단일 컬럼 매핑 (Performance 기본 정보) -->
+            <id     column="selfreview_id"          property="performanceId"/>
+            <result column="performance_value"      property="performanceValue"/>
+            <result column="selfreview_content"     property="selfreviewContent"/>
+            <result column="selfreview_created_at"  property="selfreviewCreateAt"
+                    jdbcType="TIMESTAMP"/>
+
+            <!-- 네 개의 nested select로 “파일 정보 컬렉션”을 채움 -->
+            <collection property="attachmentKeys"
+                        ofType="java.lang.String"
+                        select="selectAttachmentFileUrls"
+                        column="selfreview_id"/>
+            <collection property="attachmentFileNames"
+                        ofType="java.lang.String"
+                        select="selectAttachmentFileNames"
+                        column="selfreview_id"/>
+            <collection property="attachmentFileTypes"
+                        ofType="java.lang.String"
+                        select="selectAttachmentFileTypes"
+                        column="selfreview_id"/>
+            <collection property="attachmentFileSizes"
+                        ofType="java.lang.Long"
+                        select="selectAttachmentFileSizes"
+                        column="selfreview_id"/>
+        </association>
     </resultMap>
 
-    <select id="findGoalsByEmployeeId" resultMap="GoalsDTOResultMap">
+
+    <!-- ============================================== -->
+    <!-- 3) 실제로 Goals와 Performance 정보를 조회하는 쿼리  -->
+    <!--    (selfreviewfile JOIN은 제거됨)              -->
+    <!-- ============================================== -->
+    <select id="findGoalsByEmployeeId"
+            resultMap="GoalsDTOResultMap"
+            parameterType="java.lang.Long">
         SELECT
-            g.goal_id, g.goal_title, g.goal_content, g.goal_value, g.goal_weight, g.goal_created_at, g.employee_id, e.employee_name
+            g.goal_id,
+            g.goal_title,
+            g.goal_content,
+            g.goal_value,
+            g.goal_weight,
+            g.goal_created_at,
+            g.employee_id,
+            e.employee_name,
+
+            p.selfreview_id,
+            p.performance_value,
+            p.selfreview_content,
+            p.selfreview_created_at,
+            p.selfreview_status
+
         FROM goal g
-        JOIN employee e ON g.employee_id = e.employee_id
+                 JOIN employee e ON g.employee_id = e.employee_id
+                 LEFT JOIN selfreview p ON g.goal_id = p.goal_id
         WHERE g.employee_id = #{employeeId}
     </select>
+
 </mapper>

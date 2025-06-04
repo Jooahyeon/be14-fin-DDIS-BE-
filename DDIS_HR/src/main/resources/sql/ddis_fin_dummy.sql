@@ -420,7 +420,7 @@ VALUES
     (20191003011001, '이지은', '$2b$12$5Qikeo7mTnQY/fBUWuQe/O1HkEEtT8VQzC33cj0KlsEOTH6bI62EO', NULL, '대한민국', '여', '1994-10-03', '941003-2046894', '010-6274-5596', 'ghan@naver.com', '충청남도 태백시 강남대길', '2019-10-03', NULL, TRUE, '카카오뱅크', '이지은', '421-2290-5246', TRUE, '미필', TRUE, '2020-01-11', 4, 7, '엔오일전자', '대졸', '서언대학교', '컴퓨터공학과', 2017, TRUE, 1, 1, 11, 1, 2, 4),
     (20230525012001, '김항경', '$2b$12$3tN6Zs9Lo5k8muFy59b/RezMk8p.zflZWnKllo7Sb2sFDJXqm7BQS', NULL, '대한민국', '남', '1998-05-25', '980525-1453083', '010-5519-6102', 'jeonghun36@yu.com', '충청북도 금산군 석촌호수300가', '2023-05-25', NULL, TRUE, '기업은행', '김항경', '240-7583-4130', TRUE, '면제', TRUE, '2023-09-02', 4, 1, '유니쿠어바이오', '박사', '제주대학교', '산업경영공학과', 2021, TRUE, 1, 1, 12, 1, 2, 4),
     (20200715010001, '김미소', '$2b$12$O9zpZ4a5AM23BWCX2fnjw.VjqVPkDM6K4gtLIC/5ujKlbqeViDz0m', NULL, '대한민국', '여', '1995-07-15', '950715-2083183', '010-2164-4158', 'gimgyeongsu@ju.org', '경기도 용인시 기흥구 학동가', '2020-07-15', NULL, TRUE, '기업은행', '김미소', '941-6184-5779', TRUE, '군필', FALSE, NULL, 1, 1, '아이티웍스', '대졸', '대구대학교', '정보통신공학과', 2018, TRUE, 1, 2, 10, 1, 2, 4),
-    (20151123010001, '소혜원', '$2b$12$A9jJOaae2P3SMhcCej.mFuq7dQ5L3G5sDy4Nf08wb49S73ZO8FxPy', NULL, '대한민국', '남', '1990-11-23', '901123-1978762', '010-9052-5911', 'yeongceoli@dreamwiz.com', '제주특별자치도 고성군 학동거리', '2015-11-23', NULL, TRUE, '카카오뱅크', '소혜원', '493-1969-4418', TRUE, '면제', FALSE, NULL, 4, NULL, NULL, '고졸', '전주고등학교', NULL, 2009, TRUE, 1, 1, 10, 1, 2, 4),
+    (20151123010001, '소혜원', '$2a$12$xnf9DxvjbYkP9iAfXqFOzOPnAekB48j4QtmRLpleyeLmqu6lJcTLK', NULL, '대한민국', '남', '1990-11-23', '901123-1978762', '010-9052-5911', 'kangcanddy@gmail.com', '제주특별자치도 고성군 학동거리', '2015-11-23', NULL, TRUE, '카카오뱅크', '소혜원', '493-1969-4418', TRUE, '면제', FALSE, NULL, 4, NULL, NULL, '고졸', '전주고등학교', NULL, 2009, TRUE, 1, 1, 10, 1, 2, 4),
     (19931121014001, '박미조', '$2b$12$SH0nW.MudKNGlD.GRd9LT.wYbUQLdb8/rSyWbyRpIqLRKmOzMGgKm', NULL, '대한민국', '여', '1968-11-21', '681121-2454360', '010-2851-2400', 'yeongsuncoe@simbaeg.com', '경상남도 청양군 영동대236거리', '1993-11-21', NULL, TRUE, '신한은행', '박미조', '139-6163-5089', TRUE, '미필', FALSE, NULL, 2, NULL, NULL, '고졸', '서울고등학교', NULL, 1987, TRUE, 4, 5, 14, 2, 7, 13),
     (20031214015001, '차승호', '$2b$12$tETquoMfJh1hyOUsQfc47u.z.upx4.v4VJSn0wQJUNQ8JjJsbDh5W', NULL, '대한민국', '남', '1978-12-14', '781214-1920082', '010-6751-0074', 'yeongsighwang@bagnogim.kr', '강원도 부천시 학동6길', '2003-12-14', NULL, TRUE, '기업은행', '차승호', '451-8228-4701', TRUE, '면제', FALSE, NULL, 2, NULL, NULL, '고졸', '울지고등학교', NULL, 1997, TRUE, 3, 4, 15, 2, 3, 5),
     (20140816014001, '이수빈', '$2b$12$LcokvOiTz74vG3OqEF27XOKVzDK3kMA07qwgTe1v4T63d2WvhRcjK', NULL, '대한민국', '남', '1989-08-16', '890816-1826605', '010-0980-2507', 'gimgyeongsu@gimgim.net', '충청북도 고양시 일산동구 선릉5거리', '2014-08-16', NULL, TRUE, '농협은행', '이수빈', '366-6638-3659', TRUE, '면제', FALSE, NULL, 2, 3, '한화 에어로스페이스', '석사', '대구대학교', '정보통신공학과', 2012, TRUE, 2, 3, 14, 2, 3, 5),
@@ -560,7 +560,6 @@ INSERT INTO document_form (form_name, form_content, is_deleted, employee_id) VAL
        </div>
      </form>', false, 20180609013001);
 
-
 -- 전자결재 기안문서
 INSERT INTO draft_documents (
     doc_title,
@@ -673,12 +672,16 @@ INSERT INTO document_attachment (
 
 
 -- 결재라인
-INSERT INTO approval_line (step, status, approved_at, type, opinion, department_id, position_id, job_id, team_id, rank_id, employee_id, line_type, viewed_at, doc_id, form_id)
-VALUES
-    (0, '기안', NULL, '기안', NULL, NULL, 1, NULL, NULL, NULL, NULL, 'TEMPLATE', NULL, NULL, 1),
-    (1, '미결', NULL, '내부결재', NULL, NULL, 2, NULL, NULL, NULL, NULL,'TEMPLATE', NULL, NULL, 1),
-    (2, '미결', NULL, '내부결재', NULL, NULL, 3, NULL, NULL, NULL, NULL,'TEMPLATE', NULL, NULL, 1),
-    (3, '미결', NULL, '내부결재', NULL, NULL, 4, NULL, NULL, NULL, NULL, 'TEMPLATE', NULL, NULL, 1);
+INSERT INTO approval_line (
+    step, status, approved_at, type, opinion,
+    department_id, position_id, job_id, team_id, rank_id,
+    employee_id, doc_id, form_id
+) VALUES
+      (0, '기안',      NULL, '기안',      NULL, NULL, 1, NULL, NULL, NULL, NULL, 1, 1),
+      (1, '대기중',    NULL, '내부', NULL, NULL, 2, NULL, NULL, NULL, NULL, 1, 1),
+      (2, '대기중',    NULL, '내부', NULL, NULL, 3, NULL, NULL, NULL, NULL, 1, 1),
+      (3, '대기중',    NULL, '내부', NULL, NULL, 4, NULL, NULL, NULL, NULL, 1, 1);
+
 
 -- 문서결재함
 -- 기안자: 남금륭

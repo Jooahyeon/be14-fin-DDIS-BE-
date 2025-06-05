@@ -11,6 +11,7 @@ import lombok.*;
 public class RetirementSummaryDTO {
     private Long employeeId;
     private String employeeName;
+    private String employeeEmail;
     private LocalDate retirementDate;
     private LocalDate provisionDate;
     private String provisionSituation;

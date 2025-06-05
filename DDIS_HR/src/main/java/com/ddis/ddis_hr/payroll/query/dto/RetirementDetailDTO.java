@@ -11,6 +11,7 @@ import lombok.*;
 public class RetirementDetailDTO {
     private Long employeeId;
     private String employeeName;
+    private String employeeEmail;
     private String headName;
     private String departmentName;
     private String teamName;
@@ -18,7 +19,9 @@ public class RetirementDetailDTO {
     private LocalDate employmentDate;
     private LocalDate retirementDate;
     private int totalWorkDays;
+    private int totalYears;
     private int totalDays;
+    private int averageDailySalary;
     private int totalBonus;
     private String month1, month2, month3, month4;
     private int month1Salary, month2Salary, month3Salary, month4Salary;

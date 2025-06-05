@@ -108,28 +108,59 @@
 
     <select id="selectByAppointmentType" resultMap="AppointmentHistoryResultMap" parameterType="string">
         SELECT
-        history_id,
-        appointment_id,
-        employee_id,
-        from_head_code,
-        to_head_code,
-        from_department_code,
-        to_department_code,
-        from_team_code,
-        to_team_code,
-        from_position_code,
-        to_position_code,
-        from_rank_code,
-        to_rank_code,
-        from_job_code,
-        to_job_code,
-        appointment_type,
-        appointment_reason,
-        appointment_effective_date,
-        appointment_history_created_at
-        FROM appointment_history
+        appointment_history_id            AS appointmentHistoryId,
+        appointment_id        AS appointmentId,
+        employee_id           AS employeeId,
+        from_head_code        AS fromHeadCode,
+        to_head_code          AS toHeadCode,
+        from_department_code  AS fromDepartmentCode,
+        to_department_code    AS toDepartmentCode,
+        from_team_code        AS fromTeamCode,
+        to_team_code          AS toTeamCode,
+        from_position_code    AS fromPositionCode,
+        to_position_code      AS toPositionCode,
+        from_rank_code        AS fromRankCode,
+        to_rank_code          AS toRankCode,
+        from_job_code         AS fromJobCode,
+        to_job_code           AS toJobCode,
+        appointment_type      AS appointmentType,
+        appointment_reason    AS appointmentReason,
+        appointment_created_at       AS appointmentCreatedAt,
+        appointment_effective_date   AS appointmentEffectiveDate,
+        appointment_status    AS appointmentStatus,
+        appointment_history_created_at AS appointmentHistoryCreatedAt
         WHERE appointment_type = #{appointmentType}
         ORDER BY appointment_effective_date DESC, history_id
     </select>
+
+    <select id="findByAppointmentStatus"
+            resultMap="AppointmentHistoryResultMap"
+            parameterType="String">
+        SELECT
+        appointment_history_id            AS appointmentHistoryId,
+        appointment_id        AS appointmentId,
+        employee_id           AS employeeId,
+        from_head_code        AS fromHeadCode,
+        to_head_code          AS toHeadCode,
+        from_department_code  AS fromDepartmentCode,
+        to_department_code    AS toDepartmentCode,
+        from_team_code        AS fromTeamCode,
+        to_team_code          AS toTeamCode,
+        from_position_code    AS fromPositionCode,
+        to_position_code      AS toPositionCode,
+        from_rank_code        AS fromRankCode,
+        to_rank_code          AS toRankCode,
+        from_job_code         AS fromJobCode,
+        to_job_code           AS toJobCode,
+        appointment_type      AS appointmentType,
+        appointment_reason    AS appointmentReason,
+        appointment_created_at       AS appointmentCreatedAt,
+        appointment_effective_date   AS appointmentEffectiveDate,
+        appointment_status    AS appointmentStatus,
+        appointment_history_created_at AS appointmentHistoryCreatedAt
+        FROM appointment_history
+        WHERE appointment_status = #{status}
+    </select>
+
 
 </mapper>

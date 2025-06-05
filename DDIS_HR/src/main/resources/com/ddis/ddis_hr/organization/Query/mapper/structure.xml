@@ -166,4 +166,31 @@
         WHERE t.team_id = #{teamId}
     </select>
 
+    <select id="selectEmployeeById"
+            parameterType="long"
+            resultType="com.ddis.ddis_hr.organization.query.dto.EmployeeQueryDTO">
+        SELECT
+        e.employee_id   AS employeeId,
+        e.employee_name AS employeeName,
+
+        -- position_id가 외래키로 연결되어 있다고 가정
+        p.position_name AS positionName,
+
+        -- rank_id가 외래키로 연결되어 있다고 가정
+        r.rank_name     AS rankName,
+
+        e.head_id       AS headId,
+        e.department_id AS departmentId,
+        e.team_id       AS teamId,
+
+        -- birthdate 컬럼이 DATE 타입이라면 문자열로 포맷팅
+        DATE_FORMAT(e.birthdate, '%Y-%m-%d') AS birthdate,
+
+        e.email         AS email
+        FROM employee e
+        LEFT JOIN position p ON e.position_id = p.position_id
+        LEFT JOIN rank r ON e.rank_id = r.rank_id
+        WHERE e.employee_id = #{employeeId}
+    </select>
+
 </mapper>

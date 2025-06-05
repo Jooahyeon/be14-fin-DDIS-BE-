@@ -31,7 +31,7 @@ public class AppointmentJobScheduler {
     /**
      * 매일 00:05에 “어제(00:00 ~ 오늘 00:00 사이) appointment 데이터를 history로 이동” 작업 실행
      */
-    @Scheduled(cron = "0 5 0 * * ?")
+    @Scheduled(cron = "0 0 0 * * *")
     public void runAppointmentJobDaily() throws Exception {
         LocalDate today     = LocalDate.now();
         LocalDate yesterday = today.minusDays(1);

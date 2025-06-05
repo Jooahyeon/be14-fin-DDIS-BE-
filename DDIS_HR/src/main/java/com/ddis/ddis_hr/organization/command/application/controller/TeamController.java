@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/team")
+@RequestMapping("/org")
 public class TeamController {
 
     private final TeamService teamService;
@@ -17,7 +17,7 @@ public class TeamController {
     }
 
     /** 1) 팀 생성 (POST /api/teams) **/
-    @PostMapping
+    @PostMapping("/create/team")
     public ResponseEntity<TeamDTO> createTeam(
             @RequestBody TeamRequestDTO requestDto) {
         TeamDTO created = teamService.createTeam(requestDto);
@@ -25,7 +25,7 @@ public class TeamController {
     }
 
     /** 4) 팀 수정 (PUT /api/teams/{id}) **/
-    @PutMapping("/{id}")
+    @PutMapping("/update/team/{id}")
     public ResponseEntity<TeamDTO> updateTeam(
             @PathVariable Long id,
             @RequestBody TeamRequestDTO requestDto) {
@@ -34,7 +34,7 @@ public class TeamController {
     }
 
     /** 5) 팀 삭제 (DELETE /api/teams/{id}) **/
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/team/{id}")
     public ResponseEntity<Void> deleteTeam(@PathVariable Long id) {
         teamService.deleteTeam(id);
         return ResponseEntity.noContent().build();

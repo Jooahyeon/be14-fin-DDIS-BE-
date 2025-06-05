@@ -42,4 +42,14 @@ public interface StructureMapper {
     /**
      * 5) 특정 팀ID에 소속된 팀원(Employee) 전체 조회
      */
-    List<EmployeeQueryDTO> selectMembersByTeamId(@Param("teamId") Long teamId);}
+    List<EmployeeQueryDTO> selectMembersByTeamId(@Param("teamId") Long teamId);
+
+    /**
+     * 사원 ID로 사원 상세 조회
+     * @param employeeId 조회할 사원 고유번호
+     * @return EmployeeQueryDTO (사원 정보가 없으면 null 리턴)
+     */
+    EmployeeQueryDTO selectEmployeeById(@Param("employeeId") Long employeeId);
+
+}
+

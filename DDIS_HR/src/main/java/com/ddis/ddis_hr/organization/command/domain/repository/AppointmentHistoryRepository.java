@@ -4,7 +4,9 @@ import com.ddis.ddis_hr.organization.command.domain.aggregate.entity.Appointment
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface AppointmentHistoryRepository extends JpaRepository<AppointmentHistoryEntity, Long> {
-    // 히스토리 조회, 삭제 등의 커스텀 메서드를 추가할 수 있습니다.
+
 }

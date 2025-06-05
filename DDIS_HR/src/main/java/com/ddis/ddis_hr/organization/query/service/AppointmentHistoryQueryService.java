@@ -35,4 +35,11 @@ public class AppointmentHistoryQueryService {
     public List<AppointmentHistoryQueryDTO> getByAppointmentType(String appointmentType) {
         return historyMapper.selectByAppointmentType(appointmentType);
     }
+
+    /**
+     * 상태가 '승인'인 AppointmentHistory 전체 조회
+     */
+    public List<AppointmentHistoryQueryDTO> getApprovedHistories() {
+        return historyMapper.findByAppointmentStatus("승인");
+    }
 }

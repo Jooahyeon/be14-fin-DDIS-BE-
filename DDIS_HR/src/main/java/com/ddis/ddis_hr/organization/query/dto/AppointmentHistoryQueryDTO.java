@@ -32,5 +32,5 @@ public class AppointmentHistoryQueryDTO {
     private LocalDate appointmentCreatedAt;
     private LocalDate appointmentEffectiveDate;
     private String appointmentStatus;
-    private Boolean isApplied;
+    private LocalDate appointmentHistoryCreatedAt;
 }

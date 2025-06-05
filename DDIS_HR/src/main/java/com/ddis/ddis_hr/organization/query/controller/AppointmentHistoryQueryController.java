@@ -61,4 +61,9 @@ public class AppointmentHistoryQueryController {
         List<AppointmentHistoryQueryDTO> list = historyQueryService.getByAppointmentType(appointmentType);
         return ResponseEntity.ok(list);
     }
+    @GetMapping("/approved")
+    public ResponseEntity<List<AppointmentHistoryQueryDTO>> getApprovedOnly() {
+        List<AppointmentHistoryQueryDTO> approved = historyQueryService.getApprovedHistories();
+        return ResponseEntity.ok(approved);
+    }
 }

@@ -54,4 +54,14 @@ public class StructureQueryService {
     public List<EmployeeQueryDTO> getMembersByTeam(Long teamId) {
         return structureMapper.selectMembersByTeamId(teamId);
     }
+
+    /**
+     * 사원 ID로 사원 상세 조회
+     *
+     * @param employeeId 조회 대상 사원 고유번호
+     * @return EmployeeQueryDTO (해당 사원이 없으면 null 반환)
+     */
+    public EmployeeQueryDTO getEmployeeById(Long employeeId) {
+        return structureMapper.selectEmployeeById(employeeId);
+    }
 }

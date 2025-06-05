@@ -54,6 +54,7 @@
                type="com.ddis.ddis_hr.organization.query.dto.DepartmentIntroductionQueryDTO">
         <!-- 부서 ID -->
         <id     property="departmentId"       column="department_id"/>
+        <result property="departmentName"     column="department_name"/>
 
         <!-- 부서 소개(introduction_context) 가져오기 -->
         <association property="introductionContext"
@@ -123,21 +124,28 @@
     -->
     <select id="selectAllDepartments"
             resultMap="DepartmentResult">
-        SELECT DISTINCT department_id
-        FROM introduction
-        WHERE introduction_type = '부서'
+        SELECT DISTINCT
+            d.department_id   AS department_id,
+            d.department_name AS department_name
+        FROM introduction i
+                 JOIN department d
+                      ON i.department_id = d.department_id
+        WHERE i.introduction_type = '부서'
     </select>
-
     <!--
       9) 단일 부서 상세 조회 (department_id → Department 하나)
     -->
     <select id="selectDepartmentById"
             parameterType="long"
             resultMap="DepartmentResult">
-        SELECT DISTINCT department_id
-        FROM introduction
-        WHERE introduction_type = '부서'
-          AND department_id = #{departmentId}
+        SELECT
+            d.department_id   AS department_id,
+            d.department_name AS department_name
+        FROM introduction i
+                 JOIN department d
+                      ON i.department_id = d.department_id
+        WHERE i.introduction_type = '부서'
+          AND i.department_id = #{departmentId}
     </select>
 
     <!--

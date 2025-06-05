@@ -56,4 +56,21 @@ public class StructureQueryController {
     public List<EmployeeQueryDTO> getMembers(@PathVariable("teamId") Long teamId) {
         return structureQueryService.getMembersByTeam(teamId);
     }
+
+    /**
+     * 사원 상세 조회
+     * GET /api/employee/{employeeId}
+     *
+     * @param employeeId 조회할 사원 고유번호
+     * @return EmployeeQueryDTO (해당 사원이 없을 경우 HTTP 404)
+     */
+    @GetMapping("/employee/{employeeId}")
+    public ResponseEntity<EmployeeQueryDTO> getEmployeeDetail(@PathVariable Long employeeId) {
+        EmployeeQueryDTO dto = structureQueryService.getEmployeeById(employeeId);
+        if (dto == null) {
+            // 존재하지 않는 사원 ID면 404 Not Found를 내려준다.
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(dto);
+    }
 }

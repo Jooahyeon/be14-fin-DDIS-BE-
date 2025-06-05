@@ -395,72 +395,11 @@ INSERT INTO work_status (work_status_id, work_status_name, label_color, sort_ord
     ('HALF_AM', '오전반차', '#B5E4F0', 7),
     ('HALF_PM', '오후반차', '#B5E4F0', 8);
 
--- 전자결재양식
-INSERT INTO `document_form` (`form_name`, `form_content`, `is_deleted`) VALUES
-    ('일반기안양식',
-    '<form>
-    <h2>일반 기안 양식</h2>
-    <label>제목:</label><input type="text" name="title"><br>
-    <label>내용:</label><textarea name="content" rows="6" cols="50"></textarea><br>
-    </form>',
-    false),
-
-    ('외근신청서',
-    '<form>
-    <h2>외근 신청서</h2>
-    <label>외근 일자:</label><input type="date" name="date"><br>
-    <label>외근 시간:</label><input type="time" name="time"><br>
-    <label>외근 장소:</label><input type="text" name="location"><br>
-    <label>사유:</label><textarea name="reason"></textarea><br>
-    </form>',
-    false),
-
-    ('출장신청서',
-    '<form>
-    <h2>출장 신청서</h2>
-    <label>출장지:</label><input type="text" name="destination"><br>
-    <label>출장 기간:</label><input type="date" name="start_date"> ~ <input type="date" name="end_date"><br>
-    <label>출장 목적:</label><textarea name="purpose"></textarea><br>
-    </form>',
-    false),
-
-    ('인사발령 결재요청서',
-    '<form>
-    <h2>인사발령 결재요청서</h2>
-    <label>발령 대상자:</label><input type="text" name="employee_name"><br>
-    <label>변경 전 부서/직책:</label><input type="text" name="before"><br>
-    <label>변경 후 부서/직책:</label><input type="text" name="after"><br>
-    <label>발령 사유:</label><textarea name="reason"></textarea><br>
-    </form>',
-    false),
-
-    ('초과근무신청서',
-    '<form>
-    <h2>초과근무 신청서</h2>
-    <label>근무 일자:</label><input type="date" name="work_date"><br>
-    <label>근무 시간:</label><input type="text" name="work_time"><br>
-    <label>사유:</label><textarea name="reason"></textarea><br>
-    </form>',
-    false),
-
-    ('휴가신청서',
-    '<form>
-    <h2>휴가 신청서</h2>
-    <label>휴가 종류:</label><select name="leave_type">
-    <option value="연차">연차</option>
-    <option value="병가">병가</option>
-    <option value="경조사">경조사</option>
-    </select><br>
-    <label>휴가 기간:</label><input type="date" name="start_date"> ~ <input type="date" name="end_date"><br>
-    <label>사유:</label><textarea name="reason"></textarea><br>
-    </form>',
-    false);
-
 -- 사원
 INSERT INTO employee (employee_id, employee_name, employee_pwd, employee_profile, employee_nation, employee_gender, employee_birth, employee_resident, employee_contact, employee_email, employee_address, employment_date, retirement_date, work_type, bank_name, bank_depositor, bank_account, is_disorder, military_type, is_marriage, marriage_date, family_count, career_year_count, previous_company, final_academic, employee_school, employee_dept, graduation_year, is_four_insurances, position_id, rank_id, job_id, head_id, department_id, team_id)
 VALUES
     (19800104,       '김지후', '$2b$12$.GDm6HSO64dWCYY14ifLtu2NMiQ0WvuiQh7IxLeCmtAbPrOhkOhHC', NULL, '대한민국', '남', '1955-01-04', '550104-1150621', '010-3800-8691', 'gimsunja@nate.com', '충청북도 성남시 중원구 도산대163거리', '1980-01-04', NULL, TRUE, '국민은행', '김지후', '854-6880-4761', TRUE, '미필', FALSE, NULL, 2, 1, '에코월드', '대졸', '대구대학교', '산업경영공학과', 1978, TRUE, 5, 6, 36, 4, 7, 13),
-    (19940109004001, '박선영', '$2b$12$yKJU/ff1anFMlFHUh7TCROYbvIXexZeajPDnbptjgtAYarowr913O', NULL, '대한민국', '여', '1969-01-09', '690109-2539136', '010-4599-2466', 'coeyeonghyi@jusighoesa.kr', '경상북도 수원시 영통구 석촌호수02가', '1994-01-09', NULL, TRUE, '신한은행', '박선영', '791-9956-5623', TRUE, '미필', TRUE, '1994-04-19', 2, 1, '세이브이앤씨', '박사', '한화대학교', '컴퓨터공학과', 1992, TRUE, 4, 5, 4, 1, 7, 13),
+    (19940109004001, '박선영', '$2a$12$xnf9DxvjbYkP9iAfXqFOzOPnAekB48j4QtmRLpleyeLmqu6lJcTLK', NULL, '대한민국', '여', '1969-01-09', '690109-2539136', '010-4599-2466', 'coeyeonghyi@jusighoesa.kr', '경상북도 수원시 영통구 석촌호수02가', '1994-01-09', NULL, TRUE, '신한은행', '박선영', '791-9956-5623', TRUE, '미필', TRUE, '1994-04-19', 2, 1, '세이브이앤씨', '박사', '한화대학교', '컴퓨터공학과', 1992, TRUE, 4, 5, 4, 1, 7, 13),
     (19991208002001, '최유진', '$2b$12$hx/M91ZvawbxUQ3lUOdABe5du1CGaCyUHEuJcbHP29nY9uycl2npC', NULL, '대한민국', '여', '1974-12-08', '741208-2463270', '010-4055-5082', 'jeongjacoe@dreamwiz.com', '부산광역시 구로구 학동길', '1999-12-08', NULL, TRUE, '국민은행', '최유진', '326-4934-2061', TRUE, '미필', TRUE, '2000-03-17', 4, 7, '유니쿠어바이오', '고졸', '안산고등학교', NULL, 1993, TRUE, 3, 4, 2, 1, 1, 1),
     (20071010003001, '이정자', '$2b$12$kShor2gOzI/xCcZSLhIjcuakCrIiJuJh8XTrjpAlyNLIQh.dJd2QK', NULL, '대한민국', '남', '1982-10-10', '821010-1150337', '010-5943-1675', 'jeongungyun@live.com', '경상남도 제천시 서초대거리', '2007-10-10', NULL, TRUE, '국민은행', '이정자', '630-6038-6362', TRUE, '면제', TRUE, '2008-01-18', 3, 3, '유니쿠어바이오', '고졸', '서울고등학교', NULL, 2001, TRUE, 2, 3, 3, 1, 1, 1),
     (20180214003001, '권영자', '$2b$12$uJixpOhsESbArwHEPtZqju4gDGZeEohm9kEh1YPufJoAt38wOTRz2', NULL, '대한민국', '여', '1993-02-14', '930214-2579803', '010-7297-2257', 'seohyeonji@naver.com', '대전광역시 은평구 가락거리', '2018-02-14', NULL, TRUE, '기업은행', '권영자', '339-7114-8868', TRUE, '미필', TRUE, '2018-05-25', 1, 6, '씨엘네트웍스', '대졸', '전진대학교', '소프트웨어공학과', 2016, TRUE, 1, 2, 3, 1, 1, 1),
@@ -482,7 +421,7 @@ VALUES
     (20191003011001, '이지은', '$2b$12$5Qikeo7mTnQY/fBUWuQe/O1HkEEtT8VQzC33cj0KlsEOTH6bI62EO', NULL, '대한민국', '여', '1994-10-03', '941003-2046894', '010-6274-5596', 'ghan@naver.com', '충청남도 태백시 강남대길', '2019-10-03', NULL, TRUE, '카카오뱅크', '이지은', '421-2290-5246', TRUE, '미필', TRUE, '2020-01-11', 4, 7, '엔오일전자', '대졸', '서언대학교', '컴퓨터공학과', 2017, TRUE, 1, 1, 11, 1, 2, 4),
     (20230525012001, '김항경', '$2b$12$3tN6Zs9Lo5k8muFy59b/RezMk8p.zflZWnKllo7Sb2sFDJXqm7BQS', NULL, '대한민국', '남', '1998-05-25', '980525-1453083', '010-5519-6102', 'jeonghun36@yu.com', '충청북도 금산군 석촌호수300가', '2023-05-25', NULL, TRUE, '기업은행', '김항경', '240-7583-4130', TRUE, '면제', TRUE, '2023-09-02', 4, 1, '유니쿠어바이오', '박사', '제주대학교', '산업경영공학과', 2021, TRUE, 1, 1, 12, 1, 2, 4),
     (20200715010001, '김미소', '$2b$12$O9zpZ4a5AM23BWCX2fnjw.VjqVPkDM6K4gtLIC/5ujKlbqeViDz0m', NULL, '대한민국', '여', '1995-07-15', '950715-2083183', '010-2164-4158', 'gimgyeongsu@ju.org', '경기도 용인시 기흥구 학동가', '2020-07-15', NULL, TRUE, '기업은행', '김미소', '941-6184-5779', TRUE, '군필', FALSE, NULL, 1, 1, '아이티웍스', '대졸', '대구대학교', '정보통신공학과', 2018, TRUE, 1, 2, 10, 1, 2, 4),
-    (20151123010001, '소혜원', '$2b$12$A9jJOaae2P3SMhcCej.mFuq7dQ5L3G5sDy4Nf08wb49S73ZO8FxPy', NULL, '대한민국', '남', '1990-11-23', '901123-1978762', '010-9052-5911', 'yeongceoli@dreamwiz.com', '제주특별자치도 고성군 학동거리', '2015-11-23', NULL, TRUE, '카카오뱅크', '소혜원', '493-1969-4418', TRUE, '면제', FALSE, NULL, 4, NULL, NULL, '고졸', '전주고등학교', NULL, 2009, TRUE, 1, 1, 10, 1, 2, 4),
+    (20151123010001, '소혜원', '$2a$12$xnf9DxvjbYkP9iAfXqFOzOPnAekB48j4QtmRLpleyeLmqu6lJcTLK', NULL, '대한민국', '남', '1990-11-23', '901123-1978762', '010-9052-5911', 'kangcanddy@gmail.com', '제주특별자치도 고성군 학동거리', '2015-11-23', NULL, TRUE, '카카오뱅크', '소혜원', '493-1969-4418', TRUE, '면제', FALSE, NULL, 4, NULL, NULL, '고졸', '전주고등학교', NULL, 2009, TRUE, 1, 1, 10, 1, 2, 4),
     (19931121014001, '박미조', '$2b$12$SH0nW.MudKNGlD.GRd9LT.wYbUQLdb8/rSyWbyRpIqLRKmOzMGgKm', NULL, '대한민국', '여', '1968-11-21', '681121-2454360', '010-2851-2400', 'yeongsuncoe@simbaeg.com', '경상남도 청양군 영동대236거리', '1993-11-21', NULL, TRUE, '신한은행', '박미조', '139-6163-5089', TRUE, '미필', FALSE, NULL, 2, NULL, NULL, '고졸', '서울고등학교', NULL, 1987, TRUE, 4, 5, 14, 2, 7, 13),
     (20031214015001, '차승호', '$2b$12$tETquoMfJh1hyOUsQfc47u.z.upx4.v4VJSn0wQJUNQ8JjJsbDh5W', NULL, '대한민국', '남', '1978-12-14', '781214-1920082', '010-6751-0074', 'yeongsighwang@bagnogim.kr', '강원도 부천시 학동6길', '2003-12-14', NULL, TRUE, '기업은행', '차승호', '451-8228-4701', TRUE, '면제', FALSE, NULL, 2, NULL, NULL, '고졸', '울지고등학교', NULL, 1997, TRUE, 3, 4, 15, 2, 3, 5),
     (20140816014001, '이수빈', '$2b$12$LcokvOiTz74vG3OqEF27XOKVzDK3kMA07qwgTe1v4T63d2WvhRcjK', NULL, '대한민국', '남', '1989-08-16', '890816-1826605', '010-0980-2507', 'gimgyeongsu@gimgim.net', '충청북도 고양시 일산동구 선릉5거리', '2014-08-16', NULL, TRUE, '농협은행', '이수빈', '366-6638-3659', TRUE, '면제', FALSE, NULL, 2, 3, '한화 에어로스페이스', '석사', '대구대학교', '정보통신공학과', 2012, TRUE, 2, 3, 14, 2, 3, 5),
@@ -524,16 +463,242 @@ VALUES
     (20190817035001, '이기제', '$2b$12$hMRvxqJeA9jqCOD1XpJnG.3eXfHjdFoZZY.uX7pcFEBZLLE0ppPfi', NULL, '대한민국', '남', '1994-08-17', '940817-1616405', '010-0483-9409', 'minjae45@daum.net', '대구광역시 은평구 압구정가', '2019-08-17', '2024-09-20', TRUE, '신한은행', '이기제', '454-9126-1838', TRUE, '미필', FALSE, NULL, 5, NULL, NULL, '대졸', '서언대학교', '정보보안학과', 2017, FALSE, 1, 1, 35, 3, 6, 12),
     (20240818033001, '이주은', '$2b$12$USUtdKuF8lwQ5C9Bw1knr.3y19aRMDFJ.b/HWs8YvxI.MOrCxecSa', NULL, '대한민국', '여', '1999-08-18', '990818-2081980', '010-3035-7293', 'gimjaehyeon@ii.com', '경상북도 의왕시 개포로', '2024-08-18', '2025-05-26', TRUE, '국민은행', '이주은', '121-5473-1561', TRUE, '면제', FALSE, NULL, 3, 1, '한국전력', '석사', '수인대학교', '정보통신공학과', 2022, FALSE, 1, 1, 33, 3, 6, 12),
     (20190508035001, '이종성', '$2b$12$y.5u4IXnnCuqXhK2uH3qceIIEAxCcBNDtrfA/UJT9oMXp8l1qWCCO', NULL, '대한민국', '남', '1994-05-08', '940508-1112128', '010-5737-9460', 'seunghyeon14@iiji.net', '대전광역시 도봉구 삼성길', '2019-05-08', '2025-04-26', TRUE, '국민은행', '이종성', '360-5747-4393', TRUE, '면제', TRUE, '2019-08-16', 4, NULL, NULL, '박사', '제주대학교', '컴퓨터공학과', 2017, FALSE, 1, 1, 35, 3, 6, 12),
-    (20150220035001, '천슬기', '$2b$12$.aeHxq2RhQ4J//gz2UwE3OX3gH.fUA6CUwHQPNWNzLK9iQvc5JLbm', NULL, '대한민국', '여', '1990-02-20', '900220-2630887', '010-3564-5127', 'minsugweon@live.com', '전라남도 금산군 서초중앙4로', '2015-02-20', '2025-03-26', TRUE, '국민은행', '천슬기', '880-9671-9458', TRUE, '면제', FALSE, NULL, 2, NULL, NULL, '박사', '안산대학교', '컴퓨터공학과', 2013, FALSE, 1, 1, 35, 3, 6, 12),
+    (20150220035001, '천슬기', '$2a$12$xnf9DxvjbYkP9iAfXqFOzOPnAekB48j4QtmRLpleyeLmqu6lJcTLK', NULL, '대한민국', '여', '1990-02-20', '900220-2630887', '010-3564-5127', 'kangcanddy@gmail.com', '전라남도 금산군 서초중앙4로', '2015-02-20', '2025-03-26', TRUE, '국민은행', '천슬기', '880-9671-9458', TRUE, '면제', FALSE, NULL, 2, NULL, NULL, '박사', '안산대학교', '컴퓨터공학과', 2013, FALSE, 1, 1, 35, 3, 6, 12),
     (20160324035001, '우희원', '$2b$12$HmcjOKhUsbzI7aftpFz1K.PFxRsQdwmwAupOOWbmPdfLlKSbh9dqy', NULL, '대한민국', '여', '1991-03-24', '910324-2133126', '010-9759-3181', 'ni@daum.net', '경기도 청양군 강남대539거리', '2016-03-24', '2025-05-26', TRUE, '국민은행', '우희원', '448-7325-5106', TRUE, '군필', FALSE, NULL, 2, 8, '서구', '고졸', '광주고등학교', NULL, 2010, FALSE, 1, 1, 35, 3, 6, 12);
 
+-- 전자결재양식
+INSERT INTO document_form (form_name, form_content, is_deleted, employee_id) VALUES
+    ('사업기안',
+     '<form>
+       <h2>사업기안</h2>
+       <table>
+         <tr>
+           <td>기안부서</td>
+           <td><input type="text" name="department" readonly></td>
+           <td>직책</td>
+           <td><input type="text" name="position" readonly></td>
+         </tr>
+         <tr>
+           <td>기안자</td>
+           <td><input type="text" name="drafter" readonly></td>
+           <td>기안일자</td>
+           <td><input type="date" name="draftDate" readonly></td>
+         </tr>
+         <tr>
+           <td>문서번호</td>
+           <td>-</td>
+           <td>보존연한</td>
+           <td>
+             <select name="retentionPeriod">
+               <option value="1년">1년</option>
+               <option value="3년">3년</option>
+               <option value="5년">5년</option>
+             </select>
+           </td>
+         </tr>
+         <tr>
+           <td>수신자</td>
+           <td>
+             <input type="text" name="receiver">
+           </td>
+           <td>참조자</td>
+           <td>
+             <input type="text" name="reference">
+           </td>
+         </tr>
+       </table>
+
+       <!-- 결재라인 테이블(직책 기준, 이름은 자동할당) -->
+       <h3>결재라인</h3>
+       <table border="1" style="border-collapse:collapse; width:100%; margin-bottom:16px;">
+         <thead>
+           <tr>
+             <th>단계</th>
+             <th>직책</th>
+             <th>이름(자동지정)</th>
+             <th>상태</th>
+           </tr>
+         </thead>
+         <tbody>
+           <tr>
+             <td>기안</td>
+             <td>사원 (position_id=1)</td>
+             <td>&nbsp;</td>
+             <td>기안</td>
+           </tr>
+           <tr>
+             <td>1차</td>
+             <td>팀장 (position_id=2)</td>
+             <td>&nbsp;</td>
+             <td>대기중</td>
+           </tr>
+           <tr>
+             <td>2차</td>
+             <td>부장 (position_id=3)</td>
+             <td>&nbsp;</td>
+             <td>대기중</td>
+           </tr>
+           <tr>
+             <td>3차</td>
+             <td>본부장 (position_id=4)</td>
+             <td>&nbsp;</td>
+             <td>대기중</td>
+           </tr>
+         </tbody>
+       </table>
+
+       <div>
+         <label>제목</label>
+         <input type="text" name="title" placeholder="제목을 입력하세요">
+       </div>
+       <div>
+         <label>첨부파일</label>
+         <input type="file" name="files" multiple>
+       </div>
+       <div>
+         <label>본문</label>
+         <textarea name="body" placeholder="기안 내용을 작성하세요..."></textarea>
+       </div>
+     </form>', false, 20180609013001);
+
 -- 전자결재 기안문서
+INSERT INTO draft_documents (
+    doc_title,
+    doc_content,
+    preserve_period,
+    expiration_date,
+    doc_status,
+    created_at,
+    submitted_at,
+    draft_saved_at,
+    final_approval_at,
+    deleted_at,
+    draft_version,
+    form_id,
+    employee_id
+) VALUES
+    (
+        'ERP 시스템 도입 추진',
+        '{
+          "department": "기획팀",
+          "position": "대리",
+          "drafter": "남금륭",
+          "draftDate": "2025-06-02",
+          "receiver": ["이수빈"],
+          "reference": ["차승호"],
+          "approvalLines": [
+            {
+              "step": 0,
+              "name": "남금륭",
+              "team": "기획팀",
+              "position": "대리",
+              "status": "기안",
+              "type": "기안",
+              "viewedAt": null,
+              "approvedAt": null,
+              "comment": ""
+            },
+            {
+              "step": 1,
+              "name": "이수빈",
+              "team": "기획팀",
+              "position": "팀장",
+              "status": "대기중",
+              "type": "내부결재",
+              "viewedAt": null,
+              "approvedAt": null,
+              "comment": ""
+            },
+            {
+              "step": 2,
+              "name": "차승호",
+              "team": "기획팀",
+              "position": "부장",
+              "status": "대기중",
+              "type": "내부결재",
+              "viewedAt": null,
+              "approvedAt": null,
+              "comment": ""
+            },
+            {
+              "step": 3,
+              "name": "박미조",
+              "team": "기획팀",
+              "position": "본부장",
+              "status": "대기중",
+              "type": "내부결재",
+              "viewedAt": null,
+              "approvedAt": null,
+              "comment": ""
+            }
+          ],
+          "title": "ERP 시스템 도입 추진",
+          "files": [
+            {
+              "name": "ERP_사업계획서.pdf",
+              "size": 120456,
+              "type": "application/pdf"
+            }
+          ],
+          "body": "ERP 시스템 도입을 위한 사업기안입니다. 검토 부탁드립니다."
+        }',
+        3,                                  -- 보존기간 (1,3,5 중 택1)
+        '2028-06-01',                       -- 만료일(보존기간 기준)
+        '대기중',                           -- 문서상태
+        '2025-06-01 09:00:00',              -- 작성일
+        '2025-06-01 09:05:00',              -- 상신일
+        NULL,                               -- 임시저장일
+        NULL,                               -- 최종결재일
+        NULL,                               -- 삭제일
+        1,                                  -- 차수
+        1,                                  -- 문서양식번호
+        20150102013001                      -- 사원번호(기안자)
+    );
+
 
 -- 전자결재 파일 첨부
+INSERT INTO document_attachment (
+    file_name,
+    file_url,
+    file_size,
+    file_type,
+    is_deleted,
+    doc_id
+) VALUES
+-- PDF 첨부 예시
+('ERP_사업계획서.pdf', '/uploads/ERP_사업계획서.pdf', 120456, 'application/pdf', FALSE, 1),
+
+-- 엑셀 첨부 예시
+('예산_산정표.xlsx', '/uploads/예산_산정표.xlsx', 23844, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', FALSE, 1);
+
 
 -- 결재라인
+INSERT INTO approval_line (
+    step, status, approved_at, type, opinion,
+    department_id, position_id, job_id, team_id, rank_id,
+    employee_id, doc_id, form_id
+) VALUES
+      (0, '기안',      NULL, '기안',      NULL, NULL, 1, NULL, NULL, NULL, NULL, 1, 1),
+      (1, '대기중',    NULL, '내부', NULL, NULL, 2, NULL, NULL, NULL, NULL, 1, 1),
+      (2, '대기중',    NULL, '내부', NULL, NULL, 3, NULL, NULL, NULL, NULL, 1, 1),
+      (3, '대기중',    NULL, '내부', NULL, NULL, 4, NULL, NULL, NULL, NULL, 1, 1);
+
 
 -- 문서결재함
+-- 기안자: 남금륭
+INSERT INTO document_box (employee_id, doc_id, is_read, read_at, is_deleted, role)
+VALUES
+        (20150102013001, 1, FALSE, NULL, FALSE, '기안자'),
+
+-- 1단계 결재자: 이수빈 (팀장)
+       (20140816014001, 1, FALSE, NULL, FALSE, '결재자'),
+
+-- 2단계 결재자: 차승호 (부장)
+       (20031214015001, 1, FALSE, NULL, FALSE, '결재자'),
+
+-- 3단계 결재자: 박미조 (본부장)
+       (19931121014001, 1, FALSE, NULL, FALSE, '결재자');
+
 
 -- 급여 기초
 INSERT INTO salary_base (
@@ -1584,51 +1749,53 @@ INSERT INTO attendance (
     overtime_duration,
     request_time,
     approval_status,
-    processed_time
+    processed_time,
+    `reason`,
+    `reject_reason`
 ) VALUES
 -- 날짜: 2025-05-01 (목)
-(19991208002001, 'NORMAL', '2025-05-01', '08:30', '18:00', 8, NULL, 0, '2025-05-01 00:00:00', '승인', '2025-05-01 00:00:00'),
-(20071010003001, 'NORMAL', '2025-05-01', '08:30', '18:00', 8, NULL, 0, '2025-05-01 00:00:00', '승인', '2025-05-01 00:00:00'),
-(20180214003001, 'NORMAL', '2025-05-01', '08:30', '18:00', 8, NULL, 0, '2025-05-01 00:00:00', '승인', '2025-05-01 00:00:00'),
-(20221211003001, 'NORMAL', '2025-05-01', '08:30', '18:00', 8, NULL, 0, '2025-05-01 00:00:00', '승인', '2025-05-01 00:00:00'),
-(20210311002001, 'NORMAL', '2025-05-01', '08:30', '18:00', 8, NULL, 0, '2025-05-01 00:00:00', '승인', '2025-05-01 00:00:00'),
-(20211122003001, 'NORMAL', '2025-05-01', '08:30', '18:00', 8, NULL, 0, '2025-05-01 00:00:00', '승인', '2025-05-01 00:00:00'),
+(19991208002001, 'NORMAL', '2025-05-01', '08:30', '18:00', 8, NULL, 0, '2025-05-01 00:00:00', '승인', '2025-05-01 00:00:00', null, null),
+(20071010003001, 'NORMAL', '2025-05-01', '08:30', '18:00', 8, NULL, 0, '2025-05-01 00:00:00', '승인', '2025-05-01 00:00:00', null, null),
+(20180214003001, 'NORMAL', '2025-05-01', '08:30', '18:00', 8, NULL, 0, '2025-05-01 00:00:00', '승인', '2025-05-01 00:00:00', null, null),
+(20221211003001, 'NORMAL', '2025-05-01', '08:30', '18:00', 8, NULL, 0, '2025-05-01 00:00:00', '승인', '2025-05-01 00:00:00', null, null),
+(20210311002001, 'NORMAL', '2025-05-01', '08:30', '18:00', 8, NULL, 0, '2025-05-01 00:00:00', '승인', '2025-05-01 00:00:00', null, null),
+(20211122003001, 'NORMAL', '2025-05-01', '08:30', '18:00', 8, NULL, 0, '2025-05-01 00:00:00', '승인', '2025-05-01 00:00:00', null, null),
 
 -- 날짜: 2025-05-02 (금)
-(19991208002001, 'NORMAL', '2025-05-02', '08:30', '18:00', 8, NULL, 0, '2025-05-02 00:00:00', '승인', '2025-05-02 00:00:00'),
-(20071010003001, 'NORMAL', '2025-05-02', '08:30', '18:00', 8, NULL, 0, '2025-05-02 00:00:00', '승인', '2025-05-02 00:00:00'),
-(20180214003001, 'NORMAL', '2025-05-02', '08:30', '18:00', 8, NULL, 0, '2025-05-02 00:00:00', '승인', '2025-05-02 00:00:00'),
-(20221211003001, 'NORMAL', '2025-05-02', '08:30', '18:00', 8, NULL, 0, '2025-05-02 00:00:00', '승인', '2025-05-02 00:00:00'),
-(20210311002001, 'NORMAL', '2025-05-02', '08:30', '18:00', 8, NULL, 0, '2025-05-02 00:00:00', '승인', '2025-05-02 00:00:00'),
-(20211122003001, 'NORMAL', '2025-05-02', '08:30', '18:00', 8, NULL, 0, '2025-05-02 00:00:00', '승인', '2025-05-02 00:00:00'),
+(19991208002001, 'NORMAL', '2025-05-02', '08:30', '18:00', 8, NULL, 0, '2025-05-02 00:00:00', '승인', '2025-05-02 00:00:00', null, null),
+(20071010003001, 'NORMAL', '2025-05-02', '08:30', '18:00', 8, NULL, 0, '2025-05-02 00:00:00', '승인', '2025-05-02 00:00:00', null, null),
+(20180214003001, 'NORMAL', '2025-05-02', '08:30', '18:00', 8, NULL, 0, '2025-05-02 00:00:00', '승인', '2025-05-02 00:00:00', null, null),
+(20221211003001, 'NORMAL', '2025-05-02', '08:30', '18:00', 8, NULL, 0, '2025-05-02 00:00:00', '승인', '2025-05-02 00:00:00', null, null),
+(20210311002001, 'NORMAL', '2025-05-02', '08:30', '18:00', 8, NULL, 0, '2025-05-02 00:00:00', '승인', '2025-05-02 00:00:00', null, null),
+(20211122003001, 'NORMAL', '2025-05-02', '08:30', '18:00', 8, NULL, 0, '2025-05-02 00:00:00', '승인', '2025-05-02 00:00:00', null, null),
 
 -- 05-03, 05-04: 주말 (생략)
 
 -- 05-05, 05-06: 공휴일 (생략)
 
 -- 날짜: 2025-05-07 (수)
-(19991208002001, 'NORMAL', '2025-05-07', '08:30', '18:00', 8, NULL, 0, '2025-05-07 00:00:00', '승인', '2025-05-07 00:00:00'),
-(20071010003001, 'NORMAL', '2025-05-07', '08:30', '18:00', 8, NULL, 0, '2025-05-07 00:00:00', '승인', '2025-05-07 00:00:00'),
-(20180214003001, 'NORMAL', '2025-05-07', '08:30', '18:00', 8, NULL, 0, '2025-05-07 00:00:00', '승인', '2025-05-07 00:00:00'),
-(20221211003001, 'NORMAL', '2025-05-07', '08:30', '18:00', 8, NULL, 0, '2025-05-07 00:00:00', '승인', '2025-05-07 00:00:00'),
-(20210311002001, 'NORMAL', '2025-05-07', '08:30', '18:00', 8, NULL, 0, '2025-05-07 00:00:00', '승인', '2025-05-07 00:00:00'),
-(20211122003001, 'NORMAL', '2025-05-07', '08:30', '18:00', 8, NULL, 0, '2025-05-07 00:00:00', '승인', '2025-05-07 00:00:00'),
+(19991208002001, 'NORMAL', '2025-05-07', '08:30', '18:00', 8, NULL, 0, '2025-05-07 00:00:00', '승인', '2025-05-07 00:00:00', null, null),
+(20071010003001, 'NORMAL', '2025-05-07', '08:30', '18:00', 8, NULL, 0, '2025-05-07 00:00:00', '승인', '2025-05-07 00:00:00', null, null),
+(20180214003001, 'NORMAL', '2025-05-07', '08:30', '18:00', 8, NULL, 0, '2025-05-07 00:00:00', '승인', '2025-05-07 00:00:00', null, null),
+(20221211003001, 'NORMAL', '2025-05-07', '08:30', '18:00', 8, NULL, 0, '2025-05-07 00:00:00', '승인', '2025-05-07 00:00:00', null, null),
+(20210311002001, 'NORMAL', '2025-05-07', '08:30', '18:00', 8, NULL, 0, '2025-05-07 00:00:00', '승인', '2025-05-07 00:00:00', null, null),
+(20211122003001, 'NORMAL', '2025-05-07', '08:30', '18:00', 8, NULL, 0, '2025-05-07 00:00:00', '승인', '2025-05-07 00:00:00', null, null),
 
 -- 날짜: 2025-05-08 (목)
-(19991208002001, 'NORMAL', '2025-05-08', '08:30', '18:00', 8, NULL, 0, '2025-05-08 00:00:00', '승인', '2025-05-08 00:00:00'),
-(20071010003001, 'NORMAL', '2025-05-08', '08:30', '18:00', 8, NULL, 0, '2025-05-08 00:00:00', '승인', '2025-05-08 00:00:00'),
-(20180214003001, 'NORMAL', '2025-05-08', '08:30', '18:00', 8, NULL, 0, '2025-05-08 00:00:00', '승인', '2025-05-08 00:00:00'),
-(20221211003001, 'NORMAL', '2025-05-08', '08:30', '18:00', 8, NULL, 0, '2025-05-08 00:00:00', '승인', '2025-05-08 00:00:00'),
-(20210311002001, 'NORMAL', '2025-05-08', '08:30', '18:00', 8, NULL, 0, '2025-05-08 00:00:00', '승인', '2025-05-08 00:00:00'),
-(20211122003001, 'NORMAL', '2025-05-08', '08:30', '18:00', 8, NULL, 0, '2025-05-08 00:00:00', '승인', '2025-05-08 00:00:00'),
+(19991208002001, 'NORMAL', '2025-05-08', '08:30', '18:00', 8, NULL, 0, '2025-05-08 00:00:00', '승인', '2025-05-08 00:00:00', null, null),
+(20071010003001, 'NORMAL', '2025-05-08', '08:30', '18:00', 8, NULL, 0, '2025-05-08 00:00:00', '승인', '2025-05-08 00:00:00', null, null),
+(20180214003001, 'NORMAL', '2025-05-08', '08:30', '18:00', 8, NULL, 0, '2025-05-08 00:00:00', '승인', '2025-05-08 00:00:00', null, null),
+(20221211003001, 'NORMAL', '2025-05-08', '08:30', '18:00', 8, NULL, 0, '2025-05-08 00:00:00', '승인', '2025-05-08 00:00:00', null, null),
+(20210311002001, 'NORMAL', '2025-05-08', '08:30', '18:00', 8, NULL, 0, '2025-05-08 00:00:00', '승인', '2025-05-08 00:00:00', null, null),
+(20211122003001, 'NORMAL', '2025-05-08', '08:30', '18:00', 8, NULL, 0, '2025-05-08 00:00:00', '승인', '2025-05-08 00:00:00', null, null),
 
 -- 날짜: 2025-05-09 (금)
-(19991208002001, 'NORMAL', '2025-05-09', '08:30', '18:00', 8, NULL, 0, '2025-05-09 00:00:00', '승인', '2025-05-09 00:00:00'),
-(20071010003001, 'NORMAL', '2025-05-09', '08:30', '18:00', 8, NULL, 0, '2025-05-09 00:00:00', '승인', '2025-05-09 00:00:00'),
-(20180214003001, 'NORMAL', '2025-05-09', '08:30', '18:00', 8, NULL, 0, '2025-05-09 00:00:00', '승인', '2025-05-09 00:00:00'),
-(20221211003001, 'NORMAL', '2025-05-09', '08:30', '18:00', 8, NULL, 0, '2025-05-09 00:00:00', '승인', '2025-05-09 00:00:00'),
-(20210311002001, 'NORMAL', '2025-05-09', '08:30', '18:00', 8, NULL, 0, '2025-05-09 00:00:00', '승인', '2025-05-09 00:00:00'),
-(20211122003001, 'NORMAL', '2025-05-09', '08:30', '18:00', 8, NULL, 0, '2025-05-09 00:00:00', '승인', '2025-05-09 00:00:00');
+(19991208002001, 'NORMAL', '2025-05-09', '08:30', '18:00', 8, NULL, 0, '2025-05-09 00:00:00', '승인', '2025-05-09 00:00:00', null, null),
+(20071010003001, 'NORMAL', '2025-05-09', '08:30', '18:00', 8, NULL, 0, '2025-05-09 00:00:00', '승인', '2025-05-09 00:00:00', null, null),
+(20180214003001, 'NORMAL', '2025-05-09', '08:30', '18:00', 8, NULL, 0, '2025-05-09 00:00:00', '승인', '2025-05-09 00:00:00', null, null),
+(20221211003001, 'NORMAL', '2025-05-09', '08:30', '18:00', 8, NULL, 0, '2025-05-09 00:00:00', '승인', '2025-05-09 00:00:00', null, null),
+(20210311002001, 'NORMAL', '2025-05-09', '08:30', '18:00', 8, NULL, 0, '2025-05-09 00:00:00', '승인', '2025-05-09 00:00:00', null, null),
+(20211122003001, 'NORMAL', '2025-05-09', '08:30', '18:00', 8, NULL, 0, '2025-05-09 00:00:00', '승인', '2025-05-09 00:00:00', null, null);
 
 -- 회의
 INSERT INTO meeting (team_id, employee_id, meeting_date, meeting_title, meeting_time) VALUES
@@ -1824,7 +1991,7 @@ INSERT INTO review_grade (
       (4, 80, 89, 'B', 20121215029001),
       (5, 90, 100, 'A', 20121215029001);
 
--- 평가
+# 평가
 INSERT INTO review (
     review_score, review_grade_id, employee_id, selfreview_id
 ) VALUES

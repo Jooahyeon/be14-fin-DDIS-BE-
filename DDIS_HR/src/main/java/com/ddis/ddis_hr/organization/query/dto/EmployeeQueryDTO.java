@@ -14,6 +14,7 @@ public class EmployeeQueryDTO {
     private String employeeName;   // JSON: "employeeName"
     private String positionName;   // JSON: "positionName"
     private String rankName;       // JSON: "rankName"
+//    private String jobName;       // JSON: "jobName"
     private Long headId;           // JSON: "headId"
     private Long departmentId;     // JSON: "departmentId"
     private Long teamId;           // JSON: "teamId"

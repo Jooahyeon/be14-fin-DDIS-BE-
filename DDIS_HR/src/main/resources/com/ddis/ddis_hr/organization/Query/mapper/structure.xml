@@ -13,6 +13,7 @@
         <result property="employeeName" column="employee_name"/>
         <result property="positionName" column="position_name"/>
         <result property="rankName"     column="rank_name"    />
+        <result property="jobName"     column="job_name"    />
     </resultMap>
 
     <!-- ======================================
@@ -170,27 +171,49 @@
             parameterType="long"
             resultType="com.ddis.ddis_hr.organization.query.dto.EmployeeQueryDTO">
         SELECT
-        e.employee_id   AS employeeId,
-        e.employee_name AS employeeName,
-
-        -- position_id가 외래키로 연결되어 있다고 가정
-        p.position_name AS positionName,
-
-        -- rank_id가 외래키로 연결되어 있다고 가정
-        r.rank_name     AS rankName,
-
-        e.head_id       AS headId,
-        e.department_id AS departmentId,
-        e.team_id       AS teamId,
-
-        -- birthdate 컬럼이 DATE 타입이라면 문자열로 포맷팅
-        DATE_FORMAT(e.birthdate, '%Y-%m-%d') AS birthdate,
-
-        e.email         AS email
+        e.employee_id       AS employeeId,
+        e.employee_name     AS employeeName,
+        p.position_name     AS positionName,
+        r.rank_name         AS rankName,
+<!--        j.job_name         AS jobName,-->
+        e.head_id           AS headId,
+        e.department_id     AS departmentId,
+        e.team_id           AS teamId,
+        -- 이메일 컬럼명(employee_email)이 실제 테이블에 맞다면 이렇게 고쳐주세요
+        e.employee_email    AS email
         FROM employee e
         LEFT JOIN position p ON e.position_id = p.position_id
-        LEFT JOIN rank r ON e.rank_id = r.rank_id
+        LEFT JOIN rank     r ON e.rank_id     = r.rank_id
+<!--        LEFT JOIN job     r ON e.job_id     = j.job_id-->
         WHERE e.employee_id = #{employeeId}
+    </select>
+
+    <!-- 모든 본부 조회 -->
+    <select id="selectAllHeads" resultType="com.ddis.ddis_hr.organization.query.dto.HeadQueryDTO">
+        SELECT
+        h.head_id   AS headId,
+        h.head_name AS headName,
+        h.head_code AS headCode
+        FROM head h
+        ORDER BY h.head_id
+    </select>
+
+    <!-- 1) headId로 headName만 조회 -->
+    <select id="selectHeadNameById"
+            parameterType="long"
+            resultType="string">
+        SELECT h.head_name
+        FROM head h
+        WHERE h.head_id = #{headId}
+    </select>
+
+    <!-- 2) headId로 headCode만 조회 -->
+    <select id="selectHeadCodeById"
+            parameterType="long"
+            resultType="string">
+        SELECT h.head_code
+        FROM head h
+        WHERE h.head_id = #{headId}
     </select>
 
 </mapper>

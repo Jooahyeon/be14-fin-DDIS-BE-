@@ -73,4 +73,29 @@ public class StructureQueryController {
         }
         return ResponseEntity.ok(dto);
     }
+
+    @GetMapping
+    public ResponseEntity<List<HeadQueryDTO>> getAllHeads() {
+        List<HeadQueryDTO> heads = structureQueryService.getAllHeads();
+        return ResponseEntity.ok(heads);
+    }
+
+    @GetMapping("/head/{headId}/name")
+    public ResponseEntity<String> getHeadName(@PathVariable Long headId) {
+        String headName = structureQueryService.getHeadNameById(headId);
+        if (headName == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(headName);
+    }
+
+    @GetMapping("/head/{headId}/code")
+    public ResponseEntity<String> getHeadCode(@PathVariable Long headId) {
+        String headCode = structureQueryService.getHeadCodeById(headId);
+        if (headCode == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(headCode);
+    }
+
 }

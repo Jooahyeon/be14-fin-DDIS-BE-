@@ -64,4 +64,15 @@ public class StructureQueryService {
     public EmployeeQueryDTO getEmployeeById(Long employeeId) {
         return structureMapper.selectEmployeeById(employeeId);
     }
+
+    public List<HeadQueryDTO> getAllHeads() {
+        return structureMapper.selectAllHeads();
+    }
+
+    public String getHeadNameById(Long headId) {
+        return structureMapper.selectHeadNameById(headId);
+    }
+    public String getHeadCodeById(Long headId) {
+        return structureMapper.selectHeadCodeById(headId);
+    }
 }

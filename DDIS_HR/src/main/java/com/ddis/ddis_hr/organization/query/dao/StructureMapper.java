@@ -51,5 +51,9 @@ public interface StructureMapper {
      */
     EmployeeQueryDTO selectEmployeeById(@Param("employeeId") Long employeeId);
 
+    List<HeadQueryDTO> selectAllHeads();
+
+    String selectHeadNameById(@Param("headId") Long headId);
+    String selectHeadCodeById(@Param("headId") Long headId);
 }
 

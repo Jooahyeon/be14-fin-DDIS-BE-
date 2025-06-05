@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ddis.ddis_hr.payroll.query.dao.RetirementMapper">
+
+    <!-- 퇴직금 지급 현황 목록 조회 -->
+    <select id="getSummaries" resultType="com.ddis.ddis_hr.payroll.query.dto.RetirementSummaryDTO">
+        SELECT
+        r.employee_id,
+        e.employee_name,
+        e.retirement_date,
+        r.provision_date,
+        r.provision_situation,
+        r.remark,
+        r.retire_total,
+        r.retire_income_tax,
+        r.provision_actual
+        FROM retirement_pay r
+        JOIN employee e ON r.employee_id = e.employee_id
+        <where>
+            <choose>
+                <when test="filterByRetireDate">
+                    <if test="fromDate != null">AND e.retirement_date &gt;= #{fromDate}</if>
+                    <if test="toDate != null">AND e.retirement_date &lt;= #{toDate}</if>
+                </when>
+                <when test="filterByProvisionDate">
+                    <if test="fromDate != null">AND r.provision_date &gt;= #{fromDate}</if>
+                    <if test="toDate != null">AND r.provision_date &lt;= #{toDate}</if>
+                </when>
+            </choose>
+            <if test="provisionSituation != null and provisionSituation != ''">
+                AND r.provision_situation = #{provisionSituation}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND (
+                CAST(e.employee_id AS CHAR) LIKE CONCAT('%', #{keyword}, '%')
+                OR e.employee_name LIKE CONCAT('%', #{keyword}, '%')
+                )
+            </if>
+        </where>
+        ORDER BY e.retirement_date DESC
+    </select>
+
+    <!-- 퇴직금 상세 조회 -->
+    <select id="getDetail" parameterType="long" resultType="com.ddis.ddis_hr.payroll.query.dto.RetirementDetailDTO">
+        SELECT
+            r.employee_id,
+            e.employee_name,
+            h.head_name,
+            d.department_name,
+            t.team_name,
+            rnk.rank_name,
+            e.employment_date,
+            e.retirement_date,
+            DATEDIFF(e.retirement_date, e.employment_date) AS totalWorkDays,
+            r.total_days,
+            r.total_bonus,
+            r.month1,
+            r.month1_salary,
+            r.month2,
+            r.month2_salary,
+            r.month3,
+            r.month3_salary,
+            r.month4,
+            r.month4_salary,
+            r.retire_total,
+            r.retire_income_tax,
+            r.provision_actual,
+            r.provision_situation,
+            r.provision_date,
+            r.remark
+        FROM retirement_pay r
+                 JOIN employee e ON r.employee_id = e.employee_id
+                 LEFT JOIN headquarters h ON e.head_id = h.head_id
+                 LEFT JOIN department d ON e.department_id = d.department_id
+                 LEFT JOIN team t ON e.team_id = t.team_id
+                 LEFT JOIN rank rnk ON e.rank_id = rnk.rank_id
+        WHERE r.employee_id = #{employeeId}
+    </select>
+
+</mapper>

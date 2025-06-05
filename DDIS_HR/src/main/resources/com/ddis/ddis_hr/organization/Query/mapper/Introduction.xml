@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ddis.ddis_hr.organization.query.dao.IntroductionMapper">
+
+    <!-- 1) 직무 조회용 ResultMap -->
+    <resultMap id="JobResult"
+               type="com.ddis.ddis_hr.organization.query.dto.JobIntroductionQueryDTO">
+        <id     property="jobId"         column="job_id"/>
+        <result property="jobName"       column="job_name"/>
+        <result property="jobCode"       column="job_code"/>
+        <result property="jobRole"       column="job_role"/>
+        <result property="jobNeed"       column="job_need"/>
+        <result property="jobNecessary"  column="job_necessary"/>
+        <result property="jobPreference" column="job_preference"/>
+    </resultMap>
+
+    <!--
+      2) Team(팀) 조회용 ResultMap
+         - team 기본 컬럼(team_id, team_name)
+         - introductionContext: introduction 테이블에서 조회 (introduction_type='팀')
+         - jobs: selectJobsByTeamId 를 이용해 조회
+    -->
+    <resultMap id="TeamResult"
+               type="com.ddis.ddis_hr.organization.query.dto.TeamIntroductionQueryDTO">
+        <!-- 기본 컬럼 매핑 -->
+        <id     property="teamId"   column="team_id"/>
+        <result property="teamName" column="team_name"/>
+
+        <!-- 팀 소개(introduction_context) 가져오기 -->
+        <!-- column="team_id" → selectTeamIntroduction(#teamId) -->
+        <association property="introductionContext"
+                     javaType="String"
+                     column="team_id"
+                     select="selectTeamIntroduction"/>
+
+        <!-- 직무 목록(jobs) 가져오기 -->
+        <!-- ofType을 실제 DTO로 변경한 부분 -->
+        <!-- column="team_id" → selectJobsByTeamId(#teamId) -->
+        <collection property="jobs"
+                    ofType="com.ddis.ddis_hr.organization.query.dto.JobIntroductionQueryDTO"
+                    column="team_id"
+                    select="selectJobsByTeamId"/>
+    </resultMap>
+
+    <!--
+       3) Department(부서) 조회용 ResultMap
+          - departmentId (department_id)
+          - introductionContext: introduction 테이블에서 조회 (introduction_type='부서')
+          - teams: selectTeamsByDepartmentId 를 이용해 조회
+    -->
+    <resultMap id="DepartmentResult"
+               type="com.ddis.ddis_hr.organization.query.dto.DepartmentIntroductionQueryDTO">
+        <!-- 부서 ID -->
+        <id     property="departmentId"       column="department_id"/>
+        <result property="departmentName"     column="department_name"/>
+
+        <!-- 부서 소개(introduction_context) 가져오기 -->
+        <association property="introductionContext"
+                     javaType="String"
+                     column="department_id"
+                     select="selectDepartmentIntroduction"/>
+
+        <!-- 팀 목록(TeamResult 사용) 가져오기 -->
+        <collection property="teams"
+                    ofType="com.ddis.ddis_hr.organization.query.dto.TeamIntroductionQueryDTO"
+                    column="department_id"
+                    select="selectTeamsByDepartmentId"/>
+    </resultMap>
+
+
+    <!-- 4) 부서 소개만 조회 (department_id → introduction_context) -->
+    <select id="selectDepartmentIntroduction"
+            parameterType="long"
+            resultType="String">
+        SELECT introduction_context
+        FROM introduction
+        WHERE introduction_type = '부서'
+          AND department_id = #{departmentId}
+    </select>
+
+    <!-- 5) 팀 소개만 조회 (team_id → introduction_context) -->
+    <select id="selectTeamIntroduction"
+            parameterType="long"
+            resultType="String">
+        SELECT introduction_context
+        FROM introduction
+        WHERE introduction_type = '팀'
+          AND team_id = #{teamId}
+    </select>
+
+    <!-- 6) 특정 팀의 직무 목록 조회 (team_id → Job 목록) -->
+    <select id="selectJobsByTeamId"
+            parameterType="long"
+            resultMap="JobResult">
+        SELECT job_id,
+               job_name,
+               job_code,
+               job_role,
+               job_need,
+               job_necessary,
+               job_preference
+        FROM job
+        WHERE team_id = #{teamId}
+    </select>
+
+    <!--
+      7) 특정 부서의 팀 목록 조회 (department_id → Team 목록)
+         - team_id, team_name만 가져오면 되고,
+           TeamResult 내 nested select(직무 목록, 팀 소개)으로 나머지 채워짐
+    -->
+    <select id="selectTeamsByDepartmentId"
+            parameterType="long"
+            resultMap="TeamResult">
+        SELECT t.team_id,
+               t.team_name
+        FROM team t
+        WHERE t.department_id = #{departmentId}
+    </select>
+
+    <!--
+      8) 전체 부서 목록 조회 (부서 ID만 가져오고, DepartmentResult로 nested select 처리)
+    -->
+    <select id="selectAllDepartments"
+            resultMap="DepartmentResult">
+        SELECT DISTINCT
+            d.department_id   AS department_id,
+            d.department_name AS department_name
+        FROM introduction i
+                 JOIN department d
+                      ON i.department_id = d.department_id
+        WHERE i.introduction_type = '부서'
+    </select>
+    <!--
+      9) 단일 부서 상세 조회 (department_id → Department 하나)
+    -->
+    <select id="selectDepartmentById"
+            parameterType="long"
+            resultMap="DepartmentResult">
+        SELECT
+            d.department_id   AS department_id,
+            d.department_name AS department_name
+        FROM introduction i
+                 JOIN department d
+                      ON i.department_id = d.department_id
+        WHERE i.introduction_type = '부서'
+          AND i.department_id = #{departmentId}
+    </select>
+
+    <!--
+      10) 단일 팀 상세 조회 (team_id → Team 하나)
+           (Department 하위가 아닌 Team 단독 조회용)
+    -->
+    <select id="selectTeamById"
+            parameterType="long"
+            resultMap="TeamResult">
+        SELECT t.team_id,
+               t.team_name
+        FROM team t
+        WHERE t.team_id = #{teamId}
+    </select>
+
+</mapper>

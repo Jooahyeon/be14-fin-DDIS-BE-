@@ -58,6 +58,9 @@ dependencies {
     // pdf 전송용
     implementation 'org.thymeleaf:thymeleaf'
     implementation 'org.xhtmlrenderer:flying-saucer-pdf-openpdf:9.1.22'
+
+    // spring batch
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
 }
 
 tasks.named('test') {

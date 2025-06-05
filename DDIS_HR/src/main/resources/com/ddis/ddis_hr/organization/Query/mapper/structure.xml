@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ddis.ddis_hr.organization.query.dao.StructureMapper">
+
+    <!-- ======================================
+       1) EmployeeDto 매핑
+       ====================================== -->
+    <resultMap id="EmployeeResult" type="com.ddis.ddis_hr.organization.query.dto.EmployeeQueryDTO">
+        <id     property="employeeId"   column="employee_id"  />
+        <result property="employeeName" column="employee_name"/>
+        <result property="positionName" column="position_name"/>
+        <result property="rankName"     column="rank_name"    />
+        <result property="jobName"     column="job_name"    />
+    </resultMap>
+
+    <!-- ======================================
+         2) TeamDto 매핑
+           - team 기본 컬럼(team_id, team_name, team_code)
+           - members: selectMembersByTeamId 로직을 통해 리스트 채움
+         ====================================== -->
+    <resultMap id="TeamResult" type="com.ddis.ddis_hr.organization.query.dto.TeamQueryDTO">
+        <id     property="teamId"   column="team_id"  />
+        <result property="teamName" column="team_name"/>
+        <result property="teamCode" column="team_code"/>
+
+        <!-- team_id를 넘겨 selectMembersByTeamId → List<EmployeeDto> 로 매핑 -->
+        <collection property="members"
+                    ofType="com.example.dto.EmployeeDto"
+                    column="team_id"
+                    select="selectMembersByTeamId" />
+    </resultMap>
+
+    <!-- ======================================
+         3) DepartmentDto 매핑
+           - department 기본 컬럼(department_id, department_name, department_code)
+           - teams: selectTeamsByDepartmentId 로직을 통해 List<TeamDto> 채움
+         ====================================== -->
+    <resultMap id="DepartmentResult" type="com.ddis.ddis_hr.organization.query.dto.DepartmentQueryDTO">
+        <id     property="departmentId"   column="department_id"  />
+        <result property="departmentName" column="department_name"/>
+        <result property="departmentCode" column="department_code"/>
+
+        <!-- department_id를 넘겨 selectTeamsByDepartmentId → List<TeamDto> 로 매핑 -->
+        <collection property="teams"
+                    ofType="com.example.dto.TeamDto"
+                    column="department_id"
+                    select="selectTeamsByDepartmentId" />
+    </resultMap>
+
+    <!-- ======================================
+         4) HeadquartersDto 매핑
+           - head 기본 컬럼(head_id, head_name, head_code)
+           - departments: selectDepartmentsByHeadId 로직을 통해 List<DepartmentDto> 채움
+         ====================================== -->
+    <resultMap id="HeadquartersResult" type="com.ddis.ddis_hr.organization.query.dto.HeadQueryDTO">
+        <id     property="headId"   column="head_id"  />
+        <result property="headName" column="head_name"/>
+        <result property="headCode" column="head_code"/>
+
+        <!-- head_id를 넘겨 selectDepartmentsByHeadId → List<DepartmentDto> 로 매핑 -->
+        <collection property="departments"
+                    ofType="com.ddis.ddis_hr.organization.query.dto.DepartmentQueryDTO"
+                    column="head_id"
+                    select="selectDepartmentsByHeadId" />
+    </resultMap>
+
+
+    <!-- ======================================
+         5) selectMembersByTeamId: team_id → EmployeeDto 목록
+           - employee 테이블 JOIN position, rank 테이블
+         ====================================== -->
+    <select id="selectMembersByTeamId"
+            parameterType="long"
+            resultMap="EmployeeResult">
+        SELECT e.employee_id,
+        e.employee_name,
+        p.position_name,
+        r.rank_name
+        FROM employee e
+        LEFT JOIN `position` p ON e.position_id = p.position_id
+        LEFT JOIN `rank`     r ON e.rank_id     = r.rank_id
+        WHERE e.team_id = #{teamId}
+    </select>
+
+
+    <!-- ======================================
+         6) selectTeamsByDepartmentId: department_id → TeamDto 목록
+         ====================================== -->
+    <select id="selectTeamsByDepartmentId"
+            parameterType="long"
+            resultMap="TeamResult">
+        SELECT t.team_id,
+        t.team_name,
+        t.team_code
+        FROM team t
+        WHERE t.department_id = #{departmentId}
+    </select>
+
+
+    <!-- ======================================
+         7) selectDepartmentsByHeadId: head_id → DepartmentDto 목록
+         ====================================== -->
+    <select id="selectDepartmentsByHeadId"
+            parameterType="long"
+            resultMap="DepartmentResult">
+        SELECT d.department_id,
+        d.department_name,
+        d.department_code
+        FROM department d
+        WHERE d.head_id = #{headId}
+    </select>
+
+
+    <!-- ======================================
+         8) selectAllHeadquarters: 본부 전체 조회
+         ====================================== -->
+    <select id="selectAllHeadquarters"
+            resultMap="HeadquartersResult">
+        SELECT h.head_id,
+        h.head_name,
+        h.head_code
+        FROM headquarters h
+    </select>
+
+
+    <!-- ======================================
+         9) selectHeadById: 특정 본부 조회
+         ====================================== -->
+    <select id="selectHeadById"
+            parameterType="long"
+            resultMap="HeadquartersResult">
+        SELECT h.head_id,
+        h.head_name,
+        h.head_code
+        FROM headquarters h
+        WHERE h.head_id = #{headId}
+    </select>
+
+
+    <!-- ======================================
+         10) selectDepartmentById: 특정 부서 조회
+         ====================================== -->
+    <select id="selectDepartmentById"
+            parameterType="long"
+            resultMap="DepartmentResult">
+        SELECT d.department_id,
+        d.department_name,
+        d.department_code
+        FROM department d
+        WHERE d.department_id = #{departmentId}
+    </select>
+
+
+    <!-- ======================================
+         11) selectTeamById: 특정 팀 조회
+         ====================================== -->
+    <select id="selectTeamById"
+            parameterType="long"
+            resultMap="TeamResult">
+        SELECT t.team_id,
+        t.team_name,
+        t.team_code
+        FROM team t
+        WHERE t.team_id = #{teamId}
+    </select>
+
+    <select id="selectEmployeeById"
+            parameterType="long"
+            resultType="com.ddis.ddis_hr.organization.query.dto.EmployeeQueryDTO">
+        SELECT
+        e.employee_id       AS employeeId,
+        e.employee_name     AS employeeName,
+        p.position_name     AS positionName,
+        r.rank_name         AS rankName,
+<!--        j.job_name         AS jobName,-->
+        e.head_id           AS headId,
+        e.department_id     AS departmentId,
+        e.team_id           AS teamId,
+        -- 이메일 컬럼명(employee_email)이 실제 테이블에 맞다면 이렇게 고쳐주세요
+        e.employee_email    AS email
+        FROM employee e
+        LEFT JOIN position p ON e.position_id = p.position_id
+        LEFT JOIN rank     r ON e.rank_id     = r.rank_id
+<!--        LEFT JOIN job     r ON e.job_id     = j.job_id-->
+        WHERE e.employee_id = #{employeeId}
+    </select>
+
+    <!-- 모든 본부 조회 -->
+    <select id="selectAllHeads" resultType="com.ddis.ddis_hr.organization.query.dto.HeadQueryDTO">
+        SELECT
+        h.head_id   AS headId,
+        h.head_name AS headName,
+        h.head_code AS headCode
+        FROM head h
+        ORDER BY h.head_id
+    </select>
+
+    <!-- 1) headId로 headName만 조회 -->
+    <select id="selectHeadNameById"
+            parameterType="long"
+            resultType="string">
+        SELECT h.head_name
+        FROM head h
+        WHERE h.head_id = #{headId}
+    </select>
+
+    <!-- 2) headId로 headCode만 조회 -->
+    <select id="selectHeadCodeById"
+            parameterType="long"
+            resultType="string">
+        SELECT h.head_code
+        FROM head h
+        WHERE h.head_id = #{headId}
+    </select>
+
+</mapper>

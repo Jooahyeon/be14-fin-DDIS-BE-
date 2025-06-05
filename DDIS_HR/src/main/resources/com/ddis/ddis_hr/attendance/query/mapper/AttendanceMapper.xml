@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ddis.ddis_hr.attendance.query.dao.AttendanceMapper">
+
+    <select id="findById" resultType="com.ddis.ddis_hr.attendance.query.dto.EmployeeInfoQueryDTO">
+        SELECT
+               employee_id
+             , employee_name
+             , team_id
+          FROM employee
+         WHERE employee_id = #{employeeId}
+    </select>
+
+    <select id="findPersonalSchedules" resultType="com.ddis.ddis_hr.attendance.query.dto.PersonalScheduleQueryDTO">
+        SELECT
+               employee_id
+             , schedule_date
+             , schedule_title
+             , schedule_time
+          FROM personal_schedule
+         WHERE employee_id = #{employeeId}
+    </select>
+
+    <select id="findMeetings" resultType="com.ddis.ddis_hr.attendance.query.dto.MeetingQueryDTO">
+        SELECT
+               team_id
+             , meeting_date
+             , meeting_title
+             , meeting_time
+          FROM meeting
+         WHERE team_id = #{team_id}
+    </select>
+
+    <select id="findWorkStatuses" resultType="com.ddis.ddis_hr.attendance.query.dto.AttendanceQueryDTO">
+        SELECT
+               a.attendance_id
+             , a.employee_id
+             , a.work_date
+             , a.work_status_id
+             , e.employee_name
+             , ws.work_status_name
+          FROM attendance a
+          JOIN employee e ON a.employee_id = e.employee_id
+          JOIN work_status ws ON a.work_status_id = ws.work_status_id
+         WHERE (a.employee_id = #{employeeId} OR e.team_id = #{teamId})
+           AND ws.work_status_id IN
+        <foreach item="status" collection="statuses" open="(" separator="," close=")">
+            #{status}
+        </foreach>
+    </select>
+</mapper>

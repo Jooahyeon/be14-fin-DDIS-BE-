@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ddis.ddis_hr.review.command.application.mapper.EmployeeReviewMapper">
+
+    <!-- EmployeeReviewDTO 필드와 1:1 매핑될 resultMap -->
+    <resultMap id="EmployeeReviewResultMap"
+               type="com.ddis.ddis_hr.review.command.application.dto.EmployeeReviewDTO">
+        <id     column="employee_id"    property="employeeId"/>
+        <result column="employee_name"  property="employeeName"/>
+        <result column="position_id"    property="positionId"/>
+        <result column="position_name"  property="positionName"/>
+        <result column="team_id"        property="teamId"/>
+        <result column="team_name"      property="teamName"/>
+        <result column="rank_id"        property="rankId"/>
+        <result column="rank_name"      property="rankName"/>
+    </resultMap>
+
+    <!-- teamId로 직원 조회 -->
+    <select id="findEmployeeByTeamId"
+            resultMap="EmployeeReviewResultMap"
+            parameterType="java.lang.Long">
+        SELECT
+            e.employee_id      AS employee_id,
+            e.employee_name    AS employee_name,
+            e.position_id      AS position_id,
+            p.position_name    AS position_name,
+            e.team_id          AS team_id,
+            t.team_name        AS team_name,
+            e.rank_id          AS rank_id,
+            r.rank_name        AS rank_name
+        FROM employee e
+                 JOIN position p ON e.position_id = p.position_id
+                 JOIN team t     ON e.team_id = t.team_id
+                 JOIN rank r     ON e.rank_id = r.rank_id
+        WHERE e.team_id = #{teamId}
+    </select>
+
+</mapper>

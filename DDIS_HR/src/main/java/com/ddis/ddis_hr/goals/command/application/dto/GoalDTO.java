@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Getter
@@ -17,6 +18,7 @@ public class GoalDTO {
     private LocalDate goalCreatedAt;
     private Long employeeId;
     private String employeeName;
-
     private PerformanceDTO performance;
+
+    private List<PerformanceDTO> performances;
 }

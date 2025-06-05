@@ -22,20 +22,14 @@ public class AppointmentQueryController {
         this.appointmentQueryService = appointmentQueryService;
     }
 
-    /**
-     * GET /appointment/all
-     * 모든 appointment 조회
-     */
+    // 모든 appointment 조회
     @GetMapping("/all")
     public ResponseEntity<List<AppointmentQueryDTO>> getAllAppointments() {
         List<AppointmentQueryDTO> list = appointmentQueryService.findAll();
         return ResponseEntity.ok(list);
     }
 
-    /**
-     * GET /appointment/{appointmentId}
-     * appointment_id 로 단건 조회
-     */
+    // appointment_id 로 단건 조회
     @GetMapping("/{appointmentId}")
     public ResponseEntity<AppointmentQueryDTO> getAppointmentById(
             @PathVariable("appointmentId") Long appointmentId

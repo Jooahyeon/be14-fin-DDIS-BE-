@@ -137,14 +137,14 @@ INSERT INTO dictionary (
 
 -- 본부
 INSERT INTO headquarters
-(
-    head_name,
+(	head_name,
      head_code
 ) VALUES
       ('개발본부', 'H001'),
       ('경영지원본부', 'H002'),
       ('사업본부', 'H003'),
-      ('소속없음', '소속없음');
+      ('대표', 'H004');
+
 
 -- 부서
 INSERT INTO department
@@ -158,7 +158,8 @@ INSERT INTO department
       ('재무회계부서', 'D004', 2),
       ('마케팅부서', 'D005', 3),
       ('영업부서', 'D006', 3),
-      ('소속없음', '소속없음', 4);
+      ('대표', 'D007', 4);
+
 
 -- 팀
 INSERT INTO team
@@ -178,7 +179,7 @@ INSERT INTO team
       ('퍼포먼스팀', 'T010', 5),
       ('B2B영업팀', 'T011', 6),
       ('B2C영업팀', 'T012', 6),
-      ('소속없음', '소속없음', 7);
+      ('대표', 'T013', 7);
 
 -- 소개
 INSERT INTO introduction (

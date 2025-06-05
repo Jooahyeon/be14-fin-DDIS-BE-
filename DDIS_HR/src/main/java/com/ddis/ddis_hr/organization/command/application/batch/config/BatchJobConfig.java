@@ -1,16 +1,15 @@
+// src/main/java/com/ddis/ddis_hr/organization/command/application/batch/config/BatchJobConfig.java
 package com.ddis.ddis_hr.organization.command.application.batch.config;
 
 import com.ddis.ddis_hr.organization.command.application.batch.domain.Appointment;
 import com.ddis.ddis_hr.organization.command.application.batch.domain.AppointmentHistory;
 import com.ddis.ddis_hr.organization.command.application.batch.listener.JobCompletionNotificationListener;
 
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-
 import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
@@ -19,11 +18,14 @@ import org.springframework.batch.item.database.JdbcPagingItemReader;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.database.builder.JdbcPagingItemReaderBuilder;
 import org.springframework.batch.item.database.support.MySqlPagingQueryProvider;
+import org.springframework.batch.item.database.Order;
+import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 import java.sql.Timestamp;
@@ -31,22 +33,21 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import org.springframework.batch.repeat.RepeatStatus;
 
 @Configuration
-@EnableBatchProcessing
-public class BatchConfig {
+public class BatchJobConfig {
 
-    private final JobBuilderFactory jobBuilderFactory;
-    private final StepBuilderFactory stepBuilderFactory;
+    private final JobRepository jobRepository;
+    private final PlatformTransactionManager transactionManager;
     private final DataSource dataSource;
 
-    public BatchConfig(JobBuilderFactory jobBuilderFactory,
-                       StepBuilderFactory stepBuilderFactory,
-                       DataSource dataSource) {
-        this.jobBuilderFactory = jobBuilderFactory;
-        this.stepBuilderFactory = stepBuilderFactory;
-        this.dataSource = dataSource;
+    // 생성자 주입: @EnableBatchProcessing이 등록한 JobRepository, TransactionManager, DataSource를 받아 온다
+    public BatchJobConfig(JobRepository jobRepository,
+                          PlatformTransactionManager transactionManager,
+                          DataSource dataSource) {
+        this.jobRepository      = jobRepository;
+        this.transactionManager = transactionManager;
+        this.dataSource         = dataSource;
     }
 
     private static final String APPOINTMENT_SELECT_SQL =
@@ -55,7 +56,7 @@ public class BatchConfig {
                     "       from_position_code, to_position_code, from_rank_code, to_rank_code, " +
                     "       from_job_code, to_job_code, appointment_type, appointment_reason, " +
                     "       appointment_created_at, appointment_effective_date, appointment_status, is_applied " +
-                    " FROM appointment " +
+                    "  FROM appointment " +
                     " WHERE appointment_created_at >= :startDate AND appointment_created_at < :endDate";
 
     private static final String APPOINTMENT_HISTORY_INSERT_SQL =
@@ -72,6 +73,7 @@ public class BatchConfig {
                     "  :fromJobCode, :toJobCode, :appointmentType, :appointmentReason, " +
                     "  :appointmentCreatedAt, :appointmentEffectiveDate, :appointmentStatus, :appointmentHistoryCreatedAt)";
 
+    // --- 1) ItemReader 빈 등록 ---
     @Bean
     @StepScope
     public JdbcPagingItemReader<Appointment> appointmentReader(
@@ -91,7 +93,9 @@ public class BatchConfig {
                         "appointment_created_at, appointment_effective_date, appointment_status, is_applied"
         );
         queryProvider.setFromClause("FROM appointment");
-        queryProvider.setWhereClause("WHERE appointment_created_at >= :startDate AND appointment_created_at < :endDate");
+        queryProvider.setWhereClause(
+                "WHERE appointment_created_at >= :startDate AND appointment_created_at < :endDate"
+        );
         Map<String, Order> sortKeys = new HashMap<>();
         sortKeys.put("appointment_id", Order.ASCENDING);
         queryProvider.setSortKeys(sortKeys);
@@ -106,6 +110,7 @@ public class BatchConfig {
                 .build();
     }
 
+    // --- 2) ItemProcessor 빈 등록 ---
     @Bean
     public ItemProcessor<Appointment, AppointmentHistory> appointmentProcessor() {
         return appointment -> {
@@ -129,12 +134,12 @@ public class BatchConfig {
             history.setAppointmentCreatedAt(appointment.getAppointmentCreatedAt());
             history.setAppointmentEffectiveDate(appointment.getAppointmentEffectiveDate());
             history.setAppointmentStatus(appointment.getAppointmentStatus());
-            // 여기에서 LocalDateTime.now()로 바꿔야 TIMESTAMP 타입에 맞을 수 있습니다.
             history.setAppointmentHistoryCreatedAt(LocalDate.now());
             return history;
         };
     }
 
+    // --- 3) ItemWriter 빈 등록 ---
     @Bean
     public JdbcBatchItemWriter<AppointmentHistory> appointmentWriter() {
         return new JdbcBatchItemWriterBuilder<AppointmentHistory>()
@@ -144,55 +149,58 @@ public class BatchConfig {
                 .build();
     }
 
+    // --- 4) Step 빈 등록: moveAppointmentToHistoryStep ---
     @Bean
-    public Step moveAppointmentToHistoryStep(
-            JdbcPagingItemReader<Appointment> appointmentReader,
-            ItemProcessor<Appointment, AppointmentHistory> appointmentProcessor,
-            JdbcBatchItemWriter<AppointmentHistory> appointmentWriter) {
-
-        return stepBuilderFactory.get("moveAppointmentToHistoryStep")
-                .<Appointment, AppointmentHistory>chunk(100)
+    public Step moveAppointmentToHistoryStep(JdbcPagingItemReader<Appointment> appointmentReader,
+                                             ItemProcessor<Appointment, AppointmentHistory> appointmentProcessor,
+                                             JdbcBatchItemWriter<AppointmentHistory> appointmentWriter) {
+        return new StepBuilder("moveAppointmentToHistoryStep", jobRepository)
+                .<Appointment, AppointmentHistory>chunk(100, transactionManager)
                 .reader(appointmentReader)
                 .processor(appointmentProcessor)
                 .writer(appointmentWriter)
                 .build();
     }
 
+    // --- 5) Step 빈 등록: deleteAppointmentStep ---
     @Bean
     public Step deleteAppointmentStep() {
-        return stepBuilderFactory.get("deleteAppointmentStep")
+        return new StepBuilder("deleteAppointmentStep", jobRepository)
                 .tasklet((contribution, chunkContext) -> {
-                    JobParameters jobParameters = chunkContext.getStepContext()
+                    Map<String, Object> params = new HashMap<>();
+                    String startDate = chunkContext.getStepContext()
                             .getStepExecution()
-                            .getJobParameters();
+                            .getJobParameters()
+                            .getString("startDate");
+                    String endDate = chunkContext.getStepContext()
+                            .getStepExecution()
+                            .getJobParameters()
+                            .getString("endDate");
 
-                    String startDate = jobParameters.getString("startDate");
-                    String endDate   = jobParameters.getString("endDate");
-
-                    // JobParameters로 받은 문자열이 ISO-8601 형식(예: 2025-06-01T00:00:00)이라고 가정
                     LocalDateTime start = LocalDateTime.parse(startDate);
-                    LocalDateTime end   = LocalDateTime.parse(endDate);
+                    LocalDateTime end = LocalDateTime.parse(endDate);
+
+                    params.put("startDate", Timestamp.valueOf(start));
+                    params.put("endDate", Timestamp.valueOf(end));
 
                     String deleteSql =
                             "DELETE FROM appointment " +
                                     "WHERE appointment_created_at >= :startDate AND appointment_created_at < :endDate";
-                    Map<String, Object> params = new HashMap<>();
-                    params.put("startDate", Timestamp.valueOf(start));
-                    params.put("endDate",   Timestamp.valueOf(end));
 
-                    NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+                    NamedParameterJdbcTemplate jdbcTemplate =
+                            new NamedParameterJdbcTemplate(dataSource);
                     jdbcTemplate.update(deleteSql, params);
-
                     return RepeatStatus.FINISHED;
-                })
+                }, transactionManager)
                 .build();
     }
 
+    // --- 6) Job 빈 등록: appointmentJob ---
     @Bean
     public Job appointmentJob(JobCompletionNotificationListener listener,
                               Step moveAppointmentToHistoryStep,
                               Step deleteAppointmentStep) {
-        return jobBuilderFactory.get("appointmentJob")
+        return new JobBuilder("appointmentJob", jobRepository)
                 .incrementer(new RunIdIncrementer())
                 .listener(listener)
                 .start(moveAppointmentToHistoryStep)

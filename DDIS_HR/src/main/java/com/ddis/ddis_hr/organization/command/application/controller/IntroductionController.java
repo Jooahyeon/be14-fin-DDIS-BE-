@@ -20,9 +20,9 @@ public class IntroductionController {
     }
 
     // 부서 소개 등록
-    @PostMapping("/department/{deptId}")
+    @PostMapping("/create/department/{departmentId}")
     public ResponseEntity<IntroductionResponseDTO> createDepartmentIntroduction(
-            @PathVariable("deptId") Long deptId,
+            @PathVariable("departmentId") Long deptId,
             @RequestBody CreateIntroductionDTO request) {
 
         IntroductionEntity saved = introductionService.createDepartmentIntroduction(
@@ -42,9 +42,9 @@ public class IntroductionController {
 
 
     // 부서 소개 수정
-    @PutMapping("/department/{deptId}")
+    @PutMapping("/update/department/{departmentId}")
     public ResponseEntity<IntroductionResponseDTO> updateDepartmentIntroduction(
-            @PathVariable("deptId") Long deptId,
+            @PathVariable("departmentId") Long deptId,
             @RequestBody UpdateIntroductionDTO request) {
 
         IntroductionEntity updated = introductionService.updateDepartmentIntroduction(
@@ -62,9 +62,9 @@ public class IntroductionController {
     }
 
     // 부서 소개 삭제
-    @DeleteMapping("/department/{deptId}")
+    @DeleteMapping("/delete/department/{departmentId}")
     public ResponseEntity<Void> deleteDepartmentIntroduction(
-            @PathVariable("deptId") Long deptId) {
+            @PathVariable("departmentId") Long deptId) {
 
         introductionService.deleteDepartmentIntroduction(deptId);
         return ResponseEntity.noContent().build();

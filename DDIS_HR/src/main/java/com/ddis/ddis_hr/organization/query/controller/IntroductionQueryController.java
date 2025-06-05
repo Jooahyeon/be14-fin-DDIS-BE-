@@ -28,7 +28,7 @@ public class IntroductionQueryController {
      * 전체 부서 리스트 조회
      * GET /api/org/departments
      */
-    @GetMapping("/departments")
+    @GetMapping("/department")
     public ResponseEntity<List<DepartmentIntroductionQueryDTO>> getAllDepartments() {
         List<DepartmentIntroductionQueryDTO> departments = introductionQueryService.getAllDepartments();
         return ResponseEntity.ok(departments);
@@ -39,7 +39,7 @@ public class IntroductionQueryController {
      * 단일 부서 상세 조회
      * GET /api/org/departments/{deptId}
      */
-    @GetMapping("/departments/{deptId}")
+    @GetMapping("/department/{departmentId}")
     public ResponseEntity<DepartmentIntroductionQueryDTO> getDepartmentById(
             @PathVariable long departmentId) {
         DepartmentIntroductionQueryDTO department =
@@ -51,7 +51,7 @@ public class IntroductionQueryController {
     }
 
     //특정 부서의 팀 목록 조회 (department_id → Team 목록)
-    @GetMapping("/departments/{departmentId}/teams")
+    @GetMapping("/department/{departmentId}/team")
     public ResponseEntity<List<TeamIntroductionQueryDTO>> getTeamsByDepartment(
             @PathVariable long departmentId) {
         List<TeamIntroductionQueryDTO> teams =
@@ -63,13 +63,13 @@ public class IntroductionQueryController {
      * 단일 팀 상세 조회
      * GET /api/org/teams/{teamId}
      */
-    @GetMapping("/teams/{teamId}")
+    @GetMapping("/team/{teamId}")
     public TeamIntroductionQueryDTO getTeam(@PathVariable("teamId") Long teamId) {
         return introductionQueryService.getTeamById(teamId);
     }
 
     //  특정 팀의 직무 목록 조회 (team_id → Job 목록)
-    @GetMapping("/teams/{teamId}/jobs")
+    @GetMapping("/team/{teamId}/job")
     public ResponseEntity<List<JobIntroductionQueryDTO>> getJobsByTeam(
             @PathVariable long teamId) {
         List<JobIntroductionQueryDTO> jobs = introductionQueryService.getJobsByTeam(teamId);

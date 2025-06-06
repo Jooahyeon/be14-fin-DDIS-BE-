@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>퇴직금 명세서</title>
+    <style>
+        body {
+            font-family: 'NanumGothic', sans-serif;
+            font-size: 14px;
+            padding: 20px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin-bottom: 0;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            word-wrap: break-word;
+        }
+
+        .gray { background-color: #f8f9fa; }
+        .white { background-color: #ffffff; }
+        .highlight { font-weight: bold; color: #00a8e8; }
+        .text-right { text-align: right; }
+        .text-left { text-align: left; }
+        .text-center { text-align: center; }
+        .bold-black { font-weight: bold; color: black; }
+    </style>
+</head>
+<body>
+
+<div class="title">퇴직금 명세서</div>
+
+<!-- 인사 정보 -->
+<table>
+    <colgroup>
+        <col style="width: 25%" />
+        <col style="width: 25%" />
+        <col style="width: 25%" />
+        <col style="width: 25%" />
+    </colgroup>
+    <tbody>
+    <tr>
+        <th class="gray text-left">사번</th>
+        <td class="white" th:text="${data.employeeId}"></td>
+        <th class="gray text-left">성명</th>
+        <td class="white" th:text="${data.employeeName}"></td>
+    </tr>
+    <tr>
+        <th class="gray text-left">본부</th>
+        <td class="white" th:text="${data.headName}"></td>
+        <th class="gray text-left">부서</th>
+        <td class="white" th:text="${data.departmentName}"></td>
+    </tr>
+    <tr>
+        <th class="gray text-left">팀</th>
+        <td class="white" th:text="${data.teamName}"></td>
+        <th class="gray text-left">직급</th>
+        <td class="white" th:text="${data.rankName}"></td>
+    </tr>
+    <tr>
+        <th class="gray text-left">입사일자</th>
+        <td class="white" th:text="${data.employmentDate}"></td>
+        <th class="gray text-left">퇴사일자</th>
+        <td class="white" th:text="${data.retirementDate}"></td>
+    </tr>
+    <tr>
+        <th class="gray text-left">근속일수</th>
+        <td class="white" th:text="${data.totalWorkDays != null ? #numbers.formatInteger(data.totalWorkDays, 3) + '일' : '0일'}"></td>
+        <th class="gray text-left">근속년수</th>
+        <td class="white" th:text="${data.totalYears != null ? data.totalYears + '년' : '0년'}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- 세부 내역 제목 -->
+<table>
+    <tbody>
+    <tr>
+        <td colspan="4" class="gray text-center bold-black">세부 내역</td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- 세부 내역 -->
+<table>
+    <colgroup>
+        <col style="width: 25%" />
+        <col style="width: 25%" />
+        <col style="width: 25%" />
+        <col style="width: 25%" />
+    </colgroup>
+    <thead>
+    <tr>
+        <th class="gray text-center">월</th>
+        <th class="gray text-center">금액</th>
+        <th class="gray text-center">항목</th>
+        <th class="gray text-center">금액</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="row, stat : ${data.monthlySalaries}">
+        <td th:text="${row.label}"></td>
+        <td class="text-right" th:text="${#numbers.formatInteger(row.amount, 3, 'COMMA')}"></td>
+        <td>
+            <span th:if="${stat.index == 0}">3개월 일수</span>
+            <span th:if="${stat.index == 1}">일 평균임금</span>
+            <span th:if="${stat.index == 2}">상여금 총합</span>
+        </td>
+        <td class="text-right">
+            <span th:if="${stat.index == 0}" th:text="${data.totalDays + '일'}"></span>
+            <span th:if="${stat.index == 1}" th:text="${#numbers.formatInteger(data.averageDailySalary, 3, 'COMMA')}"></span>
+            <span th:if="${stat.index == 2}" th:text="${#numbers.formatInteger(data.totalBonus, 3, 'COMMA')}"></span>
+        </td>
+    </tr>
+    <tr>
+        <td class="bold-black text-left gray" colspan="2">총 지급액</td>
+        <td class="bold-black text-right gray highlight" colspan="2"       style="color: #00A8E8; font-weight: bold;" th:text="${#numbers.formatInteger(data.retireTotal, 3, 'COMMA')}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- 공제 내역 -->
+<table>
+    <colgroup>
+        <col style="width: 50%" />
+        <col style="width: 50%" />
+    </colgroup>
+    <thead>
+    <tr>
+        <th class="gray text-center">공제 항목</th>
+        <th class="gray text-center">금액</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>퇴직소득세</td>
+        <td class="text-right" th:text="${#numbers.formatInteger(data.retireIncomeTax, 3, 'COMMA')}"></td>
+    </tr>
+    <tr>
+        <td class="bold-black text-left gray">총 공제액</td>
+        <td class="bold-black text-right gray highlight"       style="color: #00A8E8; font-weight: bold;"th:text="${#numbers.formatInteger(data.retireIncomeTax, 3, 'COMMA')}"></td>
+    </tr>
+    <tr>
+        <td class="bold-black text-left gray">실 수령액(원)</td>
+        <td class="bold-black text-right gray highlight"       style="color: #00A8E8; font-weight: bold;" th:text="${#numbers.formatInteger(data.provisionActual, 3, 'COMMA')}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- 발급일 -->
+<div class="text-center" style="margin-top: 30px;">
+    <strong th:text="${data.provisionDate != null ? data.provisionDate : ''}"></strong>
+</div>
+
+</body>
+</html>

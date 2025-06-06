@@ -19,14 +19,14 @@ public class RetirementQueryController {
 
     private final RetirementQueryService retirementQueryService;
 
-    @PreAuthorize("hasRole('HR')")
+//    @PreAuthorize("hasRole('HR')")
     @GetMapping("/retirements")
     public ResponseEntity<List<RetirementSummaryDTO>> getRetirementList(@ModelAttribute RetirementSearchCondition condition) {
         List<RetirementSummaryDTO> result = retirementQueryService.getSummaries(condition);
         return ResponseEntity.ok(result);
     }
 
-    @PreAuthorize("hasRole('HR')")
+//    @PreAuthorize("hasRole('HR')")
     @GetMapping("/retirements/{employeeId}")
     public ResponseEntity<RetirementDetailDTO> getDetail(@PathVariable Long employeeId) {
         RetirementDetailDTO dto = retirementQueryService.getDetail(employeeId);

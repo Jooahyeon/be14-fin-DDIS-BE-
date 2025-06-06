@@ -11,19 +11,17 @@
             text-align: center;
             font-weight: bold;
             font-size: 20px;
-            /*margin-bottom: 20px;*/
         }
 
         table {
-            /*margin-top: 20px;*/
             width: 100%;
             border-collapse: collapse;
-            /*margin-bottom: 16px;*/
         }
 
         th, td {
             border: 1px solid #ccc;
             padding: 6px 8px;
+            height: 36px;
         }
 
         .section-title {
@@ -45,10 +43,20 @@
 
         .sub-head th {
             background: #f8f9fa;
+            text-align: center;
+        }
+
+        .sub-sub-head th {
+            background: #f8f9fa;
+            text-align: center;
         }
 
         .right-align {
             text-align: right;
+        }
+
+        .left-align {
+            text-align: left;
         }
 
         .bold-label {
@@ -70,7 +78,6 @@
             padding: 10px;
             background-color: #f8f9fa;
             font-weight: bold;
-            text-align: right;
             border: 1px solid #ccc;
         }
 
@@ -79,7 +86,14 @@
             margin-top: 40px;
             font-size: 20px;
             font-weight: bold;
+        }
 
+        .section-title-table td {
+            text-align: center;
+            background: #f8f9fa;
+            font-weight: bold;
+            border: 1px solid #ccc;
+            padding: 10px;
         }
     </style>
 </head>
@@ -87,30 +101,42 @@
 <h2>급여명세서</h2>
 
 <!-- 사원 정보 -->
-<table>
+<table style="width: 100%; table-layout: fixed; border-collapse: collapse;">
+    <colgroup>
+        <col style="width: 25%" />
+        <col style="width: 25%" />
+        <col style="width: 25%" />
+        <col style="width: 25%" />
+    </colgroup>
+    <tbody>
     <tr>
-        <th class="gray-row">사번</th>
+        <th class="gray-row left-align">사번</th>
         <td th:text="${employeeId}">E123</td>
-        <th class="gray-row">성명</th>
+        <th class="gray-row left-align">성명</th>
         <td th:text="${employeeName}">홍길동</td>
     </tr>
     <tr>
-        <th class="gray-row">본부</th>
+        <th class="gray-row left-align">본부</th>
         <td th:text="${headName}">본부</td>
-        <th class="gray-row">부서</th>
+        <th class="gray-row left-align">부서</th>
         <td th:text="${departmentName}">부서</td>
     </tr>
     <tr>
-        <th class="gray-row">팀</th>
+        <th class="gray-row left-align">팀</th>
         <td th:text="${teamName}">팀</td>
-        <th class="gray-row">직급</th>
+        <th class="gray-row left-align">직급</th>
         <td th:text="${rankName}">직급</td>
     </tr>
+    </tbody>
 </table>
 
 <!-- 세부 내역 구분선 -->
-<table>
-    <tr><td colspan="2" class="section-title">세부 내역</td></tr>
+<table class="section-title-table">
+    <thead>
+    <tr>
+        <td colspan="2">세부 내역</td>
+    </tr>
+    </thead>
 </table>
 
 <!-- 지급 / 공제 -->
@@ -119,12 +145,12 @@
         <table>
             <thead>
             <tr class="sub-head"><th colspan="2">지급</th></tr>
-            <tr><th>항목</th><th>금액</th></tr>
+            <tr class="sub-sub-head "><th>항목</th><th>금액</th></tr>
             </thead>
             <tbody>
             <tr th:each="item : ${pays}">
                 <td th:text="${item.label}"
-                    th:classappend="${item.label == '총지급액'} ? 'bold-label gray-row' : ''"></td>
+                    th:classappend="${item.label == '총지급액'} ? 'bold-label gray-row left-align' : 'left-align'"></td>
                 <td th:text="${#numbers.formatInteger(item.amount, 3, 'COMMA')}"
                     th:classappend="'right-align ' + (item.label == '총지급액' ? 'highlight gray-row' : '')"></td>
             </tr>
@@ -135,12 +161,12 @@
         <table>
             <thead>
             <tr class="sub-head"><th colspan="2">공제</th></tr>
-            <tr><th>항목</th><th>금액</th></tr>
+            <tr class="sub-sub-head"><th>항목</th><th>금액</th></tr>
             </thead>
             <tbody>
             <tr th:each="item : ${deductions}">
                 <td th:text="${item.label}"
-                    th:classappend="${item.label == '총공제액'} ? 'bold-label gray-row' : ''"></td>
+                    th:classappend="${item.label == '총공제액'} ? 'bold-label gray-row left-align' : 'left-align'"></td>
                 <td th:text="${#numbers.formatInteger(item.amount, 3, 'COMMA')}"
                     th:classappend="'right-align ' + (item.label == '총공제액' ? 'highlight gray-row' : '')"></td>
             </tr>
@@ -151,8 +177,8 @@
 
 <!-- 실 수령액 -->
 <div class="summary-row">
-    <span>실 수령액(월)</span>
-    <span th:text="${#numbers.formatInteger(netSalary, 3, 'COMMA')}" class="highlight">3,000,000</span>
+    <span class="left-align">실 수령액(원)</span>
+    <span th:text="${#numbers.formatInteger(netSalary, 3, 'COMMA')}" class="highlight right-align">3,000,000</span>
 </div>
 
 <!-- 지급일 -->

@@ -9,6 +9,7 @@
         SELECT
         r.employee_id,
         e.employee_name,
+        e.employee_email,
         e.retirement_date,
         r.provision_date,
         r.provision_situation,
@@ -47,6 +48,7 @@
         SELECT
             r.employee_id,
             e.employee_name,
+            e.employee_email,
             h.head_name,
             d.department_name,
             t.team_name,
@@ -69,13 +71,19 @@
             r.provision_actual,
             r.provision_situation,
             r.provision_date,
-            r.remark
+            r.remark,
+
+            CASE
+                WHEN r.total_days > 0 THEN ROUND((r.month1_salary + r.month2_salary + r.month3_salary + r.total_bonus) / r.total_days)
+                ELSE 0
+            END AS averageDailySalary
+
         FROM retirement_pay r
-                 JOIN employee e ON r.employee_id = e.employee_id
-                 LEFT JOIN headquarters h ON e.head_id = h.head_id
-                 LEFT JOIN department d ON e.department_id = d.department_id
-                 LEFT JOIN team t ON e.team_id = t.team_id
-                 LEFT JOIN rank rnk ON e.rank_id = rnk.rank_id
+             JOIN employee e ON r.employee_id = e.employee_id
+             LEFT JOIN headquarters h ON e.head_id = h.head_id
+             LEFT JOIN department d ON e.department_id = d.department_id
+             LEFT JOIN team t ON e.team_id = t.team_id
+             LEFT JOIN rank rnk ON e.rank_id = rnk.rank_id
         WHERE r.employee_id = #{employeeId}
     </select>
 

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="0062e3c8-1a78-4dfb-9c48-00c07ec06cc7" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/DDIS_HR/src/main/java/com/ddis/ddis_hr/eapproval/query/controller/.gitkeep" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DDIS_HR/src/main/java/com/ddis/ddis_hr/eapproval/query/dao/.gitkeep" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DDIS_HR/src/main/java/com/ddis/ddis_hr/eapproval/query/dto/.gitkeep" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DDIS_HR/src/main/java/com/ddis/ddis_hr/eapproval/query/service/.gitkeep" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DDIS_HR/src/main/java/com/ddis/ddis_hr/employee/query/dao/EmployeeMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DDIS_HR/src/main/java/com/ddis/ddis_hr/organization/command/application/dto/DepartmentDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/DDIS_HR/src/main/java/com/ddis/ddis_hr/organization/command/application/dto/DepartmentDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DDIS_HR/src/main/java/com/ddis/ddis_hr/organization/command/application/dto/HeadquartersDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/DDIS_HR/src/main/java/com/ddis/ddis_hr/organization/command/application/dto/HeadquartersDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DDIS_HR/src/main/java/com/ddis/ddis_hr/organization/command/application/dto/TeamDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/DDIS_HR/src/main/java/com/ddis/ddis_hr/organization/command/application/dto/TeamDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DDIS_HR/src/main/java/com/ddis/ddis_hr/organization/query/dto/DepartmentQueryDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/DDIS_HR/src/main/java/com/ddis/ddis_hr/organization/query/dto/DepartmentQueryDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DDIS_HR/src/main/java/com/ddis/ddis_hr/payroll/query/dao/RetirementMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DDIS_HR/src/main/java/com/ddis/ddis_hr/payroll/query/dao/SalaryMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DDIS_HR/src/main/java/com/ddis/ddis_hr/payroll/query/service/EmployeeSearchService.java" beforeDir="false" afterPath="$PROJECT_DIR$/DDIS_HR/src/main/java/com/ddis/ddis_hr/payroll/query/service/EmployeeSearchService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DDIS_HR/src/main/java/com/ddis/ddis_hr/payroll/query/service/RetirementQueryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/DDIS_HR/src/main/java/com/ddis/ddis_hr/payroll/query/service/RetirementQueryServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DDIS_HR/src/main/java/com/ddis/ddis_hr/payroll/query/service/SalaryQueryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/DDIS_HR/src/main/java/com/ddis/ddis_hr/payroll/query/service/SalaryQueryService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DDIS_HR/src/main/resources/com/ddis/ddis_hr/employee/query/mapper/EmployeeMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/DDIS_HR/src/main/resources/com/ddis/ddis_hr/employee/query/mapper/EmployeeMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DDIS_HR/src/main/resources/com/ddis/ddis_hr/payroll/query/mapper/RetirementMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/DDIS_HR/src/main/resources/com/ddis/ddis_hr/payroll/query/mapper/RetirementMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DDIS_HR/src/main/resources/com/ddis/ddis_hr/payroll/query/mapper/SalaryMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/DDIS_HR/src/main/resources/com/ddis/ddis_hr/payroll/query/mapper/SalaryMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DDIS_HR/src/main/resources/sql/ddis_fin_dummy.sql" beforeDir="false" afterPath="$PROJECT_DIR$/DDIS_HR/src/main/resources/sql/ddis_fin_dummy.sql" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$/DDIS_HR">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2xwe7adAu9BSGMizXpeoTJTFoMZ" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Database Script.ddis_fin_dummy.sql.executor": "Run",
+    "Database Script.ddis_fin_schema.sql.executor": "Run",
+    "Gradle.Build DDIS_HR.executor": "Run",
+    "Gradle.DDIS_HR [:com.ddis.ddis_hr.member.HMACKKeyGenerator.main()].executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.DdisHrApplication.executor": "Run",
+    "git-widget-placeholder": "feat/AH/draftdoccreate",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mariadb"
+    ],
+    "RunConfigurationTargetLRU": [
+      "26a64155-c598-4fda-801a-2aed86abdfaa"
+    ]
+  }
+}]]></component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.ddis.ddis_hr.eapproval.query.service" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.ddis.ddis_hr.payroll.query.mapper" />
+      <recent name="com.ddis.ddis_hr.employee.query.mapper" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.DdisHrApplication">
+    <configuration name="HMACKKeyGenerator" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.ddis.ddis_hr.member.HMACKKeyGenerator" />
+      <module name="DDIS_HR.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ddis.ddis_hr.member.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ddis_fin_dummy.sql" type="DatabaseScript" editBeforeRun="true" nameIsGenerated="true">
+      <script-file value="$PROJECT_DIR$/DDIS_HR/src/main/resources/sql/ddis_fin_schema.sql" />
+      <script-mode>FILE</script-mode>
+      <data-source id="26a64155-c598-4fda-801a-2aed86abdfaa" />
+      <method v="2" />
+    </configuration>
+    <configuration name="ddis_fin_schema.sql" type="DatabaseScript" editBeforeRun="true" nameIsGenerated="true">
+      <script-file value="$PROJECT_DIR$/DDIS_HR/src/main/resources/sql/ddis_fin_schema.sql" />
+      <script-mode>FILE</script-mode>
+      <data-source id="26a64155-c598-4fda-801a-2aed86abdfaa" />
+      <method v="2" />
+    </configuration>
+    <configuration name="DdisHrApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="DDIS_HR.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ddis.ddis_hr.DdisHrApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.HMACKKeyGenerator" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.24978.46" />
+        <option value="bundled-js-predefined-d6986cc7102b-76f8388c3a79-JavaScript-IU-243.24978.46" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0062e3c8-1a78-4dfb-9c48-00c07ec06cc7" name="Changes" comment="" />
+      <created>1748853398009</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1748853398009</updated>
+      <workItem from="1748853399132" duration="1233000" />
+      <workItem from="1748871382829" duration="9148000" />
+      <workItem from="1748914300629" duration="122000" />
+      <workItem from="1748914446407" duration="14491000" />
+      <workItem from="1749191411879" duration="18836000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

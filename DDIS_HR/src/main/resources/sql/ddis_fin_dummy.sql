@@ -1,4 +1,6 @@
 -- 공휴일
+USE ddisdb;
+
 INSERT INTO holiday (date, is_holiday, holiday_name, is_weekend) VALUES
     ('2025-01-01', TRUE, '신정', FALSE),
     ('2025-01-04', FALSE, NULL, TRUE),

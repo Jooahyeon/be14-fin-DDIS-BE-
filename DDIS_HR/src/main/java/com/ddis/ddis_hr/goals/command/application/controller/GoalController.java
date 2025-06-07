@@ -31,7 +31,7 @@ public class GoalController {
         return ResponseEntity.ok(goals);
     }
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<Long> createGoal(@RequestBody GoalInsertDTO req,
                                            @AuthenticationPrincipal CustomUserDetails user) {
         req.setEmployeeId(user.getEmployeeId());  // 요청 DTO에 넣어주기

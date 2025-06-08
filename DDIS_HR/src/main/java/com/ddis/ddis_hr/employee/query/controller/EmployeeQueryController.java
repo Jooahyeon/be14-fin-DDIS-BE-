@@ -1,5 +1,6 @@
 package com.ddis.ddis_hr.employee.query.controller;
 
+import com.ddis.ddis_hr.employee.query.dto.EmployeeListDTO;
 import com.ddis.ddis_hr.employee.query.service.EmployeeQueryService;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
 import com.ddis.ddis_hr.employee.query.dto.EmployeeDTO;
@@ -21,23 +22,37 @@ public class EmployeeQueryController {
         this.employeeQueryService = employeeQueryService;                       // employeeService의 인스턴스를 주입 받는다.
     }
 
-    /**
-     * 사원 상세 조회
-     * - path로 사번(employeeId)을 받아서 DTO 리턴
-     */
-//    @GetMapping("/{employeeId}")
-//    public ResponseEntity<EmployeeDTO> getEmployeeDetail(
-//             @PathVariable Long employeeId
-//            ,@AuthenticationPrincipal CustomUserDetails user ) {
-//        EmployeeDTO dto = employeeQueryService.findById(employeeId);
-//        return ResponseEntity.ok(dto);
-//    }
-
-     // 본인 프로필 조회하게 하려면 아래처럼도 가능
-     @GetMapping("/me")
+     // 본인 정보 상세 조회
+     @GetMapping("/myinfo")
      public ResponseEntity<EmployeeDTO> getMyProfile(@AuthenticationPrincipal CustomUserDetails user) {
          EmployeeDTO dto = employeeQueryService.findByMyId(user.getEmployeeId());
          return ResponseEntity.ok(dto);
      }
+
+// 타 사원 정보 상세 조회
+//     @GetMapping("/{id}")
+//     public ResponseEntity<?> getEmployeeById(
+//             @PathVariable Long id,
+//             @AuthenticationPrincipal CustomUserDetails user
+//     ) {
+//         Object result = employeeQueryService.findByIdWithRole(id, user.getAuthorities());
+//         return ResponseEntity.ok(result);
+//     }
+
+    // 사원 목록 조회
+    @GetMapping("/list")
+    public ResponseEntity<List<EmployeeListDTO>> listAll(
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        // 1) 인증 정보가 없으면 401 Unauthorized
+        if (user == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        // 2) 서비스 호출하여 사원 목록 조회
+        List<EmployeeListDTO> list = employeeQueryService.getAll();
+        // 3) 200 OK 로 응답
+        return ResponseEntity.ok(list);
+    }
 }
 

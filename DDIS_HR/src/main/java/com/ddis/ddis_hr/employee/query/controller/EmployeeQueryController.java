@@ -34,7 +34,7 @@ public class EmployeeQueryController {
 //    }
 
      // 본인 프로필 조회하게 하려면 아래처럼도 가능
-     @GetMapping("/me")
+     @GetMapping("/myinfo")
      public ResponseEntity<EmployeeDTO> getMyProfile(@AuthenticationPrincipal CustomUserDetails user) {
          EmployeeDTO dto = employeeQueryService.findByMyId(user.getEmployeeId());
          return ResponseEntity.ok(dto);

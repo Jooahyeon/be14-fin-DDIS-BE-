@@ -578,69 +578,17 @@ INSERT INTO draft_documents (
     employee_id
 ) VALUES
     (
-        'ERP 시스템 도입 추진',
-        '{
-          "department": "기획팀",
-          "position": "대리",
-          "drafter": "남금륭",
-          "draftDate": "2025-06-02",
-          "receiver": ["이수빈"],
-          "reference": ["차승호"],
-          "approvalLines": [
-            {
-              "step": 0,
-              "name": "남금륭",
-              "team": "기획팀",
-              "position": "대리",
-              "status": "기안",
-              "type": "기안",
-              "viewedAt": null,
-              "approvedAt": null,
-              "comment": ""
-            },
-            {
-              "step": 1,
-              "name": "이수빈",
-              "team": "기획팀",
-              "position": "팀장",
-              "status": "대기중",
-              "type": "내부결재",
-              "viewedAt": null,
-              "approvedAt": null,
-              "comment": ""
-            },
-            {
-              "step": 2,
-              "name": "차승호",
-              "team": "기획팀",
-              "position": "부장",
-              "status": "대기중",
-              "type": "내부결재",
-              "viewedAt": null,
-              "approvedAt": null,
-              "comment": ""
-            },
-            {
-              "step": 3,
-              "name": "박미조",
-              "team": "기획팀",
-              "position": "본부장",
-              "status": "대기중",
-              "type": "내부결재",
-              "viewedAt": null,
-              "approvedAt": null,
-              "comment": ""
-            }
-          ],
-          "title": "ERP 시스템 도입 추진",
-          "files": [
-            {
-              "name": "ERP_사업계획서.pdf",
-              "size": 120456,
-              "type": "application/pdf"
-            }
-          ],
-          "body": "ERP 시스템 도입을 위한 사업기안입니다. 검토 부탁드립니다."
+                'ERP 시스템 도입 추진',
+                '{
+          "department":"기획팀",
+          "position":"대리",
+          "drafter":"김개발",
+          "receiver": ["수신자A"],
+          "reference": ["참조자B"],
+          "approvalLines": [],
+          "title": "제목 테스트",
+          "files": [],
+          "body": "본문 테스트입니다"
         }',
         3,                                  -- 보존기간 (1,3,5 중 택1)
         '2028-06-01',                       -- 만료일(보존기간 기준)

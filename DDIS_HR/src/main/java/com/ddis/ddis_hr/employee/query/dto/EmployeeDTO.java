@@ -17,7 +17,8 @@ public class EmployeeDTO {
     private Long employeeId;
     private String employeeName;
     private String employeePwd;
-    private String employeeProfile;
+    private String employeePhotoName;
+    private String employeePhotoUrl;
     private String employeeNation;
     private String employeeGender;
     private LocalDate employeeBirth;

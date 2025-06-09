@@ -67,7 +67,8 @@
                e.employee_id
              , e.employee_name
              , p.position_name
-             , e.employee_profile AS profile_image
+             , e.employee_photo_name AS employeePhotoName
+             , e.employee_photo_url AS employeePhotoUrl
              , COALESCE(ws.work_status_name, '-') AS work_status_name
              , p.position_id
           FROM employee e

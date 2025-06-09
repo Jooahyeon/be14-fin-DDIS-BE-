@@ -8,7 +8,8 @@ public class TeamWorkStatusQueryDTO {
     private Long employeeId;
     private String employeeName;
     private String positionName;
-    private String profileImage;
+    private String employeePhotoName;
+    private String employeePhotoUrl;
     private String workStatusName;
     private Integer positionId;
 

@@ -50,4 +50,37 @@
             #{status}
         </foreach>
     </select>
+
+    <select id="findMeetingsToday" resultType="com.ddis.ddis_hr.attendance.query.dto.MeetingQueryDTO">
+        SELECT
+               team_id
+             , meeting_date
+             , meeting_title
+             , meeting_time
+          FROM meeting
+         WHERE team_id = #{teamId}
+           AND meeting_date = #{today}
+    </select>
+
+    <select id="findTodayTeamStatuses" resultType="com.ddis.ddis_hr.attendance.query.dto.TeamWorkStatusQueryDTO">
+        SELECT
+               e.employee_id
+             , e.employee_name
+             , p.position_name
+             , e.employee_profile AS profile_image
+             , COALESCE(ws.work_status_name, '-') AS work_status_name
+             , p.position_id
+          FROM employee e
+          LEFT JOIN attendance a ON e.employee_id = a.employee_id AND a.work_date = #{today}
+          LEFT JOIN work_status ws ON a.work_status_id = ws.work_status_id
+          JOIN position p ON e.position_id = p.position_id
+         WHERE e.team_id = #{teamId}
+         ORDER BY p.position_id DESC, e.employee_name ASC
+    </select>
+
+    <select id="findTeamNameById" resultType="string">
+        SELECT team_name
+          FROM team
+         WHERE team_id = #{teamId}
+    </select>
 </mapper>

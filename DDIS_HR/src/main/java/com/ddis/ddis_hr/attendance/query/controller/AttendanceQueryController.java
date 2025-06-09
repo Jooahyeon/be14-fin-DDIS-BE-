@@ -1,7 +1,9 @@
 package com.ddis.ddis_hr.attendance.query.controller;
 
+import com.ddis.ddis_hr.attendance.query.dto.MeetingQueryDTO;
 import com.ddis.ddis_hr.attendance.query.dto.PersonalCalendarQueryDTO;
 import com.ddis.ddis_hr.attendance.query.dto.TeamCalendarQueryDTO;
+import com.ddis.ddis_hr.attendance.query.dto.TeamWorkStatusQueryDTO;
 import com.ddis.ddis_hr.attendance.query.service.AttendanceQueryService;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/attendance")
@@ -31,4 +35,27 @@ public class AttendanceQueryController {
         List<TeamCalendarQueryDTO> result = attendanceQueryService.getTeamCalendar(user.getEmployeeId());
         return ResponseEntity.ok(result); // HTTP 200 OK
     }
+
+    @GetMapping("/meeting/today")
+    public ResponseEntity<List<MeetingQueryDTO>> getTodayMeetings(@AuthenticationPrincipal CustomUserDetails user) {
+        List<MeetingQueryDTO> meetings = attendanceQueryService.getTodayMeetings(user.getEmployeeId());
+        return ResponseEntity.ok(meetings);
+    }
+
+    @GetMapping("/status/team")
+    public ResponseEntity<Map<String, Object>> getTeamStatus(@AuthenticationPrincipal CustomUserDetails user) {
+        Long employeeId = user.getEmployeeId();
+        Long teamId = user.getTeamId();
+
+        String teamName = attendanceQueryService.getTeamName(teamId);
+
+        List<TeamWorkStatusQueryDTO> statuses = attendanceQueryService.getTeamWorkStatus(employeeId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("teamName", teamName);
+        response.put("statuses", statuses);
+
+        return ResponseEntity.ok(response);
+    }
+
 }

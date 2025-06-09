@@ -10,4 +10,10 @@ public interface AttendanceQueryService {
     List<PersonalCalendarQueryDTO> getMyCalendar(Long employeeId);
 
     List<TeamCalendarQueryDTO> getTeamCalendar(Long employeeId);
+
+    List<MeetingQueryDTO> getTodayMeetings(Long employeeId);
+
+    List<TeamWorkStatusQueryDTO> getTeamWorkStatus(Long employeeId);
+
+    String getTeamName(Long teamId);
 }

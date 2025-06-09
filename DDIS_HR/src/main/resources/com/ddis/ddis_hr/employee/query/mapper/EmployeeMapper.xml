@@ -113,6 +113,7 @@
             e.bank_name AS bankName,
             e.bank_account AS bankAccount,
             e.bank_depositor AS bankDepositor,
+            e.employment_date AS employmentDate,
             e.employee_email AS employeeEmail
         FROM employee e
                  LEFT JOIN headquarters h ON e.head_id = h.head_id
@@ -160,5 +161,115 @@
         </where>
         ORDER BY e.employee_id
     </select>
+
+<!--    &lt;!&ndash; 일반 사원용: Public &ndash;&gt;-->
+<!--    <select id="findPublicById"-->
+<!--            parameterType="long"-->
+<!--            resultType="com.ddis.ddis_hr.employee.query.dto.EmployeePublicDTO">-->
+<!--        SELECT-->
+<!--            e.employee_id         AS employeeId,-->
+<!--            e.employee_name       AS employeeName,-->
+<!--            e.employee_photo_name AS employeePhotoName,-->
+<!--            e.employee_photo_url  AS employeePhotoUrl,-->
+<!--            e.employee_contact    AS employeeContact,-->
+<!--            e.employee_email      AS employeeEmail,-->
+<!--            e.work_type           AS workType,-->
+<!--            e.employment_date     AS employmentDate,-->
+<!--            e.retirement_date     AS retirementDate,-->
+<!--            p.position_name       AS positionName,-->
+<!--            r.rank_name           AS rankName,-->
+<!--            j.job_name            AS jobName,-->
+<!--            h.head_name           AS headName,-->
+<!--            d.department_name     AS departmentName,-->
+<!--            t.team_name           AS teamName-->
+<!--        FROM employee e-->
+<!--                 LEFT JOIN position p ON e.position_id = p.position_id-->
+<!--                 LEFT JOIN rank     r ON e.rank_id     = r.rank_id-->
+<!--                 LEFT JOIN job      j ON e.job_id      = j.job_id-->
+<!--                 LEFT JOIN headquarters h ON e.head_id           = h.head_id-->
+<!--                 LEFT JOIN department   d ON e.department_id     = d.department_id-->
+<!--                 LEFT JOIN team         t ON e.team_id           = t.team_id-->
+<!--        WHERE e.employee_id = #{employeeId}-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; 인사팀용: HR &ndash;&gt;-->
+<!--    <select id="findHrById"-->
+<!--            parameterType="long"-->
+<!--            resultType="com.ddis.ddis_hr.employee.query.dto.EmployeeHrDTO">-->
+<!--        SELECT-->
+<!--            e.employee_id           AS employeeId,-->
+<!--            e.employee_name         AS employeeName,-->
+<!--            e.employee_pwd          AS employeePwd,-->
+<!--            e.employee_photo_name   AS employeePhotoName,-->
+<!--            e.employee_photo_url    AS employeePhotoUrl,-->
+<!--            e.employee_nation       AS employeeNation,-->
+<!--            e.employee_gender       AS employeeGender,-->
+<!--            e.employee_birth        AS employeeBirth,-->
+<!--            e.employee_resident     AS employeeResident,-->
+<!--            e.employee_contact      AS employeeContact,-->
+<!--            e.employee_email        AS employeeEmail,-->
+<!--            e.employee_address      AS employeeAddress,-->
+<!--            e.employment_date       AS employmentDate,-->
+<!--            e.retirement_date       AS retirementDate,-->
+<!--            e.work_type             AS workType,-->
+<!--            e.bank_name             AS bankName,-->
+<!--            e.bank_depositor        AS bankDepositor,-->
+<!--            e.bank_account          AS bankAccount,-->
+<!--            e.is_disorder           AS isDisorder,-->
+<!--            e.military_type         AS militaryType,-->
+<!--            e.is_marriage           AS isMarriage,-->
+<!--            e.marriage_date         AS marriageDate,-->
+<!--            e.family_count          AS familyCount,-->
+<!--            e.career_year_count     AS careerYearCount,-->
+<!--            e.previous_company      AS previousCompany,-->
+<!--            e.final_academic         AS finalAcademic,-->
+<!--            e.employee_school       AS employeeSchool,-->
+<!--            e.employee_dept         AS employeeDept,-->
+<!--            e.graduation_year       AS graduationYear,-->
+<!--            e.is_four_insurances    AS isFourInsurances,-->
+<!--            e.position_id           AS positionId,-->
+<!--            e.rank_id               AS rankId,-->
+<!--            e.job_id                AS jobId,-->
+<!--            e.head_id               AS headId,-->
+<!--            e.department_id         AS departmentId,-->
+<!--            e.team_id               AS teamId,-->
+<!--            p.position_name         AS positionName,-->
+<!--            r.rank_name             AS rankName,-->
+<!--            j.job_name              AS jobName,-->
+<!--            h.head_name             AS headName,-->
+<!--            d.department_name       AS departmentName,-->
+<!--            t.team_name             AS teamName-->
+<!--        FROM employee e-->
+<!--                 LEFT JOIN position p ON e.position_id = p.position_id-->
+<!--                 LEFT JOIN rank     r ON e.rank_id     = r.rank_id-->
+<!--                 LEFT JOIN job      j ON e.job_id      = j.job_id-->
+<!--                 LEFT JOIN headquarters h ON e.head_id           = h.head_id-->
+<!--                 LEFT JOIN department   d ON e.department_id     = d.department_id-->
+<!--                 LEFT JOIN team         t ON e.team_id           = t.team_id-->
+<!--        WHERE e.employee_id = #{employeeId}-->
+<!--    </select>-->
+
+    <select id="findAll"
+            resultType="com.ddis.ddis_hr.employee.query.dto.EmployeeListDTO">
+        SELECT
+            e.employee_id      AS employeeId,
+            e.employee_name    AS employeeName,
+            p.position_name    AS positionName,
+            r.rank_name        AS rankName,
+            j.job_name         AS jobName,
+            h.head_name        AS headName,
+            d.department_name  AS departmentName,
+            t.team_name        AS teamName
+        FROM employee e
+                 LEFT JOIN position     p ON e.position_id   = p.position_id
+                 LEFT JOIN rank         r ON e.rank_id       = r.rank_id
+                 LEFT JOIN job          j ON e.job_id        = j.job_id
+                 LEFT JOIN headquarters h ON e.head_id       = h.head_id
+                 LEFT JOIN department   d ON e.department_id = d.department_id
+                 LEFT JOIN team         t ON e.team_id       = t.team_id
+        ORDER BY e.employee_id
+    </select>
+
+
 
 </mapper>

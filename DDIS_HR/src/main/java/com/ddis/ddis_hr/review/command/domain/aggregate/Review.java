@@ -20,7 +20,7 @@ public class Review {
     private Long reviewId;
 
     @Column(name = "review_score")
-    private Integer reviewScore;
+    private Double reviewScore;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_grade_id")

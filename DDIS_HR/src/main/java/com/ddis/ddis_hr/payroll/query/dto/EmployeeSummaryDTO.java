@@ -2,6 +2,8 @@ package com.ddis.ddis_hr.payroll.query.dto;
 
 import lombok.*;
 
+import java.time.LocalDate;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -15,7 +17,7 @@ public class EmployeeSummaryDTO {
     private String departmentName;
     private String teamName;
     private String rankName;
-
+    private LocalDate employmentDate;
     private String bankName;
     private String bankAccount;
     private String bankDepositor;

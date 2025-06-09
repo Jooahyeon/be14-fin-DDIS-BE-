@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 
-@Alias("MemberEmployeeDTO") // member 패키지
-public class EmployeeDTO {
+@Alias("EmployeeHrDTO")
+public class EmployeeHrDTO {
     private Long employeeId;
     private String employeeName;
     private String employeePwd;
@@ -50,7 +50,6 @@ public class EmployeeDTO {
     private Integer graduationYear;
 
     private Boolean isFourInsurances;
-
     private Long positionId;
     private Long rankId;
     private Long jobId;
@@ -65,4 +64,5 @@ public class EmployeeDTO {
     private String headName;
     private String departmentName;
     private String teamName;
+
 }

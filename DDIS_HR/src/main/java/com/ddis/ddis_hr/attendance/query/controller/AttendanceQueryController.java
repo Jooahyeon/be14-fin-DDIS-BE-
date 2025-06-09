@@ -1,9 +1,6 @@
 package com.ddis.ddis_hr.attendance.query.controller;
 
-import com.ddis.ddis_hr.attendance.query.dto.MeetingQueryDTO;
-import com.ddis.ddis_hr.attendance.query.dto.PersonalCalendarQueryDTO;
-import com.ddis.ddis_hr.attendance.query.dto.TeamCalendarQueryDTO;
-import com.ddis.ddis_hr.attendance.query.dto.TeamWorkStatusQueryDTO;
+import com.ddis.ddis_hr.attendance.query.dto.*;
 import com.ddis.ddis_hr.attendance.query.service.AttendanceQueryService;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +53,13 @@ public class AttendanceQueryController {
         response.put("statuses", statuses);
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/status/me")
+    public ResponseEntity<MyWorkStatusQueryDTO> getMyWorkStatus(@AuthenticationPrincipal CustomUserDetails user) {
+        Long employeeId = user.getEmployeeId();
+        MyWorkStatusQueryDTO dto = attendanceQueryService.getMyWorkStatus(employeeId);
+        return ResponseEntity.ok(dto);
     }
 
 }

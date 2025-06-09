@@ -84,4 +84,18 @@
           FROM team
          WHERE team_id = #{teamId}
     </select>
+
+    <select id="findMyWorkStatus" resultType="com.ddis.ddis_hr.attendance.query.dto.MyWorkStatusQueryDTO">
+        SELECT
+               e.employee_name
+             , r.rank_name
+             , ws.work_status_name
+             , a.check_in_time
+             , a.check_out_time
+          FROM employee e
+          JOIN rank r ON e.rank_id = r.rank_id
+          LEFT JOIN attendance a ON e.employee_id = a.employee_id AND a.work_date = #{today}
+          LEFT JOIN work_status ws ON a.work_status_id = ws.work_status_id
+         WHERE e.employee_id = #{employeeId}
+    </select>
 </mapper>

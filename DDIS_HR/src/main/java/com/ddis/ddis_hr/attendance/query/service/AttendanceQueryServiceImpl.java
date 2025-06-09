@@ -81,4 +81,10 @@ public class AttendanceQueryServiceImpl implements AttendanceQueryService {
         return calendarMapper.findTeamNameById(teamId);
     }
 
+    @Override
+    public MyWorkStatusQueryDTO getMyWorkStatus(Long employeeId) {
+        String today = LocalDate.now().toString();
+        return calendarMapper.findMyWorkStatus(employeeId, today);
+    }
+
 }

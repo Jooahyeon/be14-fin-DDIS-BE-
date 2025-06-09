@@ -28,4 +28,8 @@ public interface AttendanceMapper {
                                                        @Param("today") String today);
 
     String findTeamNameById(Long teamId);
+
+    MyWorkStatusQueryDTO findMyWorkStatus(@Param("employeeId") Long employeeId,
+                                          @Param("today") String today);
+
 }

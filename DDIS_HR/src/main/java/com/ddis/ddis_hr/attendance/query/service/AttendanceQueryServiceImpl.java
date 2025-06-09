@@ -6,6 +6,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -59,4 +60,25 @@ public class AttendanceQueryServiceImpl implements AttendanceQueryService {
 
         return events;
     }
+
+    @Override
+    public List<MeetingQueryDTO> getTodayMeetings(Long employeeId) {
+        EmployeeInfoQueryDTO employee = calendarMapper.findById(employeeId);
+        Long teamId = employee.getTeamId();
+        return calendarMapper.findMeetingsToday(teamId, LocalDate.now());
+    }
+
+    @Override
+    public List<TeamWorkStatusQueryDTO> getTeamWorkStatus(Long employeeId) {
+        EmployeeInfoQueryDTO employee = calendarMapper.findById(employeeId);
+        Long teamId = employee.getTeamId();
+        String today = LocalDate.now().toString();
+        return calendarMapper.findTodayTeamStatuses(teamId, today);
+    }
+
+    @Override
+    public String getTeamName(Long teamId) {
+        return calendarMapper.findTeamNameById(teamId);
+    }
+
 }

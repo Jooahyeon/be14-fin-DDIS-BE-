@@ -16,4 +16,7 @@ public interface AttendanceQueryService {
     List<TeamWorkStatusQueryDTO> getTeamWorkStatus(Long employeeId);
 
     String getTeamName(Long teamId);
+
+    MyWorkStatusQueryDTO getMyWorkStatus(Long employeeId);
+
 }

@@ -17,7 +17,7 @@
         <result property="departmentId" column="department_id"/>
         <result property="teamId"       column="team_id"      />
         <result property="email"        column="employee_email"/>
-        <result property="birthdate"    column="birthdate"    />
+        <result property="birthdate"    column="employee_birth"    />
     </resultMap>
 
     <!-- TeamDto 매핑
@@ -66,6 +66,18 @@
         <id     property="headId"   column="head_id"  />
         <result property="headName" column="head_name"/>
         <result property="headCode" column="head_code"/>
+
+        <!-- ② headManager 매핑 -->
+        <association property="headManager"
+                     javaType="com.ddis.ddis_hr.organization.query.dto.EmployeeQueryDTO">
+            <id     property="employeeId"   column="mgr_emp_id"/>
+            <result property="employeeName" column="mgr_emp_name"/>
+            <result property="positionCode" column="mgr_position_code"/>
+            <result property="positionName" column="mgr_position_name"/>
+            <result property="rankName"     column="mgr_rank_name"/>
+            <result property="email"        column="mgr_email"/>
+            <!-- 필요에 따라 다른 필드도 추가 -->
+        </association>
 
         <!-- head_id를 넘겨 selectDepartmentsByHeadId → List<DepartmentDto> 로 매핑 -->
         <collection property="departments"
@@ -130,7 +142,7 @@
             h.head_id   AS headId,
             h.head_name AS headName,
             h.head_code AS headCode
-        FROM head h
+        FROM headquarters h
         ORDER BY h.head_id
     </select>
 

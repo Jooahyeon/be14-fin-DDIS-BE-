@@ -2,9 +2,7 @@ package com.ddis.ddis_hr.organization.query.service;
 
 import com.ddis.ddis_hr.organization.query.dao.IntroductionMapper;
 //import com.ddis.ddis_hr.organization.query.dao.JobQueryMapper;
-import com.ddis.ddis_hr.organization.query.dto.DepartmentIntroductionQueryDTO;
-import com.ddis.ddis_hr.organization.query.dto.JobIntroductionQueryDTO;
-import com.ddis.ddis_hr.organization.query.dto.TeamIntroductionQueryDTO;
+import com.ddis.ddis_hr.organization.query.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,4 +46,15 @@ public class IntroductionQueryService {
         return introductionMapper.selectJobsByTeamId(teamId);
     }
 
+    public EmployeeQueryDTO getEmployeeById(Long employeeId) {
+        return introductionMapper.selectEmployeeById(employeeId);
+    }
+
+    public List<PositionDTO> getPositionsByJob(Long jobId) {
+        return introductionMapper.selectPositionsByJobId(jobId);
+    }
+
+    public List<RankDTO> getRanksByJob(Long jobId) {
+        return introductionMapper.selectRanksByJobId(jobId);
+    }
 }

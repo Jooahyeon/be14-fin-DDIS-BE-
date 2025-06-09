@@ -1,8 +1,6 @@
 package com.ddis.ddis_hr.organization.query.controller;
 
-import com.ddis.ddis_hr.organization.query.dto.DepartmentIntroductionQueryDTO;
-import com.ddis.ddis_hr.organization.query.dto.JobIntroductionQueryDTO;
-import com.ddis.ddis_hr.organization.query.dto.TeamIntroductionQueryDTO;
+import com.ddis.ddis_hr.organization.query.dto.*;
 import com.ddis.ddis_hr.organization.query.service.IntroductionQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -74,5 +72,31 @@ public class IntroductionQueryController {
             @PathVariable long teamId) {
         List<JobIntroductionQueryDTO> jobs = introductionQueryService.getJobsByTeam(teamId);
         return ResponseEntity.ok(jobs);
+    }
+
+    /** 특정 직무(jobId) 에 속한 직책 목록 조회 */
+    @GetMapping("/job/{jobId}/positions")
+    public ResponseEntity<List<PositionDTO>> getPositionsByJob(
+            @PathVariable Long jobId) {
+        List<PositionDTO> list = introductionQueryService.getPositionsByJob(jobId);
+        return ResponseEntity.ok(list);
+    }
+
+    /** 특정 직무(jobId) 에 속한 직급 목록 조회 */
+    @GetMapping("/job/{jobId}/ranks")
+    public ResponseEntity<List<RankDTO>> getRanksByJob(
+            @PathVariable Long jobId) {
+        List<RankDTO> list = introductionQueryService.getRanksByJob(jobId);
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/employee/{employeeId}")
+    public ResponseEntity<EmployeeQueryDTO> getEmployee(
+            @PathVariable Long employeeId) {
+        EmployeeQueryDTO emp = introductionQueryService.getEmployeeById(employeeId);
+        if (emp == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(emp);
     }
 }

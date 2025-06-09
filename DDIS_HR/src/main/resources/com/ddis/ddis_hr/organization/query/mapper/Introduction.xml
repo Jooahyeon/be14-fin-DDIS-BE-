@@ -69,6 +69,27 @@
                     select="selectTeamsByDepartmentId"/>
     </resultMap>
 
+    <resultMap id="EmployeeResult"
+               type="com.ddis.ddis_hr.organization.query.dto.EmployeeQueryDTO">
+        <id     property="employeeId"   column="employee_id"/>
+        <result property="employeeName" column="employee_name"/>
+        <!-- 직책 코드·이름 -->
+        <result property="positionCode" column="position_code"/>
+        <result property="positionName" column="position_name"/>
+        <!-- 직급 코드·이름 -->
+        <result property="rankCode"     column="rank_code"/>
+        <result property="rankName"     column="rank_name"/>
+        <!-- 직무 이름만 -->
+        <result property="jobName"      column="job_name"/>
+        <!-- 조직 정보 -->
+        <result property="headId"       column="head_id"/>
+        <result property="departmentId" column="department_id"/>
+        <result property="teamId"       column="team_id"/>
+        <!-- 그 외 필드 -->
+        <result property="birthdate"    column="employee_birth"/>
+        <result property="email"        column="employee_email"/>
+    </resultMap>
+
 
     <!-- 4) 부서 소개만 조회 (department_id → introduction_context) -->
     <select id="selectDepartmentIntroduction"
@@ -161,4 +182,45 @@
         WHERE t.team_id = #{teamId}
     </select>
 
+    <!-- Position 조회 -->
+    <select id="selectPositionsByJobId" resultType="com.ddis.ddis_hr.organization.query.dto.PositionDTO">
+        SELECT
+            position_code AS positionCode,
+            position_name AS positionName
+        FROM position
+    </select>
+
+    <!-- Rank 조회 -->
+    <select id="selectRanksByJobId" resultType="com.ddis.ddis_hr.organization.query.dto.RankDTO">
+        SELECT
+            rank_code AS rankCode,
+            rank_name AS rankName
+        FROM rank
+    </select>
+
+    <select id="selectEmployeeById"
+            parameterType="long"
+            resultMap="EmployeeResult">
+        SELECT
+            e.employee_id        AS employee_id,
+            e.employee_name      AS employee_name,
+            -- position 테이블에서 코드·이름을 가져오기 위해 조인
+            p.position_code      AS position_code,
+            p.position_name      AS position_name,
+            -- rank 테이블에서 코드·이름
+            r.rank_code          AS rank_code,
+            r.rank_name          AS rank_name,
+            j.job_name           AS job_name,
+            -- FK 컬럼들은 그대로
+            e.head_id            AS head_id,
+            e.department_id      AS department_id,
+            e.team_id            AS team_id,
+            DATE_FORMAT(e.employee_birth, '%Y-%m-%d') AS employee_birth,
+            e.employee_email     AS employee_email
+        FROM employee e
+                 LEFT JOIN position p ON e.position_id = p.position_id
+                 LEFT JOIN rank     r ON e.rank_id     = r.rank_id
+                 LEFT JOIN job      j ON e.job_id      = j.job_id
+        WHERE e.employee_id = #{employeeId}
+    </select>
 </mapper>

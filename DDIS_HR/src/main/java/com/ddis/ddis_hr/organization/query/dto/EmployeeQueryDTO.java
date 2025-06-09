@@ -16,7 +16,7 @@ public class EmployeeQueryDTO {
     private String positionName;
     private String rankCode;
     private String rankName;
-//    private String jobName;
+    private String jobName;
     private Long headId;
     private Long departmentId;
     private Long teamId;

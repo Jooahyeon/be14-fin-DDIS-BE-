@@ -29,7 +29,7 @@ public class EmployeeQueryController {
          return ResponseEntity.ok(dto);
      }
 
-// 타 사원 정보 상세 조회
+     // 타 사원 정보 상세 조회
 //     @GetMapping("/{id}")
 //     public ResponseEntity<?> getEmployeeById(
 //             @PathVariable Long id,

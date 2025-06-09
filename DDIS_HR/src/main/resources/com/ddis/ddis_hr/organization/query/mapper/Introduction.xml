@@ -223,4 +223,27 @@
                  LEFT JOIN job      j ON e.job_id      = j.job_id
         WHERE e.employee_id = #{employeeId}
     </select>
+
+    <select id="findAllEmployees" resultType="com.ddis.ddis_hr.organization.query.dto.EmployeeQueryDTO">
+        SELECT
+            e.employee_id        AS employee_id,
+            e.employee_name      AS employee_name,
+            -- position 테이블에서 코드·이름을 가져오기 위해 조인
+            p.position_code      AS position_code,
+            p.position_name      AS position_name,
+            -- rank 테이블에서 코드·이름
+            r.rank_code          AS rank_code,
+            r.rank_name          AS rank_name,
+            j.job_name           AS job_name,
+            -- FK 컬럼들은 그대로
+            e.head_id            AS head_id,
+            e.department_id      AS department_id,
+            e.team_id            AS team_id,
+            DATE_FORMAT(e.employee_birth, '%Y-%m-%d') AS employee_birth,
+            e.employee_email     AS employee_email
+        FROM employee e
+                 LEFT JOIN position p ON e.position_id = p.position_id
+                 LEFT JOIN rank     r ON e.rank_id     = r.rank_id
+                 LEFT JOIN job      j ON e.job_id      = j.job_id
+    </select>
 </mapper>

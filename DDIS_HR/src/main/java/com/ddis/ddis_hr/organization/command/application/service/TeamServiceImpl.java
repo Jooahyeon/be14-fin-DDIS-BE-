@@ -25,9 +25,9 @@ public class TeamServiceImpl implements TeamService {
     public TeamDTO createTeam(TeamRequestDTO requestDto) {
         // 1) departmentName으로 부서 조회
         DepartmentEntity dept = departmentRepository
-                .findByDepartmentName(requestDto.getDepartmentName())
+                .findByDepartmentId(requestDto.getDepartmentId())
                 .orElseThrow(() ->
-                        new RuntimeException("해당 이름의 부서를 찾을 수 없습니다: " + requestDto.getDepartmentName()));
+                        new RuntimeException("해당 이름의 부서를 찾을 수 없습니다: " + requestDto.getDepartmentId()));
 
         // 2) teamCode 자동 생성
         TeamEntity last = teamRepository.findTopByOrderByTeamCodeDesc();
@@ -58,9 +58,9 @@ public class TeamServiceImpl implements TeamService {
 
         // 1) departmentName으로 부서 조회
         DepartmentEntity dept = departmentRepository
-                .findByDepartmentName(requestDto.getDepartmentName())
+                .findByDepartmentId(requestDto.getDepartmentId())
                 .orElseThrow(() ->
-                        new RuntimeException("해당 이름의 부서를 찾을 수 없습니다: " + requestDto.getDepartmentName()));
+                        new RuntimeException("해당 이름의 부서를 찾을 수 없습니다: " + requestDto.getDepartmentId()));
 
         // 2) 부서 연결 변경
         existing.setDepartment(dept);

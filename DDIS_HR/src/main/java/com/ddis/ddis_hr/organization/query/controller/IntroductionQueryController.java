@@ -99,4 +99,10 @@ public class IntroductionQueryController {
         }
         return ResponseEntity.ok(emp);
     }
+
+    /** 사원 전체 조회 */
+    @GetMapping("/employees")
+    public List<EmployeeQueryDTO> getAllEmployees() {
+        return introductionQueryService.findAllEmployees();
+    }
 }

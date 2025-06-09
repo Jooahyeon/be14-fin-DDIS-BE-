@@ -35,4 +35,6 @@ public interface IntroductionMapper {
     List<PositionDTO> selectPositionsByJobId(Long jobId);
 
     List<RankDTO> selectRanksByJobId(Long jobId);
+
+    List<EmployeeQueryDTO> findAllEmployees();
 }

@@ -57,4 +57,8 @@ public class IntroductionQueryService {
     public List<RankDTO> getRanksByJob(Long jobId) {
         return introductionMapper.selectRanksByJobId(jobId);
     }
+
+    public List<EmployeeQueryDTO> findAllEmployees() {
+        return introductionMapper.findAllEmployees();
+    }
 }

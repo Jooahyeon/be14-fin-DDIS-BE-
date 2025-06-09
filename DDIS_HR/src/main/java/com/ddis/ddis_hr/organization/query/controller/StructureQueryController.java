@@ -26,44 +26,37 @@ public class StructureQueryController {
     }
 
 
-    // 본부 전체 계층(부서→팀→팀원) 조회
+    /** 특정 본부 계층(부서→팀→팀원)만 조회 */
     @GetMapping("/hierarchy")
     public List<HeadQueryDTO> getFullHierarchy() {
         return structureQueryService.getOrganizationHierarchy();
     }
 
-
-     // 특정 본부 계층(부서→팀→팀원)만 조회
+     /** 특정 본부 계층(부서→팀→팀원)만 조회 */
     @GetMapping("/heads/{headId}")
     public HeadQueryDTO getHeadHierarchy(@PathVariable("headId") Long headId) {
         return structureQueryService.getHeadHierarchy(headId);
     }
 
-    // 특정 부서 계층(팀→팀원)만 조회
+    /** 특정 부서 계층(팀→팀원)만 조회 */
     @GetMapping("/departments/{deptId}")
     public DepartmentQueryDTO getDepartmentHierarchy(@PathVariable("deptId") Long deptId) {
         return structureQueryService.getDepartmentHierarchy(deptId);
     }
 
-    // 특정 팀 계층(팀원)만 조회
+    /** 특정 팀 계층(팀원)만 조회 */
     @GetMapping("/teams/{teamId}")
     public TeamQueryDTO getTeamHierarchy(@PathVariable("teamId") Long teamId) {
         return structureQueryService.getTeamHierarchy(teamId);
     }
 
-    // 특정 팀의 팀원 목록만 조회
+    /** 특정 팀의 팀원 목록만 조회 */
     @GetMapping("/teams/{teamId}/members")
     public List<EmployeeQueryDTO> getMembers(@PathVariable("teamId") Long teamId) {
         return structureQueryService.getMembersByTeam(teamId);
     }
 
-    /**
-     * 사원 상세 조회
-     * GET /api/employee/{employeeId}
-     *
-     * @param employeeId 조회할 사원 고유번호
-     * @return EmployeeQueryDTO (해당 사원이 없을 경우 HTTP 404)
-     */
+    /** 사원 상세 조회 */
     @GetMapping("/employee/{employeeId}")
     public ResponseEntity<EmployeeQueryDTO> getEmployeeDetail(@PathVariable Long employeeId) {
         EmployeeQueryDTO dto = structureQueryService.getEmployeeById(employeeId);
@@ -74,12 +67,14 @@ public class StructureQueryController {
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping
+    /** 모든 본부만 조회 */
+    @GetMapping("/heads")
     public ResponseEntity<List<HeadQueryDTO>> getAllHeads() {
         List<HeadQueryDTO> heads = structureQueryService.getAllHeads();
         return ResponseEntity.ok(heads);
     }
 
+    /** 특정 본부 이름 조회 */
     @GetMapping("/head/{headId}/name")
     public ResponseEntity<String> getHeadName(@PathVariable Long headId) {
         String headName = structureQueryService.getHeadNameById(headId);
@@ -89,6 +84,7 @@ public class StructureQueryController {
         return ResponseEntity.ok(headName);
     }
 
+    /** 특정 본부 코드 조회 */
     @GetMapping("/head/{headId}/code")
     public ResponseEntity<String> getHeadCode(@PathVariable Long headId) {
         String headCode = structureQueryService.getHeadCodeById(headId);
@@ -98,4 +94,23 @@ public class StructureQueryController {
         return ResponseEntity.ok(headCode);
     }
 
+    /** 특정 본부의 부서 정보(+부장) 조회 */
+    @GetMapping("/heads/{headId}/departments")
+    public ResponseEntity<List<DepartmentQueryDTO>> getDepartmentsByHeadId(@PathVariable Long headId) {
+        List<DepartmentQueryDTO> departments = structureQueryService.getDepartmentsByHeadId(headId);
+        if (departments == null || departments.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(departments);
+    }
+
+    /** 특정 부서의 부서장 조회*/
+    @GetMapping("/departments/{deptId}/manager")
+    public ResponseEntity<EmployeeQueryDTO> getDeptManager(@PathVariable("deptId") Long deptId) {
+        EmployeeQueryDTO manager = structureQueryService.getDeptManagerByDepartmentId(deptId);
+        if (manager == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(manager);
+    }
 }

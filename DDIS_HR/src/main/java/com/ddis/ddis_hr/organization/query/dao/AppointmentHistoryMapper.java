@@ -16,12 +16,16 @@ public interface AppointmentHistoryMapper {
     /* appointment_id 로 단건 조회 */
     List<AppointmentHistoryQueryDTO> selectByAppointmentId(@Param("appointmentId") Long appointmentId);
 
+    List<AppointmentHistoryQueryDTO> selectByAppointmentHistoryId(@Param("appointmentHistoryId") Long appointmentHistoryId);
+
     /* employee_id 로 해당 사원(직원)의 모든 appointment 조회 */
     List<AppointmentHistoryQueryDTO> selectByEmployeeId(@Param("employeeId") Long employeeId);
 
     // 발령 유형 별 조회
     List<AppointmentHistoryQueryDTO> selectByAppointmentType(@Param("appointmentType") String appointmentType);
 
-    // 상태가 '승인'인 레코드만 모두 가져오는 메서드
-    List<AppointmentHistoryQueryDTO> findByAppointmentStatus(@Param("status") String status);
+    // 상태가 '승인'인 레코드만 모두 가져오는 메서드 (인사발령 이력 목록에 보여질 데이터)
+    List<AppointmentHistoryQueryDTO> findByAppointmentStatus();
+
+//    List<AppointmentHistoryQueryDTO> getApprovedHistories();
 }

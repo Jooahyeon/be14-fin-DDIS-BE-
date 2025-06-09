@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface DepartmentRepository extends JpaRepository<DepartmentEntity, Long> {
     DepartmentEntity findTopByOrderByDepartmentCodeDesc();
-    Optional<DepartmentEntity> findByDepartmentName(String departmentName);
+    Optional<DepartmentEntity> findByDepartmentId(Long departmentId);
 }

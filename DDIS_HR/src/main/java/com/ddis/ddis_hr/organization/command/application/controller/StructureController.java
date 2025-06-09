@@ -1,30 +1,105 @@
 package com.ddis.ddis_hr.organization.command.application.controller;
 
-import com.ddis.ddis_hr.organization.command.application.dto.HeadquartersDTO;
+import com.ddis.ddis_hr.organization.command.application.dto.*;
 //import com.ddis.ddis_hr.organization.command.application.service.StructureService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ddis.ddis_hr.organization.command.application.service.DepartmentService;
+import com.ddis.ddis_hr.organization.command.application.service.HeadquartersService;
+import com.ddis.ddis_hr.organization.command.application.service.TeamService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/organization")
+@RequestMapping("/org")
 public class StructureController {
-//
-//    private final StructureService structureService;
-//
-//    public StructureController(StructureService structureService) {
-//        this.structureService = structureService;
-//    }
-//
-//    /**
-//     * 1) 조직도 전체 구조 조회
-//     *    GET  /api/organization/tree
-//     *    - 본부 → 부서 → 팀 계층을 모두 포함한 DTO 트리 구조 반환
-//     */
-//    @GetMapping("/tree")
-//    public List<HeadquartersDTO> getHierarchy() {
-//        return StructureService.getHierarchy();
-//    }
+
+    private final HeadquartersService headquartersService;
+    private final DepartmentService departmentService;
+    private final TeamService teamService;
+
+    public StructureController(
+            HeadquartersService headquartersService,
+            DepartmentService departmentService,
+            TeamService teamService
+    ) {
+        this.headquartersService = headquartersService;
+        this.departmentService  = departmentService;
+        this.teamService        = teamService;
+    }
+
+    // 본부
+    /** 본부 생성 **/
+    @PostMapping("/create/head")
+    public ResponseEntity<HeadquartersDTO> createHeadquarters(
+            @RequestBody HeadquartersRequestDTO requestDto) {
+        HeadquartersDTO created = headquartersService.createHeadquarters(requestDto);
+        return ResponseEntity.ok(created);
+    }
+
+    /** 본부 수정 **/
+    @PutMapping("/update/head/{id}")
+    public ResponseEntity<HeadquartersDTO> updateHeadquarters(
+            @PathVariable Long id,
+            @RequestBody HeadquartersRequestDTO requestDto) {
+        HeadquartersDTO updated = headquartersService.updateHeadquarters(id, requestDto);
+        return ResponseEntity.ok(updated);
+    }
+
+    /** 본부 삭제 **/
+    @DeleteMapping("/delete/head/{id}")
+    public ResponseEntity<Void> deleteHeadquarters(@PathVariable Long id) {
+        headquartersService.deleteHeadquarters(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // 부서
+    /** 부서 생성 **/
+    @PostMapping("/create/department")
+    public ResponseEntity<DepartmentDTO> createDepartment(
+            @RequestBody DepartmentRequestDTO requestDto) {
+        DepartmentDTO created = departmentService.createDepartment(requestDto);
+        return ResponseEntity.ok(created);
+    }
+
+    /** 부서 수정 **/
+    @PutMapping("/update/department/{id}")
+    public ResponseEntity<DepartmentDTO> updateDepartment(
+            @PathVariable Long id,
+            @RequestBody DepartmentRequestDTO requestDto) {
+        DepartmentDTO updated = departmentService.updateDepartment(id, requestDto);
+        return ResponseEntity.ok(updated);
+    }
+
+    /** 부서 삭제 **/
+    @DeleteMapping("/delete/department/{id}")
+    public ResponseEntity<Void> deleteDepartment(@PathVariable Long id) {
+        departmentService.deleteDepartment(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // 팀
+    /** 팀 생성 **/
+    @PostMapping("/create/team")
+    public ResponseEntity<TeamDTO> createTeam(
+            @RequestBody TeamRequestDTO requestDto) {
+        TeamDTO created = teamService.createTeam(requestDto);
+        return ResponseEntity.ok(created);
+    }
+
+    /** 팀 수정 **/
+    @PutMapping("/update/team/{id}")
+    public ResponseEntity<TeamDTO> updateTeam(
+            @PathVariable Long id,
+            @RequestBody TeamRequestDTO requestDto) {
+        TeamDTO updated = teamService.updateTeam(id, requestDto);
+        return ResponseEntity.ok(updated);
+    }
+
+    /** 팀 삭제 **/
+    @DeleteMapping("/delete/team/{id}")
+    public ResponseEntity<Void> deleteTeam(@PathVariable Long id) {
+        teamService.deleteTeam(id);
+        return ResponseEntity.noContent().build();
+    }
 }

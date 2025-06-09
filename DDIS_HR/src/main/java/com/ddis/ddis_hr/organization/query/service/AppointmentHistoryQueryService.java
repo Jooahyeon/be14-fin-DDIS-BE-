@@ -21,6 +21,10 @@ public class AppointmentHistoryQueryService {
         return historyMapper.selectAllHistory();
     }
 
+    public List<AppointmentHistoryQueryDTO> getHistoriesByHistoryId(Long appointmentHistoryId) {
+        return historyMapper.selectByAppointmentHistoryId(appointmentHistoryId);
+    }
+
     /* 특정 사원(employeeId)의 이력만 조회 */
     public List<AppointmentHistoryQueryDTO> getHistoriesByEmployeeId(Long employeeId) {
         return historyMapper.selectByEmployeeId(employeeId);
@@ -40,6 +44,7 @@ public class AppointmentHistoryQueryService {
      * 상태가 '승인'인 AppointmentHistory 전체 조회
      */
     public List<AppointmentHistoryQueryDTO> getApprovedHistories() {
-        return historyMapper.findByAppointmentStatus("승인");
+        return historyMapper.findByAppointmentStatus();
     }
+
 }

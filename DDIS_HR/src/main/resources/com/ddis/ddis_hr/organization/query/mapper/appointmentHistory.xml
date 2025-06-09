@@ -5,10 +5,11 @@
 
 <mapper namespace="com.ddis.ddis_hr.organization.query.dao.AppointmentHistoryMapper">
 
-    <resultMap id="AppointmentHistoryResultMap" type="com.ddis.ddis_hr.organization.query.dto.DepartmentIntroductionQueryDTO">
+    <resultMap id="AppointmentHistoryResultMap" type="com.ddis.ddis_hr.organization.query.dto.AppointmentHistoryQueryDTO">
         <id property="appointmentHistoryId" column="appointment_history_id"/>
         <result property="appointmentId" column="appointment_id"/>
         <result property="employeeId" column="employee_id"/>
+        <result property="employeeName" column="employee_name"/>
         <result property="fromHeadCode" column="from_head_code"/>
         <result property="toHeadCode" column="to_head_code"/>
         <result property="fromDepartmentCode" column="from_department_code"/>
@@ -106,6 +107,22 @@
         ORDER BY appointment_effective_date DESC
     </select>
 
+    <select id="selectByAppointmentHistoryId" resultMap="AppointmentHistoryResultMap">
+        SELECT
+            ah.appointment_history_id,
+            ah.appointment_id,
+            ah.employee_id,
+            e.employee_name,
+            ah.appointment_type,
+            ah.appointment_reason,
+            ah.appointment_effective_date,
+            ah.appointment_history_created_at
+        FROM appointment_history ah
+        LEFT JOIN employee e
+            ON ah.employee_id = e.employee_id
+        WHERE ah.appointment_history_id = #{appointmentHistoryId}
+    </select>
+
     <select id="selectByAppointmentType" resultMap="AppointmentHistoryResultMap" parameterType="string">
         SELECT
         appointment_history_id            AS appointmentHistoryId,
@@ -134,33 +151,18 @@
     </select>
 
     <select id="findByAppointmentStatus"
-            resultMap="AppointmentHistoryResultMap"
-            parameterType="String">
+            resultMap="AppointmentHistoryResultMap">
+
         SELECT
-        appointment_history_id            AS appointmentHistoryId,
-        appointment_id        AS appointmentId,
-        employee_id           AS employeeId,
-        from_head_code        AS fromHeadCode,
-        to_head_code          AS toHeadCode,
-        from_department_code  AS fromDepartmentCode,
-        to_department_code    AS toDepartmentCode,
-        from_team_code        AS fromTeamCode,
-        to_team_code          AS toTeamCode,
-        from_position_code    AS fromPositionCode,
-        to_position_code      AS toPositionCode,
-        from_rank_code        AS fromRankCode,
-        to_rank_code          AS toRankCode,
-        from_job_code         AS fromJobCode,
-        to_job_code           AS toJobCode,
-        appointment_type      AS appointmentType,
-        appointment_reason    AS appointmentReason,
-        appointment_created_at       AS appointmentCreatedAt,
-        appointment_effective_date   AS appointmentEffectiveDate,
-        appointment_status    AS appointmentStatus,
-        appointment_history_created_at AS appointmentHistoryCreatedAt
+        appointment_history_id,
+        appointment_id,
+        employee_id,
+        appointment_type,
+        appointment_reason,
+        appointment_effective_date,
+        appointment_history_created_at
         FROM appointment_history
-        WHERE appointment_status = #{status}
+        WHERE appointment_status = '승인'
     </select>
 
-
-</mapper>
+    </mapper>

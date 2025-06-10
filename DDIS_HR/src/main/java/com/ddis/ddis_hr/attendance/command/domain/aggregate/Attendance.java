@@ -70,5 +70,8 @@ public class Attendance {
         this.workStatus = workStatus;
     }
 
+    public void updateCheckOutTime(LocalTime time) {
+        this.checkOutTime = time;
+    }
 
 }

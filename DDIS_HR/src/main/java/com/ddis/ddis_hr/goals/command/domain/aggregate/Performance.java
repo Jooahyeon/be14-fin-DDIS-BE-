@@ -47,7 +47,7 @@ public class Performance {
     private String selfreviewContent;
 
     // 오타 컬럼명 그대로 매핑
-    @Column(name = "reviewer_scroe")
+    @Column(name = "reviewer_score")
     private Integer reviewerScore;
 
     @Column(name = "reviewer_created_at")
@@ -61,6 +61,17 @@ public class Performance {
     @JoinColumn(name = "employee_id_reviewer")
     private Employee reviewer;
 
+    public Performance(Employee reviewer,
+                       Goals goal,
+                       Integer reviewerScore,
+                       String reviewerContent) {
+        this.reviewer = reviewer;
+        this.goal = goal;
+        this.reviewerScore = reviewerScore;
+        this.reviewerContent = reviewerContent;
+        this.createdAt = LocalDateTime.now();
+        this.status = Status.대기;  // enum 타입으로 설정
+    }
     public enum Status {
         대기, 승인, 반려
     }

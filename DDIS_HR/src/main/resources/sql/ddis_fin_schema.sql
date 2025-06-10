@@ -1,3 +1,5 @@
+
+
 SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS `notice`;
@@ -37,10 +39,9 @@ DROP TABLE IF EXISTS `headquarters`;
 DROP TABLE IF EXISTS `rank`;
 DROP TABLE IF EXISTS `holiday`;
 DROP TABLE IF EXISTS `dictionary`;
+DROP TABLE IF EXISTS `menu`;
+DROP TABLE IF EXISTS `favorite_menu`;
 
--- 주석 처리된 항목들
--- DROP TABLE IF EXISTS `menu`;
--- DROP TABLE IF EXISTS `favorite_menu`;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -171,7 +172,7 @@ CREATE TABLE `employee` (
     `bank_depositor` VARCHAR(255) NOT NULL,
     `bank_account`  VARCHAR(255) NOT NULL,
     `is_disorder`   BOOLEAN NOT NULL DEFAULT FALSE,
-    `military_type`   VARCHAR(255) NOT NULL,
+    `military_type`   VARCHAR(255) NOT NULL DEFAULT '미필',
     `is_marriage`   BOOLEAN NOT NULL DEFAULT TRUE,
     `marriage_date` DATE,
     `family_count` INT NOT NULL,
@@ -398,11 +399,11 @@ CREATE TABLE `attendance` (
     `check_in_time`  TIME,
     `check_out_time` TIME,
     `work_duration` INT,
-    `overtime_type` VARCHAR(255) DEFAULT '시간외근무',
+    `overtime_type` VARCHAR(255),
     `overtime_duration` INT,
     `request_time`   DATETIME,
     `requested_time_change` DATETIME,
-    `approval_status` VARCHAR(255) DEFAULT '대기중',
+    `approval_status` VARCHAR(255),
     `processed_time` DATETIME,
     `reason` VARCHAR(255),
     `reject_reason` VARCHAR(255),
@@ -627,3 +628,24 @@ CREATE TABLE `board` (
     FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
+-- 메뉴
+CREATE TABLE `menu` (
+    `menu_id` BIGINT NOT NULL AUTO_INCREMENT,
+    `menu_name` VARCHAR(255) NOT NULL,
+    `parent_menu_id` BIGINT,
+    `menu_path` VARCHAR(255),
+    PRIMARY KEY (`menu_id`),
+    FOREIGN KEY (`parent_menu_id`) REFERENCES menu(`menu_id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
+
+-- 자주찾는메뉴
+CREATE TABLE `favorite_menu` (
+    `favorite_menu_id` BIGINT NOT NULL AUTO_INCREMENT,
+    `display_order` BIGINT NOT NULL,
+    `menu_id` BIGINT NOT NULL,
+    `employee_id` BIGINT NOT NULL,
+    PRIMARY KEY (`favorite_menu_id`),
+    FOREIGN KEY (`employee_id`) REFERENCES employee(`employee_id`),
+    FOREIGN KEY (`menu_id`) REFERENCES menu(`menu_id`),
+    UNIQUE KEY `uk_employee_menu` (`employee_id`, `menu_id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;

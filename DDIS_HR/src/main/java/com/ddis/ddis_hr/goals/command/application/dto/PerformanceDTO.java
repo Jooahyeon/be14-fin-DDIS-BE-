@@ -18,9 +18,13 @@ public class PerformanceDTO {
 
     // S3에서 받아온 presigned GET URL 목록
     private List<String> attachmentKeys;
-
-
     private List<String> attachmentFileNames;
     private List<String> attachmentFileTypes;
     private List<Long> attachmentFileSizes;
+    private Integer reviewerScore;
+    private String reviewerContent;
+    private Long employeeIdReviewer;
+
+
+
 }

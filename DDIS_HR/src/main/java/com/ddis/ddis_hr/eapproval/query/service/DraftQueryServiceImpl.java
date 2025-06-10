@@ -1,5 +1,6 @@
 package com.ddis.ddis_hr.eapproval.query.service;
 
+import com.ddis.ddis_hr.eapproval.command.application.dto.DraftCreateCommandDTO;
 import com.ddis.ddis_hr.eapproval.query.dto.ContentQueryDTO;
 import com.ddis.ddis_hr.eapproval.query.mapper.DraftMapper;
 import com.ddis.ddis_hr.eapproval.query.dto.DraftDetailResponseQueryDTO;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class DraftServiceImpl implements DraftService {
+public class DraftQueryServiceImpl implements DraftQueryService {
 
 
     private final DraftMapper draftMapper;
@@ -50,5 +51,10 @@ public class DraftServiceImpl implements DraftService {
 
         // ✅ 5. 최종 결과 반환
         return dto;
+    }
+
+    @Override
+    public Long createDraft(DraftCreateCommandDTO requestDto) {
+        return 0L;
     }
 }

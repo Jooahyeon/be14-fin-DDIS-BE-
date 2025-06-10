@@ -15,6 +15,7 @@ public class AppointmentHistoryQueryDTO {
     private Long appointmentHistoryId;
     private Long appointmentId;
     private Long employeeId;
+    private String employeeName;
     private String fromHeadCode;
     private String toHeadCode;
     private String fromDepartmentCode;

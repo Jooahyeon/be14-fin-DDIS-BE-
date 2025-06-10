@@ -8,8 +8,12 @@ import java.util.List;
 
 @Mapper
 public interface ContractMapper {
-
-     // 로그인한 사원의 계약서 목록 조회
+    /** 본인 계약서 목록 */
     List<MyContractDTO> findByEmployeeId(@Param("employeeId") Long employeeId);
-}
 
+    /** 인사팀 전체 계약서 목록 */
+    List<MyContractDTO> findAllContracts();
+
+    /** 단일 계약서 조회 (메타·소유권 검사용) */
+    MyContractDTO findById(@Param("contractId") Long contractId);
+}

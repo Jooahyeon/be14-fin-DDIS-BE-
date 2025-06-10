@@ -16,4 +16,7 @@ public class TeamQueryDTO {
     private String teamName;
     private String teamCode;
     private List<EmployeeQueryDTO> members;
+
+    private Long departmentId;         // 어떤 부서에 속했는지
+    private EmployeeQueryDTO teamManager;   // 팀장
 }

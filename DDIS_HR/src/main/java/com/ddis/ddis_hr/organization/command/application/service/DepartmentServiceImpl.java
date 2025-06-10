@@ -27,9 +27,9 @@ public class DepartmentServiceImpl implements DepartmentService {
     public DepartmentDTO createDepartment(DepartmentRequestDTO requestDto) {
         // 1) headName으로 본부 조회
         HeadquartersEntity head = headquartersRepository
-                .findByHeadName(requestDto.getHeadName())
+                .findByHeadId(requestDto.getHeadId())
                 .orElseThrow(() ->
-                        new RuntimeException("해당 이름의 본부를 찾을 수 없습니다: " + requestDto.getHeadName()));
+                        new RuntimeException("해당 이름의 본부를 찾을 수 없습니다: " + requestDto.getHeadId()));
 
         // 2) departmentCode 자동 생성
         DepartmentEntity last = departmentRepository.findTopByOrderByDepartmentCodeDesc();
@@ -60,9 +60,9 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         // 1) headName으로 본부 조회
         HeadquartersEntity head = headquartersRepository
-                .findByHeadName(requestDto.getHeadName())
+                .findByHeadId(requestDto.getHeadId())
                 .orElseThrow(() ->
-                        new RuntimeException("해당 이름의 본부를 찾을 수 없습니다: " + requestDto.getHeadName()));
+                        new RuntimeException("해당 이름의 본부를 찾을 수 없습니다: " + requestDto.getHeadId()));
 
         // 2) 본부 연결 변경
         existing.setHeadquarters(head);

@@ -12,5 +12,5 @@ import lombok.Setter;
 public class TeamRequestDTO {
 
     private String teamName;
-    private String departmentName;
+    private Long departmentId;
 }

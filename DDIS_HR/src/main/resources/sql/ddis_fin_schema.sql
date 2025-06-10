@@ -1,3 +1,5 @@
+USE ddisdb;
+
 SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS `notice`;
@@ -171,7 +173,7 @@ CREATE TABLE `employee` (
     `bank_depositor` VARCHAR(255) NOT NULL,
     `bank_account`  VARCHAR(255) NOT NULL,
     `is_disorder`   BOOLEAN NOT NULL DEFAULT FALSE,
-    `military_type`   VARCHAR(255) NOT NULL,
+    `military_type`   VARCHAR(255) NOT NULL DEFAULT '미필',
     `is_marriage`   BOOLEAN NOT NULL DEFAULT TRUE,
     `marriage_date` DATE,
     `family_count` INT NOT NULL,

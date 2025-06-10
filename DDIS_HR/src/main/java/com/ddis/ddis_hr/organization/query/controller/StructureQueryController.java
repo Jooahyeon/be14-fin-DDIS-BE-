@@ -113,4 +113,10 @@ public class StructureQueryController {
         }
         return ResponseEntity.ok(manager);
     }
+
+    // 부서별 직원 목록
+    @GetMapping("/departments/{departmentId}/members")
+    public List<EmployeeQueryDTO> getDeptMembers(@PathVariable Long departmentId) {
+        return structureQueryService.getDeptMembers(departmentId);
+    }
 }

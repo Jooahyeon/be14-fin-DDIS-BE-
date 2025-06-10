@@ -1,9 +1,12 @@
 package com.ddis.ddis_hr.organization.query.controller;
 
+import com.ddis.ddis_hr.member.security.CustomUserDetails;
 import com.ddis.ddis_hr.organization.query.dto.AppointmentHistoryQueryDTO;
 import com.ddis.ddis_hr.organization.query.service.AppointmentHistoryQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,5 +66,18 @@ public class AppointmentHistoryQueryController {
     public ResponseEntity<List<AppointmentHistoryQueryDTO>> getApprovedOnly() {
         List<AppointmentHistoryQueryDTO> approved = historyQueryService.getApprovedHistories();
         return ResponseEntity.ok(approved);
+    }
+
+    /** 3) 로그인한 사용자의 사번으로 본인 이력 조회 */
+    @GetMapping("/me")
+    public ResponseEntity<List<AppointmentHistoryQueryDTO>> getMyHistories(
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        List<AppointmentHistoryQueryDTO> list =
+                historyQueryService.getHistoriesByEmployeeId(user.getEmployeeId());
+        return ResponseEntity.ok(list);
     }
 }

@@ -1,14 +1,15 @@
 package com.ddis.ddis_hr.attendance.command.application.service;
 
+import com.ddis.ddis_hr.attendance.command.application.dto.MeetingScheduleRequestDTO;
 import com.ddis.ddis_hr.attendance.command.application.dto.PersonalScheduleRequestDTO;
 import com.ddis.ddis_hr.attendance.command.domain.aggregate.Attendance;
+import com.ddis.ddis_hr.attendance.command.domain.aggregate.Meeting;
 import com.ddis.ddis_hr.attendance.command.domain.aggregate.PersonalSchedule;
 import com.ddis.ddis_hr.attendance.command.domain.aggregate.WorkStatus;
-import com.ddis.ddis_hr.attendance.command.domain.repository.AttendanceRepository;
-import com.ddis.ddis_hr.attendance.command.domain.repository.PersonalScheduleRepository;
-import com.ddis.ddis_hr.attendance.command.domain.repository.WorkStatusRepository;
-import com.ddis.ddis_hr.attendance.command.domain.repository.AttendanceEmployeeRepository;
+import com.ddis.ddis_hr.attendance.command.domain.repository.*;
 import com.ddis.ddis_hr.member.command.domain.aggregate.entity.Employee;
+import com.ddis.ddis_hr.organization.command.domain.aggregate.entity.TeamEntity;
+import com.ddis.ddis_hr.organization.command.domain.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,8 @@ public class AttendanceCommandServiceImpl implements AttendanceCommandService{
     private final AttendanceEmployeeRepository employeeRepository;
     private final WorkStatusRepository workStatusRepository;
     private final PersonalScheduleRepository repository;
+    private final MeetingScheduleRepository meetingScheduleRepository;
+    private final TeamRepository teamRepository;
 
     @Override
     public void checkIn(Long employeeId) {
@@ -90,4 +93,23 @@ public class AttendanceCommandServiceImpl implements AttendanceCommandService{
 
         repository.save(schedule);
     }
+
+    @Override
+    public void MeetingScheduleRegister(MeetingScheduleRequestDTO dto, Long employeeId, Long teamId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사원"));
+        TeamEntity team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 팀"));
+
+        Meeting meeting = Meeting.builder()
+                .employee(employee)
+                .team(team)
+                .meetingDate(LocalDate.parse(dto.getMeetingDate()))
+                .meetingTitle(dto.getMeetingTitle())
+                .meetingTime(dto.getMeetingTime())
+                .build();
+
+        meetingScheduleRepository.save(meeting);
+    }
+
 }

@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface HeadquartersRepository extends JpaRepository<HeadquartersEntity, Long> {
     HeadquartersEntity findTopByOrderByHeadCodeDesc();
-    Optional<HeadquartersEntity> findByHeadName(String headName);
+    Optional<HeadquartersEntity> findByHeadId(Long headId);
 }

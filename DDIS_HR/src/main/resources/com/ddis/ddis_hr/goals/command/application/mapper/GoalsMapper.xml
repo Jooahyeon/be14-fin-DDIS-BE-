@@ -73,6 +73,9 @@
             <result column="selfreview_content"     property="selfreviewContent"/>
             <result column="selfreview_created_at"  property="selfreviewCreateAt"
                     jdbcType="TIMESTAMP"/>
+            <result column="reviewer_score"         property="reviewerScore"/>
+            <result column="reviewer_content"       property="reviewerContent"/>
+            <result column="employee_id_reviewer"   property="employeeIdReviewer"/>
 
             <!-- 네 개의 nested select로 “파일 정보 컬렉션”을 채움 -->
             <collection property="attachmentKeys"
@@ -91,6 +94,9 @@
                         ofType="java.lang.Long"
                         select="selectAttachmentFileSizes"
                         column="selfreview_id"/>
+
+
+
         </association>
     </resultMap>
 
@@ -116,7 +122,10 @@
             p.performance_value,
             p.selfreview_content,
             p.selfreview_created_at,
-            p.selfreview_status
+            p.selfreview_status,
+            p.reviewer_score,
+            p.reviewer_content,
+            p.reviewer_created_at
 
         FROM goal g
                  JOIN employee e ON g.employee_id = e.employee_id

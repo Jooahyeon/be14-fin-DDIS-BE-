@@ -4,20 +4,17 @@ import lombok.*;
 
 import java.util.Date;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@ToString
+@Data
 public class MyContractDTO {
     private Long contractId;
     private String contractDescription;
-    private Date ContractReqDate;
-    private Date ContractDate;
-    private Date ContractEndDate;
-    private String ContractFileName;
-    private String ContractFileURL;
-    private Long ContractFileSize;
+    private Date contractReqDate;
+    private Date contractDate;
+    private Date contractEndDate;
+
+    private String contractFileName;
+    private String contractFileURL;     // 객체 키
+    private Long contractFileSize;
 
     private Long employeeId;
 

@@ -1,8 +1,6 @@
 package com.ddis.ddis_hr.organization.query.dao;
 
-import com.ddis.ddis_hr.organization.query.dto.DepartmentIntroductionQueryDTO;
-import com.ddis.ddis_hr.organization.query.dto.JobIntroductionQueryDTO;
-import com.ddis.ddis_hr.organization.query.dto.TeamIntroductionQueryDTO;
+import com.ddis.ddis_hr.organization.query.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.data.repository.query.Param;
 
@@ -32,4 +30,11 @@ public interface IntroductionMapper {
     // 특정 팀의 직무 목록 조회
     List<JobIntroductionQueryDTO> selectJobsByTeamId(@Param("teamId") long teamId);
 
+    EmployeeQueryDTO selectEmployeeById(Long employeeId);
+
+    List<PositionDTO> selectPositionsByJobId(Long jobId);
+
+    List<RankDTO> selectRanksByJobId(Long jobId);
+
+    List<EmployeeQueryDTO> findAllEmployees();
 }

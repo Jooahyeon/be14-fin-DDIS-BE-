@@ -1,12 +1,11 @@
 package com.ddis.ddis_hr.attendance.query.dao;
 
-import com.ddis.ddis_hr.attendance.query.dto.AttendanceQueryDTO;
-import com.ddis.ddis_hr.attendance.query.dto.EmployeeInfoQueryDTO;
-import com.ddis.ddis_hr.attendance.query.dto.MeetingQueryDTO;
-import com.ddis.ddis_hr.attendance.query.dto.PersonalScheduleQueryDTO;
+import com.ddis.ddis_hr.attendance.query.dto.*;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Mapper
@@ -21,4 +20,16 @@ public interface AttendanceMapper {
     List<AttendanceQueryDTO> findWorkStatuses(@Param("teamId") Long teamId,
                                               @Param("employeeId") Long employeeId,
                                               @Param("statuses") List<String> statuses);
+
+    List<MeetingQueryDTO> findMeetingsToday(@Param("teamId") Long teamId,
+                                            @Param("today") LocalDate today);
+
+    List<TeamWorkStatusQueryDTO> findTodayTeamStatuses(@Param("teamId") Long teamId,
+                                                       @Param("today") String today);
+
+    String findTeamNameById(Long teamId);
+
+    MyWorkStatusQueryDTO findMyWorkStatus(@Param("employeeId") Long employeeId,
+                                          @Param("today") String today);
+
 }

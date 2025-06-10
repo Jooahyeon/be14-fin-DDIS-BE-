@@ -1,3 +1,5 @@
+USE ddisdb;
+
 SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS `notice`;
@@ -154,7 +156,8 @@ CREATE TABLE `employee` (
     `employee_id`   BIGINT NOT NULL,
     `employee_name` VARCHAR(255) NOT NULL,
     `employee_pwd`  VARCHAR(255) NOT NULL,
-    `employee_profile` VARCHAR(255),
+    `employee_photo_name`  VARCHAR(255),
+    `employee_photo_url`  VARCHAR(255),
     `employee_nation` VARCHAR(255) NOT NULL,
     `employee_gender` VARCHAR(255) NOT NULL,
     `employee_birth` DATE NOT NULL,
@@ -169,7 +172,7 @@ CREATE TABLE `employee` (
     `bank_depositor` VARCHAR(255) NOT NULL,
     `bank_account`  VARCHAR(255) NOT NULL,
     `is_disorder`   BOOLEAN NOT NULL DEFAULT FALSE,
-    `military_type`   VARCHAR(255) NOT NULL,
+    `military_type`   VARCHAR(255) NOT NULL DEFAULT '미필',
     `is_marriage`   BOOLEAN NOT NULL DEFAULT TRUE,
     `marriage_date` DATE,
     `family_count` INT NOT NULL,
@@ -396,11 +399,11 @@ CREATE TABLE `attendance` (
     `check_in_time`  TIME,
     `check_out_time` TIME,
     `work_duration` INT,
-    `overtime_type` VARCHAR(255) DEFAULT '시간외근무',
+    `overtime_type` VARCHAR(255),
     `overtime_duration` INT,
     `request_time`   DATETIME,
     `requested_time_change` DATETIME,
-    `approval_status` VARCHAR(255) DEFAULT '대기중',
+    `approval_status` VARCHAR(255),
     `processed_time` DATETIME,
     `reason` VARCHAR(255),
     `reject_reason` VARCHAR(255),

@@ -22,20 +22,14 @@ public class AppointmentHistoryQueryController {
         this.historyQueryService = historyQueryService;
     }
 
-    /**
-     * 1) 모든 이력 조회
-     * GET /appointmentHistory/all
-     */
+    /** 1) 모든 이력 조회 */
     @GetMapping("/all")
     public ResponseEntity<List<AppointmentHistoryQueryDTO>> getAllHistories() {
         List<AppointmentHistoryQueryDTO> list = historyQueryService.getAllHistories();
         return ResponseEntity.ok(list);
     }
 
-    /**
-     * 2) 특정 사원(Employee) 이력 조회
-     * GET /appointmentHistory/employee/{employeeId}
-     */
+    /** 2) 특정 사원(Employee) 이력 조회 */
     @GetMapping("/employee/{employeeId}")
     public ResponseEntity<List<AppointmentHistoryQueryDTO>> getByEmployeeId(
             @PathVariable("employeeId") Long employeeId) {
@@ -43,14 +37,18 @@ public class AppointmentHistoryQueryController {
         return ResponseEntity.ok(list);
     }
 
-    /**
-     * 3) 특정 appointmentId 이력 조회
-     * GET /api/appointment/history/appointment/{appointmentId}
-     */
+    /** 3) 특정 appointmentId 이력 조회 */
     @GetMapping("/appointment/{appointmentId}")
     public ResponseEntity<List<AppointmentHistoryQueryDTO>> getByAppointmentId(
             @PathVariable("appointmentId") Long appointmentId) {
         List<AppointmentHistoryQueryDTO> list = historyQueryService.getHistoriesByAppointmentId(appointmentId);
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/history/{appointmentHistoryId}")
+    public ResponseEntity<List<AppointmentHistoryQueryDTO>> getHistoriesByHistoryId(
+            @PathVariable("appointmentHistoryId") Long appointmentHistoryId) {
+        List<AppointmentHistoryQueryDTO> list = historyQueryService.getHistoriesByHistoryId(appointmentHistoryId);
         return ResponseEntity.ok(list);
     }
 

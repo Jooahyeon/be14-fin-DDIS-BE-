@@ -1,8 +1,11 @@
 package com.ddis.ddis_hr.attendance.command.application.service;
 
+import com.ddis.ddis_hr.attendance.command.application.dto.PersonalScheduleRequestDTO;
 import com.ddis.ddis_hr.attendance.command.domain.aggregate.Attendance;
+import com.ddis.ddis_hr.attendance.command.domain.aggregate.PersonalSchedule;
 import com.ddis.ddis_hr.attendance.command.domain.aggregate.WorkStatus;
 import com.ddis.ddis_hr.attendance.command.domain.repository.AttendanceRepository;
+import com.ddis.ddis_hr.attendance.command.domain.repository.PersonalScheduleRepository;
 import com.ddis.ddis_hr.attendance.command.domain.repository.WorkStatusRepository;
 import com.ddis.ddis_hr.attendance.command.domain.repository.AttendanceEmployeeRepository;
 import com.ddis.ddis_hr.member.command.domain.aggregate.entity.Employee;
@@ -19,6 +22,7 @@ public class AttendanceCommandServiceImpl implements AttendanceCommandService{
     private final AttendanceRepository attendanceRepository;
     private final AttendanceEmployeeRepository employeeRepository;
     private final WorkStatusRepository workStatusRepository;
+    private final PersonalScheduleRepository repository;
 
     @Override
     public void checkIn(Long employeeId) {
@@ -70,5 +74,20 @@ public class AttendanceCommandServiceImpl implements AttendanceCommandService{
 
         attendance.updateCheckOutTime(LocalTime.now());
         attendanceRepository.save(attendance);
+    }
+
+    @Override
+    public void personalScheduleRegister(PersonalScheduleRequestDTO dto, Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사원"));
+
+        PersonalSchedule schedule = PersonalSchedule.builder()
+                .employee(employee)
+                .scheduleDate(LocalDate.parse(dto.getScheduleDate()))
+                .scheduleTitle(dto.getScheduleTitle())
+                .scheduleTime(dto.getScheduleTime())
+                .build();
+
+        repository.save(schedule);
     }
 }

@@ -1,5 +1,5 @@
 -- 공휴일
-USE ddisdb;
+# USE ddisdb;
 
 INSERT INTO holiday (date, is_holiday, holiday_name, is_weekend) VALUES
     ('2025-01-01', TRUE, '신정', FALSE),
@@ -467,7 +467,6 @@ VALUES
     (20190508035001, '이종성', '$2b$12$y.5u4IXnnCuqXhK2uH3qceIIEAxCcBNDtrfA/UJT9oMXp8l1qWCCO', NULL, NULL, '대한민국', '남', '1994-05-08', '940508-1112128', '010-5737-9460', 'seunghyeon14@iiji.net', '대전광역시 도봉구 삼성길', '2019-05-08', '2025-04-26', TRUE, '국민은행', '이종성', '360-5747-4393', TRUE, '면제', TRUE, '2019-08-16', 4, NULL, NULL, '박사', '제주대학교', '컴퓨터공학과', 2017, FALSE, 1, 1, 35, 3, 6, 12),
     (20150220035001, '천슬기', '$2b$12$.aeHxq2RhQ4J//gz2UwE3OX3gH.fUA6CUwHQPNWNzLK9iQvc5JLbm', NULL, NULL, '대한민국', '여', '1990-02-20', '900220-2630887', '010-3564-5127', 'minsugweon@live.com', '전라남도 금산군 서초중앙4로', '2015-02-20', '2025-03-26', TRUE, '국민은행', '천슬기', '880-9671-9458', TRUE, '면제', FALSE, NULL, 2, NULL, NULL, '박사', '안산대학교', '컴퓨터공학과', 2013, FALSE, 1, 1, 35, 3, 6, 12),
     (20160324035001, '우희원', '$2b$12$HmcjOKhUsbzI7aftpFz1K.PFxRsQdwmwAupOOWbmPdfLlKSbh9dqy', NULL, NULL, '대한민국', '여', '1991-03-24', '910324-2133126', '010-9759-3181', 'ni@daum.net', '경기도 청양군 강남대539거리', '2016-03-24', '2025-05-26', TRUE, '국민은행', '우희원', '448-7325-5106', TRUE, '군필', FALSE, NULL, 2, 8, '서구', '고졸', '광주고등학교', NULL, 2010, FALSE, 1, 1, 35, 3, 6, 12);
-
 -- 전자결재양식
 INSERT INTO document_form (form_name, form_content, is_deleted, employee_id) VALUES
     ('사업기안',
@@ -2007,5 +2006,57 @@ INSERT INTO board (
       ('건강검진 신청 안내', '직원 대상 건강검진 신청이 6월 3일까지 가능합니다.', '2025-05-18 08:50:00', NULL, NULL, 20020724007001),
       ('회식 일정 공지', '전사 회식이 6월 12일 18시에 진행됩니다. 많은 참석 바랍니다.', '2025-05-17 18:10:00', NULL, NULL, 20020724007001);
 # -- 메뉴: 잠시 sidebar 수정으로 멈춤
+INSERT INTO menu (menu_id, menu_name, parent_menu_id, menu_path) VALUES
+       (1, '인사 정보', NULL, NULL),
+       (2, '사원 조회', 1, NULL),
+       (3, '내 인사 정보', 2, '/employeeInfo/myInfo'),
+       (4, '사원 목록 조회', 2, '/employeeInfo/employeeList'),
+       (5, '계약서/법정서류 관리', 2, '/employeeInfo/Contract'),
+       (6, '징계 관리', 2, '/employeeInfo/disciplinary'),
+       (7, '근태 관리', NULL, NULL),
+       (8, '근태 현황', 7, NULL),
+       (9, '내 근태 현황', 8, '/attendance/myAttendance'),
+       (10, '팀 근태 현황', 8, '/attendance/teamAttendance'),
+       (11, '내 출근 정정 관리', 8, '/attendance/myCorrection'),
+       (12, '전체 출근 정정 관리', 8, '/attendance/allCorrection'),
+       (13, '출퇴근 관리', 7, NULL),
+       (14, '내 출퇴근 관리', 13, '/attendance/myCommute'),
+       (15, '전체 출퇴근 관리', 13, '/attendance/allCommute'),
+       (16, '휴가 관리', 7, NULL),
+       (17, '내 연차 관리', 16, '/attendance/myLeave'),
+       (18, '전체 연차 관리', 16, '/attendance/allLeave'),
+       (19, '조직 및 직무', NULL, NULL),
+       (20, '조직 구성', 19, NULL),
+       (21, '조직 구성 조회', 20, '/org/structure'),
+       (22, '조직 및 직무 소개', 19, NULL),
+       (23, '조직 및 직무 소개', 22, '/org/introduction'),
+       (24, '인사발령', 19, NULL),
+       (25, '인사발령 이력', 24, '/org/appointment'),
+       (26, '인사발령 등록', 24, '/org/appointment/register'),
+       (27, '전자 결재', NULL, NULL),
+       (28, '기안 작성', 27, NULL),
+       (29, '기안양식함', 28, '/draftdoc/draftcreate'),
+       (30, '임시저장함', 28, '/draftdoc/temporarydoc'),
+       (31, '문서함', 27, NULL),
+       (32, '기안함', 31, '/draftdoc/mydraft'),
+       (33, '결재함', 31, '/draftdoc/approve'),
+       (34, '수신함', 31, '/draftdoc/inbox'),
+       (35, '참조함', 31, '/draftdoc/reference'),
+       (36, '급여', NULL, NULL),
+       (37, '급여 관리', 36, NULL),
+       (38, '내 급여명세서 조회', 37, '/salary/payroll/slip'),
+       (39, '급여명세서 발급', 37, '/salary/payroll/issue'),
+       (40, '퇴직 관리', 36, NULL),
+       (41, '예상 퇴직금 계산', 40, '/salary/retirement/estimate'),
+       (42, '퇴직금 지급 현황', 40, '/salary/retirement/status'),
+       (43, '평가 및 성과', NULL, NULL),
+       (44,'평가 관리', 43, NULL),
+       (45,'평가',44, '/org/evaluation'),
+       (46,'내가 쓴 평가', 44, '/org/myevaluation'),
+       (47,'성과 관리', 43, NULL),
+       (48,'목표', 47, '/org/goals'),
+       (49,'성과 이력', 47, '/org/achievment'),
+       (50, '공지 사항', NULL, '/post'),
+       (51, '용어 사전', NULL, '/dictionary')
 
-# -- 자주찾는메뉴
+# -- 자주쓰는메뉴

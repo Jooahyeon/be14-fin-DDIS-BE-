@@ -1,4 +1,4 @@
-USE ddisdb;
+
 
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -39,10 +39,9 @@ DROP TABLE IF EXISTS `headquarters`;
 DROP TABLE IF EXISTS `rank`;
 DROP TABLE IF EXISTS `holiday`;
 DROP TABLE IF EXISTS `dictionary`;
+DROP TABLE IF EXISTS `menu`;
+DROP TABLE IF EXISTS `favorite_menu`;
 
--- 주석 처리된 항목들
--- DROP TABLE IF EXISTS `menu`;
--- DROP TABLE IF EXISTS `favorite_menu`;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -629,3 +628,24 @@ CREATE TABLE `board` (
     FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
+-- 메뉴
+CREATE TABLE `menu` (
+    `menu_id` BIGINT NOT NULL AUTO_INCREMENT,
+    `menu_name` VARCHAR(255) NOT NULL,
+    `parent_menu_id` BIGINT,
+    `menu_path` VARCHAR(255),
+    PRIMARY KEY (`menu_id`),
+    FOREIGN KEY (`parent_menu_id`) REFERENCES menu(`menu_id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
+
+-- 자주찾는메뉴
+CREATE TABLE `favorite_menu` (
+    `favorite_menu_id` BIGINT NOT NULL AUTO_INCREMENT,
+    `display_order` BIGINT NOT NULL,
+    `menu_id` BIGINT NOT NULL,
+    `employee_id` BIGINT NOT NULL,
+    PRIMARY KEY (`favorite_menu_id`),
+    FOREIGN KEY (`employee_id`) REFERENCES employee(`employee_id`),
+    FOREIGN KEY (`menu_id`) REFERENCES menu(`menu_id`),
+    UNIQUE KEY `uk_employee_menu` (`employee_id`, `menu_id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;

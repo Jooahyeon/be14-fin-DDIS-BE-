@@ -90,7 +90,7 @@ public class WebSecurity {
         // 인증 쿠키/헤더 허용
         config.setAllowCredentials(true);
         // 허용 HTTP 메서드
-        config.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","OPTIONS"));
+        config.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","OPTIONS", "PATCH"));
         // 허용 요청 헤더
         config.setAllowedHeaders(Arrays.asList("Authorization","Content-Type"));
         // 클라이언트에서 접근을 허용할 응답 헤더

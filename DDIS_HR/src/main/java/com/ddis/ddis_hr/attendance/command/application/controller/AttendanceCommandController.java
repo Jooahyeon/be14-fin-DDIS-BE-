@@ -1,5 +1,6 @@
 package com.ddis.ddis_hr.attendance.command.application.controller;
 
+import com.ddis.ddis_hr.attendance.command.application.dto.MeetingScheduleRequestDTO;
 import com.ddis.ddis_hr.attendance.command.application.dto.PersonalScheduleRequestDTO;
 import com.ddis.ddis_hr.attendance.command.application.service.AttendanceCommandService;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
@@ -32,6 +33,13 @@ public class AttendanceCommandController {
                                                     @AuthenticationPrincipal CustomUserDetails user) {
         Long employeeId = user.getEmployeeId();
         attendanceCommandService.personalScheduleRegister(dto, employeeId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/schedule/meeting")
+    public ResponseEntity<Void> addMeetingSchedule(@RequestBody MeetingScheduleRequestDTO dto,
+                                                @AuthenticationPrincipal CustomUserDetails user) {
+        attendanceCommandService.MeetingScheduleRegister(dto, user.getEmployeeId(), user.getTeamId());
         return ResponseEntity.ok().build();
     }
 

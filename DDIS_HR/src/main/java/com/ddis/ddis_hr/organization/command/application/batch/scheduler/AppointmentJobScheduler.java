@@ -28,7 +28,7 @@ public class AppointmentJobScheduler {
         this.appointmentJob = appointmentJob;
     }
 
-    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 20 2 * * *", zone = "Asia/Seoul")
     public void runAppointmentJobDaily() throws Exception {
         LocalDate today     = LocalDate.now();
         LocalDate yesterday = today.minusDays(1);

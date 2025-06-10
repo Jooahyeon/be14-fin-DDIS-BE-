@@ -180,7 +180,7 @@ public class BatchJobConfig {
                     "       job_id      = (SELECT job_id        FROM job     WHERE job_code       = :toJobCode) " +
 
                     " WHERE employee_id = :employeeId" +
-                    "   AND DATE(appointment_effective_date) = CURRENT_DATE()"
+                    "   AND DATE(:appointmentEffectiveDate) = CURRENT_DATE()"
                 )
                 .build();
     }

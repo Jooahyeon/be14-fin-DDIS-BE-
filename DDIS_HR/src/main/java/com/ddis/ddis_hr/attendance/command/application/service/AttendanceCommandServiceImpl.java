@@ -53,4 +53,22 @@ public class AttendanceCommandServiceImpl implements AttendanceCommandService{
 
         attendanceRepository.save(attendance);
     }
+
+    @Override
+    public void checkOut(Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사원입니다."));
+
+        LocalDate today = LocalDate.now();
+
+        Attendance attendance = attendanceRepository.findByEmployeeAndWorkDate(employee, today)
+                .orElseThrow(() -> new IllegalStateException("출근 기록이 없습니다."));
+
+        if (attendance.getCheckOutTime() != null) {
+            throw new IllegalStateException("이미 퇴근 처리된 기록입니다.");
+        }
+
+        attendance.updateCheckOutTime(LocalTime.now());
+        attendanceRepository.save(attendance);
+    }
 }

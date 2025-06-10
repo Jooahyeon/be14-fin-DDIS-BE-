@@ -4,4 +4,6 @@ public interface AttendanceCommandService {
 
     void checkIn(Long employeeId);
 
+    void checkOut(Long employeeId);
+
 }

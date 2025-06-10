@@ -39,8 +39,8 @@ public class Attendance {
     @Column
     private Integer workDuration; // 분 또는 시간 단위 선택 (예: 480 = 8시간)
 
-    @Column(nullable = false)
-    private String overtimeType = "시간외근무"; // 시간외근무, 야간근무, 휴일근무
+    @Column
+    private String overtimeType; // 시간외근무, 야간근무, 휴일근무
 
     @Column
     private Integer overtimeDuration; // 분 또는 시간 단위
@@ -51,8 +51,8 @@ public class Attendance {
     @Column
     private LocalDateTime requestedTimeChange;
 
-    @Column(nullable = false)
-    private String approvalStatus = "대기중"; // 승인, 대기중, 반려
+    @Column
+    private String approvalStatus; // 승인, 대기중, 반려
 
     @Column
     private LocalDateTime processedTime;

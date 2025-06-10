@@ -63,5 +63,12 @@ public class Attendance {
     @Column
     private String rejectReason;
 
-    // 필요 시 생성자, setter 또는 update 메서드 추가
+    public Attendance(Employee employee, LocalDate workDate, LocalTime checkInTime, WorkStatus workStatus) {
+        this.employee = employee;
+        this.workDate = workDate;
+        this.checkInTime = checkInTime;
+        this.workStatus = workStatus;
+    }
+
+
 }

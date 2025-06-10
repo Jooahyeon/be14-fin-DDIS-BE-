@@ -20,4 +20,10 @@ public class AttendanceCommandController {
         return ResponseEntity.ok("출근이 정상적으로 등록되었습니다.");
     }
 
+    @PutMapping("/check-out")
+    public ResponseEntity<String> checkOut(@AuthenticationPrincipal CustomUserDetails user) {
+        checkInService.checkOut(user.getEmployeeId());
+        return ResponseEntity.ok("퇴근이 정상적으로 등록되었습니다.");
+    }
+
 }

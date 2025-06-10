@@ -9,7 +9,7 @@ import java.util.List;
 
 @Mapper
 public interface ReviewMapper {
-    Review selectBySelfreviewId(@Param("perfId") Long performanceId);
+    Review selectBySelfreviewId(@Param("performanceId") Long performanceId);
 
     List<ReviewHistoryDTO> selectHistoryByEmployeeId(@Param("employeeId") Long employeeId);
 }

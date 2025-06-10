@@ -2,6 +2,9 @@ package com.ddis.ddis_hr.review.command.application.service;
 
 import com.ddis.ddis_hr.employee.command.domain.repository.EmployeeRepository;
 import com.ddis.ddis_hr.goals.command.application.dto.GoalDTO;
+import com.ddis.ddis_hr.goals.command.application.dto.PerformanceDTO;
+import com.ddis.ddis_hr.goals.command.application.dto.PerformanceResponseDTO;
+import com.ddis.ddis_hr.goals.command.application.dto.PerformanceReviewDTO;
 import com.ddis.ddis_hr.goals.command.application.mapper.GoalsMapper;
 import com.ddis.ddis_hr.goals.command.domain.aggregate.Goals;
 import com.ddis.ddis_hr.goals.command.domain.aggregate.Performance;
@@ -56,7 +59,7 @@ public class ReviewServiceImpl implements ReviewService {
         return employees;
     }
     @Override
-    public void saveEvaluation(
+    public PerformanceReviewDTO saveEvaluation(
             Long performanceId,
             Long employeeIdReviewer,
             Integer reviewerScore,
@@ -130,9 +133,16 @@ public class ReviewServiceImpl implements ReviewService {
         review.setEmployeeId(reviewer);
         review.setReviewScore(finalScore);
         review.setReviewGradeId(grade);
-        // 필요 시 review.setReviewGradeId(...);
+
 
         // 8) JPA save → insert/update 자동 분기
         reviewRepository.save(review);
+
+        return PerformanceReviewDTO.builder()
+                .performanceId(perf.getId())             // getId() → getPerformanceId()
+                .reviewerScore(perf.getReviewerScore())
+                .reviewerContent(perf.getReviewerContent())
+                .reviewerCreatedAt(perf.getReviewerCreatedAt())      // 날짜 필드도 추가
+                .build();
     }
 }

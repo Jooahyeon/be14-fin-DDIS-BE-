@@ -1,4 +1,4 @@
-USE ddisdb;
+
 
 SET FOREIGN_KEY_CHECKS = 0;
 

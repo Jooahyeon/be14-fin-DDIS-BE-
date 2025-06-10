@@ -15,7 +15,7 @@ public class FavoriteMenuQueryController {
 
     private final FavoriteMenuQueryService favoriteMenuQueryService;
 
-    // 사원별 자주찾는 메뉴 조회
+    // 사원별 자주 쓰는 메뉴 조회
     @GetMapping("/{employeeId}")
     public ResponseEntity<List<MenuDTO>> getFavoriteMenus(@PathVariable Long employeeId) {
         List<MenuDTO> favorites = favoriteMenuQueryService.getFavoriteMenus(employeeId);

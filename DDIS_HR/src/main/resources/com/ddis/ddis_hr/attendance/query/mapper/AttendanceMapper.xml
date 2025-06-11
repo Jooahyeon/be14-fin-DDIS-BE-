@@ -121,4 +121,12 @@
            AND overtime_type IN ('시간외근무', '야간근무', '휴일근무')
            AND work_date BETWEEN #{startDate} AND #{endDate}
     </select>
+
+    <select id="findWeeklyWorkDuration" resultType="com.ddis.ddis_hr.attendance.query.dto.WeeklyWorkDurationQueryDTO">
+        SELECT
+               COALESCE(SUM(work_duration), 0) AS totalWorkDuration
+          FROM attendance
+         WHERE employee_id = #{employeeId}
+           AND work_date BETWEEN #{startDate} AND #{endDate}
+    </select>
 </mapper>

@@ -39,4 +39,8 @@ public interface AttendanceMapper {
                                                        @Param("startDate") LocalDate startDate,
                                                        @Param("endDate") LocalDate endDate);
 
+    WeeklyWorkDurationQueryDTO findWeeklyWorkDuration(@Param("employeeId") Long employeeId,
+                                                 @Param("startDate") LocalDate startDate,
+                                                 @Param("endDate") LocalDate endDate);
+
 }

@@ -23,4 +23,6 @@ public interface AttendanceQueryService {
 
     WeeklyOvertimeSummaryQueryDTO getWeeklyOvertime(Long employeeId);
 
+    WeeklyWorkDurationQueryDTO getWeeklyWorkDuration(Long employeeId);
+
 }

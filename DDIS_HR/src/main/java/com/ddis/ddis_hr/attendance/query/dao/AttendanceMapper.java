@@ -35,4 +35,8 @@ public interface AttendanceMapper {
     MyWorkStatusQueryDTO findMyWorkStatus(@Param("employeeId") Long employeeId,
                                           @Param("today") String today);
 
+    WeeklyOvertimeSummaryQueryDTO findWeeklyOvertimeSummary(@Param("employeeId") Long employeeId,
+                                                       @Param("startDate") LocalDate startDate,
+                                                       @Param("endDate") LocalDate endDate);
+
 }

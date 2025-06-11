@@ -10,13 +10,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DrafterQueryServiceImpl implements DrafterQueryService {
 
-    private final JwtUtil jwtUtil;
     private final FindDrafterMapper findDrafterMapper;
 
     @Override
-    public FindDrafterQueryDTO getfindDrafterInfo(String token) {
-        String empId = jwtUtil.getEmpIdFromToken(token);
-        return findDrafterMapper.findDrafterInfo(empId);
+    public FindDrafterQueryDTO getfindDrafterInfo(Long employeeId) {
+        return findDrafterMapper.findDrafterInfo(employeeId);
     }
 
 }

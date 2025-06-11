@@ -77,12 +77,5 @@ public class JwtUtil {
     private Claims parseClaims(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
-
-    public String getEmpIdFromToken(String token) {
-        if (token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        }
-        return parseClaims(token).getSubject();
-    }
     
 }

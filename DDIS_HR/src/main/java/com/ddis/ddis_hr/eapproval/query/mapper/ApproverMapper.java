@@ -12,20 +12,13 @@ import org.apache.ibatis.annotations.Param;
 public interface ApproverMapper {
 
     /**
-     * findApproverByPositionAndOrg
+     * 포지션명 + 조직 구분(팀/부서/본부) + 조직 ID 로 결재자 1명을 찾는다.
      *
-     * @param positionName     결재 단계에서 요구하는 직급명 (예: "팀장", "부서장", "본부장")
-     * @param organizationType 조직 단위 구분자
-     *                         - "team"       : 팀 단위로 조회
-     *                         - "department" : 부서 단위로 조회
-     *                         - "head"       : 본부 단위로 조회
-     * @param organizationId   조회 대상 조직 ID (teamId, departmentId, headId 중 하나)
-     * @return 단일 EmployeeSimpleDTO
-     *         - 조회된 결재자가 없으면 null 반환
+     * @param positionName     직책(예: "팀장")
+     * @param organizationType 조직 구분 (team|department|head)
+     * @param organizationId   해당 조직 PK
      */
-    ApproverInfoQueryDTO findApproverByPositionAndOrg(
-            @Param("positionName")    String positionName,
-            @Param("organizationType") String organizationType,
-            @Param("organizationId")   Long organizationId
-    );
+    ApproverInfoQueryDTO findApproverByPositionAndOrg(@Param("positionName") String positionName,
+                                                      @Param("organizationType") String organizationType,
+                                                      @Param("organizationId") Long organizationId);
 }

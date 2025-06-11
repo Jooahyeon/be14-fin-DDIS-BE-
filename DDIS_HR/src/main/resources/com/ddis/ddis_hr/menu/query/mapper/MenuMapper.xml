@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ddis.ddis_hr.menu.query.dao.MenuMapper">
+
+    <select id="selectAllMenus" resultType="com.ddis.ddis_hr.menu.query.dto.MenuDTO">
+        SELECT
+            menu_id,
+            menu_name,
+            parent_menu_id,
+            menu_path
+        FROM menu
+        ORDER BY menu_id
+    </select>
+
+</mapper>

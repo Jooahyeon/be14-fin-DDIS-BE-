@@ -6,6 +6,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +16,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AttendanceQueryServiceImpl implements AttendanceQueryService {
 
-    private final AttendanceMapper calendarMapper;
+    private final AttendanceMapper attendanceMapper;
 
     @Override
     public EmployeeInfoQueryDTO findById(Long employeeId) {
-        return Optional.ofNullable(calendarMapper.findById(employeeId))
+        return Optional.ofNullable(attendanceMapper.findById(employeeId))
                 .orElseThrow(() -> new EntityNotFoundException("사원을 찾을 수 없습니다."));
     }
 
@@ -30,12 +31,12 @@ public class AttendanceQueryServiceImpl implements AttendanceQueryService {
 
         List<PersonalCalendarQueryDTO> events = new ArrayList<>();
 
-        for (PersonalScheduleQueryDTO ps : calendarMapper.findPersonalSchedules(employeeId)) {
+        for (PersonalScheduleQueryDTO ps : attendanceMapper.findPersonalSchedules(employeeId)) {
             events.add(new PersonalCalendarQueryDTO("personal", ps.getScheduleTitle(), ps.getScheduleTime(), null, null, ps.getScheduleDate()));
         }
 
         List<String> validStatuses = List.of("LATE", "ABSENT", "BUSINESS_TRIP", "FIELD_WORK", "ANNUAL_LEAVE", "HALF_AM", "HALF_PM");
-        for (AttendanceQueryDTO at : calendarMapper.findWorkStatuses(teamId, employeeId, validStatuses)) {
+        for (AttendanceQueryDTO at : attendanceMapper.findWorkStatuses(teamId, employeeId, validStatuses)) {
             events.add(new PersonalCalendarQueryDTO("attendance", null, null, at.getWorkStatusName(), at.getEmployeeName(), at.getWorkDate()));
         }
 
@@ -49,12 +50,12 @@ public class AttendanceQueryServiceImpl implements AttendanceQueryService {
 
         List<TeamCalendarQueryDTO> events = new ArrayList<>();
 
-        for (MeetingQueryDTO m : calendarMapper.findMeetings(teamId)) {
+        for (MeetingQueryDTO m : attendanceMapper.findMeetings(teamId)) {
             events.add(new TeamCalendarQueryDTO("meeting", m.getMeetingTitle(), m.getMeetingTime(), null, null, m.getMeetingDate()));
         }
 
         List<String> validStatuses = List.of("LATE", "ABSENT", "BUSINESS_TRIP", "FIELD_WORK", "ANNUAL_LEAVE", "HALF_AM", "HALF_PM");
-        for (AttendanceQueryDTO at : calendarMapper.findWorkStatuses(teamId, employeeId, validStatuses)) {
+        for (AttendanceQueryDTO at : attendanceMapper.findWorkStatuses(teamId, employeeId, validStatuses)) {
             events.add(new TeamCalendarQueryDTO("attendance", null, null, at.getWorkStatusName(), at.getEmployeeName(), at.getWorkDate()));
         }
 
@@ -63,28 +64,40 @@ public class AttendanceQueryServiceImpl implements AttendanceQueryService {
 
     @Override
     public List<MeetingQueryDTO> getTodayMeetings(Long employeeId) {
-        EmployeeInfoQueryDTO employee = calendarMapper.findById(employeeId);
+        EmployeeInfoQueryDTO employee = attendanceMapper.findById(employeeId);
         Long teamId = employee.getTeamId();
-        return calendarMapper.findMeetingsToday(teamId, LocalDate.now());
+        return attendanceMapper.findMeetingsToday(teamId, LocalDate.now());
     }
 
     @Override
     public List<TeamWorkStatusQueryDTO> getTeamWorkStatus(Long employeeId) {
-        EmployeeInfoQueryDTO employee = calendarMapper.findById(employeeId);
+        EmployeeInfoQueryDTO employee = attendanceMapper.findById(employeeId);
         Long teamId = employee.getTeamId();
         String today = LocalDate.now().toString();
-        return calendarMapper.findTodayTeamStatuses(teamId, today);
+        return attendanceMapper.findTodayTeamStatuses(teamId, today);
     }
 
     @Override
     public String getTeamName(Long teamId) {
-        return calendarMapper.findTeamNameById(teamId);
+        return attendanceMapper.findTeamNameById(teamId);
     }
 
     @Override
     public MyWorkStatusQueryDTO getMyWorkStatus(Long employeeId) {
         String today = LocalDate.now().toString();
-        return calendarMapper.findMyWorkStatus(employeeId, today);
+        return attendanceMapper.findMyWorkStatus(employeeId, today);
+    }
+
+    @Override
+    public WeeklyOvertimeSummaryQueryDTO getWeeklyOvertime(Long employeeId) {
+        LocalDate today = LocalDate.now();
+        DayOfWeek dayOfWeek = today.getDayOfWeek();
+        LocalDate startOfWeek = today.minusDays(dayOfWeek.getValue() % 7); // 일요일
+        LocalDate endOfWeek = startOfWeek.plusDays(6); // 토요일
+
+        WeeklyOvertimeSummaryQueryDTO result = attendanceMapper.findWeeklyOvertimeSummary(employeeId, startOfWeek, endOfWeek);
+        result.calculateTotal();
+        return result;
     }
 
 }

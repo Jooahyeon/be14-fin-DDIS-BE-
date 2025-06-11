@@ -26,5 +26,10 @@ public class ApproverInfoQueryDTO {
     private Long positionId;     // 포지션 ID
     private String employeeName; // 이름
     private String teamName;
+    private String positionName;
     private String departmentName;
+    private String type;             // 결재유형 코드
+    private String lineType;         // 결재선 유형 코드
+    private String typeLabel;        // 한글 라벨
+    private String lineTypeLabel;    // 한글 라벨
 }

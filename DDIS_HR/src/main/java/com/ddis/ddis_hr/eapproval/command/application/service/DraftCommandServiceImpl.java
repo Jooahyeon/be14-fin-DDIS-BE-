@@ -1,14 +1,17 @@
 package com.ddis.ddis_hr.eapproval.command.application.service;
 
 import com.ddis.ddis_hr.eapproval.command.application.dto.DraftCreateCommandDTO;
+import com.ddis.ddis_hr.eapproval.command.application.dto.DraftCreateResponseCommandDTO;
 import com.ddis.ddis_hr.eapproval.command.domain.entity.Draft;
 import com.ddis.ddis_hr.eapproval.command.domain.repository.DraftRepository;
 
+import com.ddis.ddis_hr.eapproval.query.service.ApprovalLineQueryService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 
 
 @RequiredArgsConstructor
@@ -17,31 +20,25 @@ import org.springframework.stereotype.Service;
 public class DraftCommandServiceImpl implements DraftCommandService {
 
     private final DraftRepository draftRepository;
-//    private final DepartmentService departmentService;
-//    private final TeamService teamService;
-//    private final PositionService positionService;
-//    private final UserService userService;
-//    private final ObjectMapper objectMapper; // JSON 파싱용
+    private final ApprovalLineCommandService approvalLineCommandService;
 
     /**
-     * 기안문 생성 로직
+     * 기안문 생성 로직 / 결재라인 자동매칭
      */
-    @Override
     @Transactional
-    public Long createDraft(DraftCreateCommandDTO commandDto) {
-        // 1) DTO → 엔티티 변환 (doc_content: JSON 문자열)
-        Draft draft = commandDto.toEntity();
+    @Override
+    public DraftCreateResponseCommandDTO createDraft(DraftCreateCommandDTO dto) {
 
-        // 2) 저장
-        Draft saved = draftRepository.save(draft);
+        // 1) 기안 저장 → docId 생성
+        Draft saved = draftRepository.save(dto.toEntity());
 
-        System.out.println("✅ 저장 성공: docId = " + saved.getDocId());
+        // 2) 결재라인 자동 생성 및 저장
+        Long approvalLineId = approvalLineCommandService
+                .createAutoLine(saved.getDocId(), dto.getEmployeeId());
 
-
-        // 3) 생성된 문서 ID 반환
-        return saved.getDocId();
+        // 3) docId + approvalLineId(결재라인) 를 응답 DTO 로 반환
+        return new DraftCreateResponseCommandDTO(saved.getDocId(), approvalLineId);
     }
-
 //    /**
 //     * 기안문 상세 조회 로직
 //     */

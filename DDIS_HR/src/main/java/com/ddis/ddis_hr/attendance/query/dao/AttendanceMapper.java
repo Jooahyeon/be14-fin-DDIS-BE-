@@ -24,6 +24,9 @@ public interface AttendanceMapper {
     List<MeetingQueryDTO> findMeetingsToday(@Param("teamId") Long teamId,
                                             @Param("today") LocalDate today);
 
+    List<PersonalScheduleQueryDTO> findSchedulesToday(@Param("employeeId") Long employeeId,
+                                                      @Param("today") LocalDate today);
+
     List<TeamWorkStatusQueryDTO> findTodayTeamStatuses(@Param("teamId") Long teamId,
                                                        @Param("today") String today);
 

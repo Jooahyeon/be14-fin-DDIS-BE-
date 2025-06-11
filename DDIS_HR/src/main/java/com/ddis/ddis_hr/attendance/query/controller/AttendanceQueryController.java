@@ -39,6 +39,12 @@ public class AttendanceQueryController {
         return ResponseEntity.ok(meetings);
     }
 
+    @GetMapping("/schedule/today")
+    public ResponseEntity<List<PersonalScheduleQueryDTO>> getTodaySchedules(@AuthenticationPrincipal CustomUserDetails user) {
+        List<PersonalScheduleQueryDTO> schedules = attendanceQueryService.getTodaySchedules(user.getEmployeeId());
+        return ResponseEntity.ok(schedules);
+    }
+
     @GetMapping("/status/team")
     public ResponseEntity<Map<String, Object>> getTeamStatus(@AuthenticationPrincipal CustomUserDetails user) {
         Long employeeId = user.getEmployeeId();

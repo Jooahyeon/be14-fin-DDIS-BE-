@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -85,23 +84,7 @@ public class JwtUtil {
         }
         return parseClaims(token).getSubject();
     }
-    public String createToken(CustomUserDetails userDetails, long expirationMillis) {
-        Claims claims = Jwts.claims().setSubject(userDetails.getUsername());
-        claims.put("auth", userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
-        claims.put("teamId", userDetails.getTeamId());
-        claims.put("positionId", userDetails.getPositionId());
-        claims.put("rankId", userDetails.getRankId());
-        claims.put("jobId", userDetails.getJobId());
-        claims.put("headId", userDetails.getHeadId());
-        claims.put("departmentId", userDetails.getDepartmentId());
 
-        return Jwts.builder()
-                .setClaims(claims)
-                .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
-                .signWith(key, SignatureAlgorithm.HS512)
-                .compact();
-    }
 
 }
 

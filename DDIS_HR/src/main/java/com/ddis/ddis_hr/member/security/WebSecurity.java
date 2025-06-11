@@ -7,7 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -20,6 +22,8 @@ import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
+@EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class WebSecurity {
 
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
@@ -57,6 +61,7 @@ public class WebSecurity {
                                 .requestMatchers(new AntPathRequestMatcher("/email-verification/**")).permitAll()
                                 // 모든 경로 허용 → 필요시 조정
                                 .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
+//                                .requestMatchers(new AntPathRequestMatcher("/payroll/employees/**")).hasAnyRole("HR")
                                 .anyRequest().authenticated()
                 )
                 // 3) stateless 세션 정책

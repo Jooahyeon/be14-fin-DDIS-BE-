@@ -33,13 +33,10 @@ import java.util.stream.Collectors;
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private Environment env;
-    @Autowired
-    private JwtUtil jwtUtil;
 
     public AuthenticationFilter(AuthenticationManager authenticationManager,Environment env) {
         super(authenticationManager);
         this.env = env;
-
     }
 
     @Override
@@ -65,9 +62,38 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         // CustomUserDetails로 올바르게 캐스팅하여 사용
         CustomUserDetails userDetails = (CustomUserDetails) authResult.getPrincipal();
-        String token = jwtUtil.createToken(userDetails, Long.parseLong(env.getProperty("token.expiration_time")));
-        response.addHeader("Authorization", "Bearer " + token);
+        byte[] keyBytes = Decoders.BASE64.decode(env.getProperty("token.secret"));
+        Key key = Keys.hmacShaKeyFor(keyBytes);
 
+        String employeeId = userDetails.getUsername();
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
+        Claims claims = Jwts.claims().setSubject(employeeId);
+        claims.put("auth", roles);
+
+        Long teamId = userDetails.getTeamId();
+        claims.put("teamId", teamId);
+        Long positionId = userDetails.getPositionId();
+        claims.put("positionId", positionId);
+        Long rankId = userDetails.getRankId();
+        claims.put("rankId", rankId);
+        Long jobId = userDetails.getJobId();
+        claims.put("jobId", jobId);
+        Long headId = userDetails.getHeadId();
+        claims.put("headId", headId);
+        Long departmentId = userDetails.getDepartmentId();
+        claims.put("departmentId", departmentId);
+
+
+        String token = Jwts.builder()
+                .setClaims(claims)
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("token.expiration_time"))))
+                .signWith(SignatureAlgorithm.HS512, key)
+                .compact();
+
+        response.addHeader("Authorization", "Bearer " + token);
     }
 
 

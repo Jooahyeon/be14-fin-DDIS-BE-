@@ -14,7 +14,6 @@ public class EmployeeDTO {
     private Long employeeId;
     private String employeeName;
     private String employeePwd;
-    private String employeeProfile;
     private String employeeNation;
     private String employeeGender;
     private LocalDateTime employeeBirth;
@@ -23,16 +22,16 @@ public class EmployeeDTO {
     private String employeeEmail;
     private String employeeAddress;
     private LocalDateTime employmentDate;
-    private LocalDateTime returementDate;
+    private LocalDateTime retirementDate;
     private Boolean workType;
     private String bankName;
     private String bankDepositor;
     private String bankAccount;
     private Boolean isDisorder;
-    private String isMilitary;
+    private String isMilitaryType;
     private Boolean isMarriage;
     private LocalDateTime marriageDate;
-    private Integer familiyCount;
+    private Integer familyCount;
     private Integer careerYearCount;
     private String previousCompany;
     private String finalAcademic;

@@ -98,4 +98,15 @@
           LEFT JOIN work_status ws ON a.work_status_id = ws.work_status_id
          WHERE e.employee_id = #{employeeId}
     </select>
+
+    <select id="findWeeklyOvertimeSummary" resultType="com.ddis.ddis_hr.attendance.query.dto.WeeklyOvertimeSummaryQueryDTO">
+        SELECT
+               COALESCE(SUM(CASE WHEN overtime_type = '시간외근무' THEN overtime_duration ELSE 0 END), 0) AS regularOvertime
+             , COALESCE(SUM(CASE WHEN overtime_type = '야간근무' THEN overtime_duration ELSE 0 END), 0) AS nightOvertime
+             , COALESCE(SUM(CASE WHEN overtime_type = '휴일근무' THEN overtime_duration ELSE 0 END), 0) AS holidayOvertime
+          FROM attendance
+         WHERE employee_id = #{employeeId}
+           AND overtime_type IN ('시간외근무', '야간근무', '휴일근무')
+           AND work_date BETWEEN #{startDate} AND #{endDate}
+    </select>
 </mapper>

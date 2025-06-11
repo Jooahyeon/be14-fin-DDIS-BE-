@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @ToString
 public class EmployeeDTO {
 
-    private Integer employeeId;
+    private Long employeeId;
     private String employeeName;
     private String employeePwd;
     private String employeePhotoName;

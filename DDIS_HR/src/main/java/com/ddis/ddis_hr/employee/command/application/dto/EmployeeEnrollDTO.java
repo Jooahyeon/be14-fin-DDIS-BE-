@@ -1,18 +1,18 @@
-package com.ddis.ddis_hr.member.command.application.dto;
-
-import lombok.*;
+package com.ddis.ddis_hr.employee.command.application.dto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
+/**
+ * 사원 등록 요청 정보를 담는 DTO
+ */
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@ToString
-public class EmployeeDTO {
-
-    private Long employeeId;
+public class EmployeeEnrollDTO {
+    private Integer employeeId;
     private String employeeName;
     private String employeePwd;
     private String employeePhotoName;
@@ -48,5 +48,4 @@ public class EmployeeDTO {
     private Long headId;
     private Long departmentId;
     private Long teamId;
-
 }

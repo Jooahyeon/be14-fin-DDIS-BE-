@@ -13,6 +13,7 @@
         <result property="positionName" column="position_name"/>
         <result property="rankCode"     column="rank_code"    />
         <result property="rankName"     column="rank_name"    />
+        <result property="jobName"      column="job_name"     />
         <result property="headId"       column="head_id"      />
         <result property="departmentId" column="department_id"/>
         <result property="teamId"       column="team_id"      />
@@ -93,11 +94,25 @@
         SELECT e.employee_id,
             e.employee_name,
             p.position_name,
-            r.rank_name
+            r.rank_name,
+            e.employee_email
         FROM employee e
         LEFT JOIN `position` p ON e.position_id = p.position_id
         LEFT JOIN `rank`     r ON e.rank_id     = r.rank_id
         WHERE e.team_id = #{teamId}
+    </select>
+
+    <select id="selectDeptMembers" resultType="com.ddis.ddis_hr.organization.query.dto.EmployeeQueryDTO">
+        SELECT
+        e.employee_id    AS employeeId,
+        e.employee_name  AS employeeName,
+        p.position_name  AS positionName,
+        r.rank_name      AS rankName,
+        e.employee_email          AS email
+        FROM employee e
+        LEFT JOIN position p ON e.position_id = p.position_id
+        LEFT JOIN rank     r ON e.rank_id     = r.rank_id
+        WHERE e.department_id = #{departmentId}
     </select>
 
 
@@ -188,15 +203,16 @@
             e.employee_name     AS employeeName,
             p.position_name     AS positionName,
             r.rank_name         AS rankName,
-    <!--        j.job_name         AS jobName,-->
+            j.job_name         AS jobName,
             e.head_id           AS headId,
             e.department_id     AS departmentId,
             e.team_id           AS teamId,
+            e.employee_birth    AS birthdate,
             e.employee_email    AS email
         FROM employee e
         LEFT JOIN position p ON e.position_id = p.position_id
         LEFT JOIN rank     r ON e.rank_id     = r.rank_id
-<!--        LEFT JOIN job     r ON e.job_id     = j.job_id-->
+        LEFT JOIN job     j ON e.job_id     = j.job_id
         WHERE e.employee_id = #{employeeId}
     </select>
 

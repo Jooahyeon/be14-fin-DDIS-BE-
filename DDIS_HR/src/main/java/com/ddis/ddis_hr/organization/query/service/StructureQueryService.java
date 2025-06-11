@@ -72,4 +72,9 @@ public class StructureQueryService {
     public EmployeeQueryDTO getDeptManagerByDepartmentId(Long departmentId) {
         return structureMapper.selectDeptManagerByDepartmentId(departmentId);
     }
+
+    // 부서원 조회
+    public List<EmployeeQueryDTO> getDeptMembers(Long departmentId) {
+        return structureMapper.selectDeptMembers(departmentId);
+    }
 }

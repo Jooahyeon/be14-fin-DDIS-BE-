@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ddis.ddis_hr.menu.query.dao.FavoriteMenuMapper">
+
+    <select id="selectFavoriteMenus" resultType="com.ddis.ddis_hr.menu.query.dto.MenuDTO">
+        SELECT
+            m.menu_id,
+            m.menu_name,
+            m.parent_menu_id,
+            m.menu_path
+        FROM favorite_menu f
+                 JOIN menu m ON f.menu_id = m.menu_id
+        WHERE f.employee_id = #{employeeId}
+        ORDER BY f.display_order
+    </select>
+
+</mapper>

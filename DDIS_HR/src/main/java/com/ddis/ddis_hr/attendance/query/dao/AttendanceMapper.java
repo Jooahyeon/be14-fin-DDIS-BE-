@@ -43,4 +43,7 @@ public interface AttendanceMapper {
                                                  @Param("startDate") LocalDate startDate,
                                                  @Param("endDate") LocalDate endDate);
 
+    LeaveStatusQueryDTO getLeaveStatus(@Param("employeeId") Long employeeId);
+
+
 }

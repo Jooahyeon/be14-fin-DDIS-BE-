@@ -82,4 +82,11 @@ public class AttendanceQueryController {
         return ResponseEntity.ok(dto);
     }
 
+    @GetMapping("/leave/status/me")
+    public ResponseEntity<LeaveStatusQueryDTO> getMyLeaveStatus(@AuthenticationPrincipal CustomUserDetails user) {
+        Long employeeId = user.getEmployeeId();
+        LeaveStatusQueryDTO status = attendanceQueryService.getLeaveStatus(employeeId);
+        return ResponseEntity.ok(status);
+    }
+
 }

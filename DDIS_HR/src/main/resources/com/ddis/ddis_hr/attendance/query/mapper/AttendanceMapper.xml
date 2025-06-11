@@ -129,4 +129,17 @@
          WHERE employee_id = #{employeeId}
            AND work_date BETWEEN #{startDate} AND #{endDate}
     </select>
+
+    <select id="getLeaveStatus" resultType="com.ddis.ddis_hr.attendance.query.dto.LeaveStatusQueryDTO">
+        SELECT
+               total_days AS totalLeave
+             , used_days AS usedLeave
+             , pending_leave_days AS pendingLeave
+             , remaining_days AS remainingLeave
+             , first_notice_date AS firstPromotionDate
+             , second_notice_date AS secondPromotionDate
+          FROM `leave`
+         WHERE employee_id = #{employeeId}
+    </select>
+
 </mapper>

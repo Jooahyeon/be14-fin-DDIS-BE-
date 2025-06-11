@@ -67,17 +67,4 @@ public class AppointmentHistoryQueryController {
         List<AppointmentHistoryQueryDTO> approved = historyQueryService.getApprovedHistories();
         return ResponseEntity.ok(approved);
     }
-
-    /** 3) 로그인한 사용자의 사번으로 본인 이력 조회 */
-    @GetMapping("/me")
-    public ResponseEntity<List<AppointmentHistoryQueryDTO>> getMyHistories(
-            @AuthenticationPrincipal CustomUserDetails user
-    ) {
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        List<AppointmentHistoryQueryDTO> list =
-                historyQueryService.getHistoriesByEmployeeId(user.getEmployeeId());
-        return ResponseEntity.ok(list);
-    }
 }

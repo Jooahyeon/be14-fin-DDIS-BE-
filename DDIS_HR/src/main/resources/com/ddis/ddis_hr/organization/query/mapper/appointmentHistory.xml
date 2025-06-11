@@ -121,6 +121,7 @@
         LEFT JOIN employee e
             ON ah.employee_id = e.employee_id
         WHERE ah.appointment_history_id = #{appointmentHistoryId}
+        ORDER BY ah.appointment_effective_date DESC
     </select>
 
     <select id="selectByAppointmentType" resultMap="AppointmentHistoryResultMap" parameterType="string">

@@ -36,7 +36,7 @@ public class ApprovalLineQueryController {
     @GetMapping
     public ResponseEntity<List<ApproverQueryDTO>> getApprovalLine(Authentication authentication) {
         // 인증 컨텍스트에서 사용자 사번(subject) 획득
-        String employeeId = authentication.getName();
+        Long employeeId = Long.valueOf(authentication.getName());
 
         // 서비스 호출: 결재라인 생성
         List<ApproverQueryDTO> line = approvalLineQueryService.generateApprovalLine(employeeId);

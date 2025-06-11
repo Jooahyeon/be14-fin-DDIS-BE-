@@ -21,7 +21,7 @@
 
     <!-- 2) 실제 SELECT: 컬럼에 alias를 DTO 프로퍼티명과 맞추고, resultMap 사용 -->
     <select id="findDrafterInfo"
-            parameterType="string"
+            parameterType="Long"
             resultMap="DrafterMap">
         SELECT
             e.employee_id     AS empId,

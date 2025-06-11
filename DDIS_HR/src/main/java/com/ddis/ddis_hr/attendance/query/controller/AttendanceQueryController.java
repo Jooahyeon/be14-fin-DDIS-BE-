@@ -75,4 +75,11 @@ public class AttendanceQueryController {
         return ResponseEntity.ok(dto);
     }
 
+    @GetMapping("/work-duration-summary")
+    public ResponseEntity<WeeklyWorkDurationQueryDTO> getWeeklyWorkDurationSummary(@AuthenticationPrincipal CustomUserDetails user) {
+        Long employeeId = user.getEmployeeId();
+        WeeklyWorkDurationQueryDTO dto = attendanceQueryService.getWeeklyWorkDuration(employeeId);
+        return ResponseEntity.ok(dto);
+    }
+
 }

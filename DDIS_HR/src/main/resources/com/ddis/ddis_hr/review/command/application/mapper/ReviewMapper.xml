@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ddis.ddis_hr.review.command.application.mapper.ReviewMapper">
+
+    <!-- 1) 컬럼 ↔ 필드 매핑 -->
+    <resultMap id="ReviewResult" type="com.ddis.ddis_hr.review.command.domain.aggregate.Review">
+        <id     column="review_id"       property="reviewId"/>
+        <result column="review_score"    property="reviewScore"/>
+        <association property="reviewGradeId"
+                     javaType="com.ddis.ddis_hr.review.command.domain.aggregate.ReviewGrade">
+            <id   column="review_grade_id" property="reviewGradeId"/>
+        </association>
+        <association property="employeeId" javaType="com.ddis.ddis_hr.member.command.domain.aggregate.entity.Employee">
+            <id   column="employee_id"     property="employeeId"/>
+        </association>
+        <association property="selfreviewId" javaType="com.ddis.ddis_hr.goals.command.domain.aggregate.Performance">
+            <id   column="selfreview_id"   property="id"/>
+        </association>
+    </resultMap>
+
+    <!-- 2) selectBySelfreviewId -->
+    <select id="selectBySelfreviewId"
+            parameterType="long"
+            resultMap="ReviewResult">
+        SELECT
+        review_id,
+        review_score,
+        review_grade_id,
+        employee_id,
+        selfreview_id
+        FROM review
+        WHERE selfreview_id = #{performanceId}
+    </select>
+
+    <resultMap id="PerfHistoryResult" type="com.ddis.ddis_hr.review.command.application.dto.ReviewHistoryDTO">
+        <result column="year_month"              property="yearMonth"/>
+        <result column="performance_description" property="performanceDescription"/>
+        <result column="performance_value"       property="performanceValue"/>
+        <result column="review_score"            property="reviewScore"/>
+    </resultMap>
+
+    <!-- 2) selectHistoryByEmployeeId 쿼리 -->
+    <select id="selectHistoryByEmployeeId"
+            parameterType="long"
+            resultMap="PerfHistoryResult">
+        SELECT
+        p.reviewer_created_at,
+        g.goal_content,
+        p.performance_value,
+        r.review_score
+        FROM selfreview p
+        JOIN goal    g ON g.goal_id = p.goal_id
+        LEFT JOIN review r ON r.selfreview_id = p.selfreview_id
+        WHERE g.employee_id = #{employeeId}
+        AND p.reviewer_created_at IS NOT NULL
+        ORDER BY p.reviewer_created_at DESC
+    </select>
+
+
+</mapper>

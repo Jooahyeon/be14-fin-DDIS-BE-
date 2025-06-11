@@ -1,8 +1,6 @@
 package com.ddis.ddis_hr.goals.command.application.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,6 +8,8 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class PerformanceDTO {
     private Long performanceId;
     private LocalDateTime selfreviewCreateAt;

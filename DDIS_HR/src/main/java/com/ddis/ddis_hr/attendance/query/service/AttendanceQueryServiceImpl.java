@@ -70,6 +70,12 @@ public class AttendanceQueryServiceImpl implements AttendanceQueryService {
     }
 
     @Override
+    public List<PersonalScheduleQueryDTO> getTodaySchedules(Long employeeId) {
+        EmployeeInfoQueryDTO employee = calendarMapper.findById(employeeId);
+        return calendarMapper.findSchedulesToday(employeeId, LocalDate.now());
+    }
+
+    @Override
     public List<TeamWorkStatusQueryDTO> getTeamWorkStatus(Long employeeId) {
         EmployeeInfoQueryDTO employee = attendanceMapper.findById(employeeId);
         Long teamId = employee.getTeamId();

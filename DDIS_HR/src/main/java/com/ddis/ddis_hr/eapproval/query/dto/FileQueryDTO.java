@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @ToString
 @Builder
-public class FileDTO {
+public class FileQueryDTO {
     private String name;            // 파일명
     private int size;               // 파일용량
     private String type;            // 파일종류

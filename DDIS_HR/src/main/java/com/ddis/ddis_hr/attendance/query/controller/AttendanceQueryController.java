@@ -62,4 +62,11 @@ public class AttendanceQueryController {
         return ResponseEntity.ok(dto);
     }
 
+    @GetMapping("/overtime-summary")
+    public ResponseEntity<WeeklyOvertimeSummaryQueryDTO> getWeeklyOvertimeSummary(@AuthenticationPrincipal CustomUserDetails user) {
+        Long employeeId = user.getEmployeeId();
+        WeeklyOvertimeSummaryQueryDTO dto = attendanceQueryService.getWeeklyOvertime(employeeId);
+        return ResponseEntity.ok(dto);
+    }
+
 }

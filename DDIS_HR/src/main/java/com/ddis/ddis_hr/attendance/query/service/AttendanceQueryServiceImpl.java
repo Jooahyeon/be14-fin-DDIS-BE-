@@ -71,8 +71,8 @@ public class AttendanceQueryServiceImpl implements AttendanceQueryService {
 
     @Override
     public List<PersonalScheduleQueryDTO> getTodaySchedules(Long employeeId) {
-        EmployeeInfoQueryDTO employee = calendarMapper.findById(employeeId);
-        return calendarMapper.findSchedulesToday(employeeId, LocalDate.now());
+        EmployeeInfoQueryDTO employee = attendanceMapper.findById(employeeId);
+        return attendanceMapper.findSchedulesToday(employeeId, LocalDate.now());
     }
 
     @Override
@@ -104,6 +104,15 @@ public class AttendanceQueryServiceImpl implements AttendanceQueryService {
         WeeklyOvertimeSummaryQueryDTO result = attendanceMapper.findWeeklyOvertimeSummary(employeeId, startOfWeek, endOfWeek);
         result.calculateTotal();
         return result;
+    }
+
+    @Override
+    public WeeklyWorkDurationQueryDTO getWeeklyWorkDuration(Long employeeId) {
+        LocalDate today = LocalDate.now();
+        LocalDate startOfWeek = today.minusDays(today.getDayOfWeek().getValue() % 7); // 일요일
+        LocalDate endOfWeek = startOfWeek.plusDays(6); // 토요일
+
+        return attendanceMapper.findWeeklyWorkDuration(employeeId, startOfWeek, endOfWeek);
     }
 
 }

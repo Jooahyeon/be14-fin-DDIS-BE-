@@ -45,5 +45,6 @@ public interface AttendanceMapper {
 
     LeaveStatusQueryDTO getLeaveStatus(@Param("employeeId") Long employeeId);
 
+    List<LeaveHistoryQueryDTO> getLeaveHistoryByEmployeeId(@Param("employeeId") Long employeeId);
 
 }

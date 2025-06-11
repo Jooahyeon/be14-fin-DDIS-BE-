@@ -27,5 +27,8 @@ public interface AttendanceQueryService {
 
     LeaveStatusQueryDTO getLeaveStatus(Long employeeId);
 
+    List<LeaveHistoryQueryDTO> getLeaveHistory(Long employeeId);
+
+
 
 }

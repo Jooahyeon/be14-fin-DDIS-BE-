@@ -121,5 +121,11 @@ public class AttendanceQueryServiceImpl implements AttendanceQueryService {
                 .orElseThrow(() -> new EntityNotFoundException("연차 정보가 없습니다."));
     }
 
+    @Override
+    public List<LeaveHistoryQueryDTO> getLeaveHistory(Long employeeId) {
+        return attendanceMapper.getLeaveHistoryByEmployeeId(employeeId);
+    }
+
+
 
 }

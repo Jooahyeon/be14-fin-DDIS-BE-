@@ -89,4 +89,13 @@ public class AttendanceQueryController {
         return ResponseEntity.ok(status);
     }
 
+    @GetMapping("/leave/history/used/me")
+    public ResponseEntity<List<LeaveHistoryQueryDTO>> getLeaveHistory(@AuthenticationPrincipal CustomUserDetails user) {
+        Long employeeId = user.getEmployeeId();
+        List<LeaveHistoryQueryDTO> historyList = attendanceQueryService.getLeaveHistory(employeeId);
+        return ResponseEntity.ok(historyList);
+    }
+
+
+
 }

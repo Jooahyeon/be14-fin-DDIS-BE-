@@ -4,6 +4,7 @@ import com.ddis.ddis_hr.eapproval.command.domain.entity.Draft;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@Slf4j
 public class DraftCreateCommandDTO {
     private String title;                // 문서 제목
     private String docContent;          // JSON 전체 내용
@@ -32,9 +34,6 @@ public class DraftCreateCommandDTO {
     private Long employeeId;            // 작성자 사번
 
     public Draft toEntity() {
-        System.out.println("테스트");
-
-
         return Draft.builder()
                 .docTitle(this.title)
                 .docContent(this.docContent)
@@ -47,7 +46,7 @@ public class DraftCreateCommandDTO {
                 .finalApprovalAt(this.finalApprovalAt)
                 .deletedAt(this.deletedAt)
                 .draftVersion(this.draftVersion > 0 ? this.draftVersion : 1)
-                .formId(this.formId != null ? this.formId : 1L)
+                .formId(this.formId != null ? this.formId : 1)
                 .employeeId(this.employeeId)
                 .build();
     }

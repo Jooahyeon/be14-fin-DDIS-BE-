@@ -24,6 +24,9 @@ public interface AttendanceMapper {
     List<MeetingQueryDTO> findMeetingsToday(@Param("teamId") Long teamId,
                                             @Param("today") LocalDate today);
 
+    List<PersonalScheduleQueryDTO> findSchedulesToday(@Param("employeeId") Long employeeId,
+                                                      @Param("today") LocalDate today);
+
     List<TeamWorkStatusQueryDTO> findTodayTeamStatuses(@Param("teamId") Long teamId,
                                                        @Param("today") String today);
 
@@ -31,5 +34,13 @@ public interface AttendanceMapper {
 
     MyWorkStatusQueryDTO findMyWorkStatus(@Param("employeeId") Long employeeId,
                                           @Param("today") String today);
+
+    WeeklyOvertimeSummaryQueryDTO findWeeklyOvertimeSummary(@Param("employeeId") Long employeeId,
+                                                       @Param("startDate") LocalDate startDate,
+                                                       @Param("endDate") LocalDate endDate);
+
+    WeeklyWorkDurationQueryDTO findWeeklyWorkDuration(@Param("employeeId") Long employeeId,
+                                                 @Param("startDate") LocalDate startDate,
+                                                 @Param("endDate") LocalDate endDate);
 
 }

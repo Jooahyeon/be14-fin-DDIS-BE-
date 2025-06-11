@@ -13,10 +13,16 @@ public interface AttendanceQueryService {
 
     List<MeetingQueryDTO> getTodayMeetings(Long employeeId);
 
+    List<PersonalScheduleQueryDTO> getTodaySchedules(Long employeeId);
+
     List<TeamWorkStatusQueryDTO> getTeamWorkStatus(Long employeeId);
 
     String getTeamName(Long teamId);
 
     MyWorkStatusQueryDTO getMyWorkStatus(Long employeeId);
+
+    WeeklyOvertimeSummaryQueryDTO getWeeklyOvertime(Long employeeId);
+
+    WeeklyWorkDurationQueryDTO getWeeklyWorkDuration(Long employeeId);
 
 }

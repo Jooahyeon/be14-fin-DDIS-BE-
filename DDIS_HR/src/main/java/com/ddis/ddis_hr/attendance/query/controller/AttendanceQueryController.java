@@ -39,6 +39,12 @@ public class AttendanceQueryController {
         return ResponseEntity.ok(meetings);
     }
 
+    @GetMapping("/schedule/today")
+    public ResponseEntity<List<PersonalScheduleQueryDTO>> getTodaySchedules(@AuthenticationPrincipal CustomUserDetails user) {
+        List<PersonalScheduleQueryDTO> schedules = attendanceQueryService.getTodaySchedules(user.getEmployeeId());
+        return ResponseEntity.ok(schedules);
+    }
+
     @GetMapping("/status/team")
     public ResponseEntity<Map<String, Object>> getTeamStatus(@AuthenticationPrincipal CustomUserDetails user) {
         Long employeeId = user.getEmployeeId();
@@ -59,6 +65,20 @@ public class AttendanceQueryController {
     public ResponseEntity<MyWorkStatusQueryDTO> getMyWorkStatus(@AuthenticationPrincipal CustomUserDetails user) {
         Long employeeId = user.getEmployeeId();
         MyWorkStatusQueryDTO dto = attendanceQueryService.getMyWorkStatus(employeeId);
+        return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping("/overtime-summary")
+    public ResponseEntity<WeeklyOvertimeSummaryQueryDTO> getWeeklyOvertimeSummary(@AuthenticationPrincipal CustomUserDetails user) {
+        Long employeeId = user.getEmployeeId();
+        WeeklyOvertimeSummaryQueryDTO dto = attendanceQueryService.getWeeklyOvertime(employeeId);
+        return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping("/work-duration-summary")
+    public ResponseEntity<WeeklyWorkDurationQueryDTO> getWeeklyWorkDurationSummary(@AuthenticationPrincipal CustomUserDetails user) {
+        Long employeeId = user.getEmployeeId();
+        WeeklyWorkDurationQueryDTO dto = attendanceQueryService.getWeeklyWorkDuration(employeeId);
         return ResponseEntity.ok(dto);
     }
 

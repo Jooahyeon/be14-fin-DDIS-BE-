@@ -80,6 +80,7 @@
         <result property="rankCode"     column="rank_code"/>
         <result property="rankName"     column="rank_name"/>
         <!-- 직무 이름만 -->
+        <result property="jobCode"      column="job_code"/>
         <result property="jobName"      column="job_name"/>
         <!-- 조직 정보 -->
         <result property="headId"       column="head_id"/>
@@ -210,6 +211,7 @@
             -- rank 테이블에서 코드·이름
             r.rank_code          AS rank_code,
             r.rank_name          AS rank_name,
+            j.job_code           AS job_code,
             j.job_name           AS job_name,
             -- FK 컬럼들은 그대로
             e.head_id            AS head_id,

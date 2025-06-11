@@ -57,7 +57,7 @@ public class ApprovalLineQueryServiceImpl implements ApprovalLineQueryService {
      * @return 단계별 결재자 정보 리스트
      */
     @Override
-    public List<ApproverQueryDTO> generateApprovalLine(String employeeId) {
+    public List<ApproverQueryDTO> generateApprovalLine(Long employeeId) {
         // 1) DrafterInfoDTO로부터 기안자 조직정보 획득
         FindDrafterQueryDTO drafter = drafterMapper.findDrafterInfo(employeeId);
 

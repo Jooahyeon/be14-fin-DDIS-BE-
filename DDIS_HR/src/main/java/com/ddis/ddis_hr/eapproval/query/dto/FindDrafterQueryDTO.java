@@ -17,7 +17,7 @@ import lombok.*;
  */
 public class FindDrafterQueryDTO {
     /** 로그인한 사용자의 사번(empId) */
-    private String empId;
+    private Long empId;
 
     /** 로그인한 사용자의 이름 */
     private String name;

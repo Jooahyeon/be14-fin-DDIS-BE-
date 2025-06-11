@@ -19,5 +19,5 @@ public interface ApprovalLineQueryService {
      * @param employeeId 로그인한 사용자의 사번 (또는 토큰 subject)
      * @return 단계별 실제 결재자 정보를 담은 ApproverDTO 리스트
      */
-    List<ApproverQueryDTO> generateApprovalLine(String employeeId);
+    List<ApproverQueryDTO> generateApprovalLine(Long employeeId);
 }

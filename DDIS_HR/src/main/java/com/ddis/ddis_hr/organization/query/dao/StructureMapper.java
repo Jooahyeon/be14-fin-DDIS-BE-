@@ -48,5 +48,8 @@ public interface StructureMapper {
 
     //headId로 headCode만 조회
     String selectHeadCodeById(@Param("headId") Long headId);
+
+    List<EmployeeQueryDTO> selectDeptMembers(Long departmentId);
+
 }
 

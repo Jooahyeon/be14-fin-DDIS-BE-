@@ -62,6 +62,18 @@
            AND meeting_date = #{today}
     </select>
 
+    <select id="findSchedulesToday" resultType="com.ddis.ddis_hr.attendance.query.dto.PersonalScheduleQueryDTO">
+        SELECT
+               personal_schedule_id
+             , employee_id
+             , schedule_date
+             , schedule_title
+             , schedule_time
+        FROM personal_schedule
+        WHERE employee_id = #{employeeId}
+          AND schedule_date = #{today}
+    </select>
+
     <select id="findTodayTeamStatuses" resultType="com.ddis.ddis_hr.attendance.query.dto.TeamWorkStatusQueryDTO">
         SELECT
                e.employee_id

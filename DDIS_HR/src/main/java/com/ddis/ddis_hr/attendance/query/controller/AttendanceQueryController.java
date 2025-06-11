@@ -96,6 +96,14 @@ public class AttendanceQueryController {
         return ResponseEntity.ok(historyList);
     }
 
+    @GetMapping("/leave/history/request/me")
+    public ResponseEntity<List<LeaveHistoryQueryDTO>> getPendingLeaveRequests(@AuthenticationPrincipal CustomUserDetails user) {
+        Long employeeId = user.getEmployeeId();
+        List<LeaveHistoryQueryDTO> result = attendanceQueryService.getPendingLeaveRequests(employeeId);
+        return ResponseEntity.ok(result);
+    }
+
+
 
 
 }

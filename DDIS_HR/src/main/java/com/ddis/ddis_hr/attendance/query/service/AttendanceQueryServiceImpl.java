@@ -126,6 +126,11 @@ public class AttendanceQueryServiceImpl implements AttendanceQueryService {
         return attendanceMapper.getLeaveHistoryByEmployeeId(employeeId);
     }
 
+    @Override
+    public List<LeaveHistoryQueryDTO> getPendingLeaveRequests(Long employeeId) {
+        return attendanceMapper.getPendingLeaveRequests(employeeId);
+    }
+
 
 
 }

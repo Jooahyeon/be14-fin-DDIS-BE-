@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
 @Builder
 public class PerformanceReviewDTO {
     private Long performanceId;
+    private Long goalId;
+    private String goalTitle;
+    private Double performanceValue;
     private Integer reviewerScore;
     private String reviewerContent;
     private LocalDateTime reviewerCreatedAt;

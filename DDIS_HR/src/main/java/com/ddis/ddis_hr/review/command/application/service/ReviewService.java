@@ -4,6 +4,7 @@ import com.ddis.ddis_hr.goals.command.application.dto.PerformanceDTO;
 import com.ddis.ddis_hr.goals.command.application.dto.PerformanceResponseDTO;
 import com.ddis.ddis_hr.goals.command.application.dto.PerformanceReviewDTO;
 import com.ddis.ddis_hr.review.command.application.dto.EmployeeReviewDTO;
+import com.ddis.ddis_hr.review.command.application.dto.ReviewedPerformanceDTO;
 
 import java.util.List;
 
@@ -17,4 +18,5 @@ public interface ReviewService {
             String reviewerContent,
             String decision
     );
+    List<ReviewedPerformanceDTO> getReviewedPerformances(Long reviewerId);
 }

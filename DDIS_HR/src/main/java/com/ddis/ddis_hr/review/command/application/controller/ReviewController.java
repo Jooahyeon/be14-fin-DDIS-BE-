@@ -7,6 +7,7 @@ import com.ddis.ddis_hr.member.security.CustomUserDetails;
 import com.ddis.ddis_hr.review.command.application.dto.EmployeeReviewDTO;
 import com.ddis.ddis_hr.review.command.application.dto.EvaluationRequest;
 import com.ddis.ddis_hr.review.command.application.dto.ReviewHistoryDTO;
+import com.ddis.ddis_hr.review.command.application.dto.ReviewedPerformanceDTO;
 import com.ddis.ddis_hr.review.command.application.mapper.ReviewMapper;
 import com.ddis.ddis_hr.review.command.application.service.ReviewService;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +52,14 @@ public class ReviewController {
                 request.getDecision()        // "승인" or "반려" 같은 상태
         );
         return ResponseEntity.ok(updated);
+    }
+
+    @GetMapping("/{reviewerId}/performance")
+    public ResponseEntity<List<ReviewedPerformanceDTO>> getMyReviews(
+            @PathVariable Long reviewerId) {
+        return ResponseEntity.ok(
+                reviewService.getReviewedPerformances(reviewerId)
+        );
     }
 
 

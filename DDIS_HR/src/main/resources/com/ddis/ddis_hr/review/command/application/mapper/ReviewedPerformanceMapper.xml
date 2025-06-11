@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ddis.ddis_hr.review.command.application.mapper.ReviewedPerformanceMapper">
+
+    <!-- 성과 테이블과 goals, employee 테이블을 JOIN해서 필요한 데이터 조회 -->
+    <select id="findReviewedPerformances" parameterType="long" resultType="com.ddis.ddis_hr.review.command.application.dto.ReviewedPerformanceDTO">
+        SELECT
+            p.selfreview_id         AS performanceId,
+            g.goal_id                AS goalId,
+            g.goal_title             AS goalTitle,
+            g.goal_value             AS goalValue,
+            p.performance_value      AS performanceValue,
+            p.reviewer_score         AS reviewerScore,
+            p.reviewer_content       AS reviewerContent,
+            p.reviewer_created_at    AS reviewerCreatedAt
+        FROM selfreview p
+                 JOIN goal g ON p.goal_id = g.goal_id
+        WHERE p.employee_id_reviewer = #{reviewerId}
+        ORDER BY p.reviewer_created_at DESC
+    </select>
+
+</mapper>

@@ -2,19 +2,17 @@ package com.ddis.ddis_hr.review.command.application.service;
 
 import com.ddis.ddis_hr.employee.command.domain.repository.EmployeeRepository;
 import com.ddis.ddis_hr.goals.command.application.dto.GoalDTO;
-import com.ddis.ddis_hr.goals.command.application.dto.PerformanceDTO;
-import com.ddis.ddis_hr.goals.command.application.dto.PerformanceResponseDTO;
 import com.ddis.ddis_hr.goals.command.application.dto.PerformanceReviewDTO;
 import com.ddis.ddis_hr.goals.command.application.mapper.GoalsMapper;
-import com.ddis.ddis_hr.goals.command.domain.aggregate.Goals;
 import com.ddis.ddis_hr.goals.command.domain.aggregate.Performance;
-import com.ddis.ddis_hr.goals.command.domain.repository.GoalsRepository;
 import com.ddis.ddis_hr.goals.command.domain.repository.PerformanceRepository;
 import com.ddis.ddis_hr.member.command.domain.aggregate.entity.Employee;
 import com.ddis.ddis_hr.review.command.application.dto.EmployeeReviewDTO;
+import com.ddis.ddis_hr.review.command.application.dto.ReviewedPerformanceDTO;
 import com.ddis.ddis_hr.review.command.application.mapper.EmployeeReviewMapper;
 import com.ddis.ddis_hr.review.command.application.mapper.ReviewGradeMapper;
 import com.ddis.ddis_hr.review.command.application.mapper.ReviewMapper;
+import com.ddis.ddis_hr.review.command.application.mapper.ReviewedPerformanceMapper;
 import com.ddis.ddis_hr.review.command.domain.aggregate.Review;
 import com.ddis.ddis_hr.review.command.domain.aggregate.ReviewGrade;
 import com.ddis.ddis_hr.review.command.domain.repository.ReviewRepository;
@@ -34,8 +32,9 @@ public class ReviewServiceImpl implements ReviewService {
     private final GoalsMapper goalsMapper;
     private final ReviewMapper reviewMapper;
     private final ReviewGradeMapper reviewGradeMapper;
+    private final ReviewedPerformanceMapper reviewedPerformanceMapper;
 
-    public ReviewServiceImpl(EmployeeReviewMapper employeeReviewMapper, ReviewRepository reviewRepository, EmployeeRepository employeeRepository,PerformanceRepository performanceRepository, GoalsMapper goalsMapper, ReviewMapper reviewMapper, ReviewGradeMapper reviewGradeMapper) {
+    public ReviewServiceImpl(EmployeeReviewMapper employeeReviewMapper, ReviewRepository reviewRepository, EmployeeRepository employeeRepository,PerformanceRepository performanceRepository, GoalsMapper goalsMapper, ReviewMapper reviewMapper, ReviewGradeMapper reviewGradeMapper, ReviewedPerformanceMapper reviewedPerformanceMapper) {
         this.employeeReviewMapper = employeeReviewMapper;
         this.reviewRepository = reviewRepository;
         this.employeeRepository = employeeRepository;
@@ -43,6 +42,7 @@ public class ReviewServiceImpl implements ReviewService {
         this.goalsMapper = goalsMapper;
         this.reviewMapper = reviewMapper;
         this.reviewGradeMapper = reviewGradeMapper;
+        this.reviewedPerformanceMapper = reviewedPerformanceMapper;
     }
 
     @Override
@@ -57,6 +57,11 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         return employees;
+    }
+
+    @Override
+    public List<ReviewedPerformanceDTO> getReviewedPerformances(Long reviewerId) {
+        return reviewedPerformanceMapper.findReviewedPerformances(reviewerId);
     }
     @Override
     public PerformanceReviewDTO saveEvaluation(

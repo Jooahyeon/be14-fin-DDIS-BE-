@@ -3,6 +3,7 @@ package com.ddis.ddis_hr.eapproval.query.service;
 import com.ddis.ddis_hr.eapproval.command.application.dto.DraftCreateCommandDTO;
 import com.ddis.ddis_hr.eapproval.query.dto.ContentQueryDTO;
 import com.ddis.ddis_hr.eapproval.query.dto.DocumentDTO;
+import com.ddis.ddis_hr.eapproval.query.dto.DraftDTO;
 import com.ddis.ddis_hr.eapproval.query.mapper.DraftDocumentMapper;
 import com.ddis.ddis_hr.eapproval.query.mapper.DraftMapper;
 import com.ddis.ddis_hr.eapproval.query.dto.DraftDetailResponseQueryDTO;
@@ -64,7 +65,7 @@ public class DraftQueryServiceImpl implements DraftQueryService {
     }
 
     @Override
-    public List<DocumentDTO> getMyDrafts(Long employeeId) {
+    public List<DraftDTO> getMyDrafts(Long employeeId) {
         return draftDocumentMapper.selectDraftsByDrafter(employeeId);
     }
 }

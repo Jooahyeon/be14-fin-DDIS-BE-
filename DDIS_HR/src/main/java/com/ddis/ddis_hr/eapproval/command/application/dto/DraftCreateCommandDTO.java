@@ -34,7 +34,6 @@ public class DraftCreateCommandDTO {
     private Long employeeId;            // 작성자 사번
 
     public Draft toEntity() {
-
         // 1) 기준 날짜 계산: submittedAt이 있으면 그 날짜, 없으면 지금 날짜
         LocalDate baseDate = (this.submittedAt != null
                 ? this.submittedAt.toLocalDate()

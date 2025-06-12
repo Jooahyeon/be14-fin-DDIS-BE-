@@ -55,7 +55,7 @@ public class ApprovalLineCommandServiceImpl implements ApprovalLineCommandServic
                                 .step(pq.getStepNo())
                                 .employeeId(info.getEmployeeId())
                                 .status("대기중")
-                                .type(ApprovalType.INTERNAL)               // ✅ 결재유형: 내부결재로 기본 설정
+                                .type(info.getLineType())               // ✅ 결재유형: 내부결재로 기본 설정
                                 .lineType(ApprovalLineType.ACTUAL)         // ✅ 라인유형: 실제 결재라인
                                 .build()
                 );

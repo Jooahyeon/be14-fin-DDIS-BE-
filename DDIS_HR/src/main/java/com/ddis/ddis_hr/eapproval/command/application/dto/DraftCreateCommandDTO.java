@@ -34,11 +34,20 @@ public class DraftCreateCommandDTO {
     private Long employeeId;            // 작성자 사번
 
     public Draft toEntity() {
+
+        // 1) 기준 날짜 계산: submittedAt이 있으면 그 날짜, 없으면 지금 날짜
+        LocalDate baseDate = (this.submittedAt != null
+                ? this.submittedAt.toLocalDate()
+                : LocalDate.now());
+
+        // 2) 보존 연한만큼 년 추가
+        LocalDate calculatedExpiration = baseDate.plusYears(this.retentionPeriod);
+
         return Draft.builder()
                 .docTitle(this.title)
                 .docContent(this.docContent)
                 .preservePeriod(this.retentionPeriod)
-                .expirationDate(this.expirationDate)
+                .expirationDate(calculatedExpiration)
                 .docStatus(this.docStatus != null ? this.docStatus : "대기중")
                 .createdAt(this.createdAt != null ? this.createdAt : LocalDateTime.now())
                 .submittedAt(this.submittedAt)

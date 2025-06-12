@@ -23,6 +23,6 @@ public class DraftQueryController {
         return ResponseEntity.ok(dto);
     }
 
-    private final DraftMapper draftMapper; // ✅ 생성자 주입
+
 
 }

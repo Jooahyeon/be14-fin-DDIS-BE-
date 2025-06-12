@@ -115,4 +115,32 @@ public class AttendanceQueryServiceImpl implements AttendanceQueryService {
         return attendanceMapper.findWeeklyWorkDuration(employeeId, startOfWeek, endOfWeek);
     }
 
+    @Override
+    public LeaveStatusQueryDTO getLeaveStatus(Long employeeId) {
+        return Optional.ofNullable(attendanceMapper.getLeaveStatus(employeeId))
+                .orElseThrow(() -> new EntityNotFoundException("연차 정보가 없습니다."));
+    }
+
+    @Override
+    public List<LeaveHistoryQueryDTO> getLeaveHistory(Long employeeId) {
+        return attendanceMapper.getLeaveHistoryByEmployeeId(employeeId);
+    }
+
+    @Override
+    public List<LeaveHistoryQueryDTO> getPendingLeaveRequests(Long employeeId) {
+        return attendanceMapper.getPendingLeaveRequests(employeeId);
+    }
+
+    @Override
+    public List<AllLeaveHistoryQueryDTO> getAllLeaveUsedList() {
+        return attendanceMapper.getAllLeaveUsedList();
+    }
+
+    @Override
+    public List<AllLeaveHistoryQueryDTO> getAllLeavePendingList() {
+        return attendanceMapper.getAllLeavePendingList();
+    }
+
+
+
 }

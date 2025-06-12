@@ -25,4 +25,17 @@ public interface AttendanceQueryService {
 
     WeeklyWorkDurationQueryDTO getWeeklyWorkDuration(Long employeeId);
 
+    LeaveStatusQueryDTO getLeaveStatus(Long employeeId);
+
+    List<LeaveHistoryQueryDTO> getLeaveHistory(Long employeeId);
+
+    List<LeaveHistoryQueryDTO> getPendingLeaveRequests(Long employeeId);
+
+    List<AllLeaveHistoryQueryDTO> getAllLeaveUsedList();
+
+    List<AllLeaveHistoryQueryDTO> getAllLeavePendingList();
+
+
+
+
 }

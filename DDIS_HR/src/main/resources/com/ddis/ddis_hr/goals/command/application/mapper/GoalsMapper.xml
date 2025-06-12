@@ -125,7 +125,8 @@
             p.selfreview_status,
             p.reviewer_score,
             p.reviewer_content,
-            p.reviewer_created_at
+            p.reviewer_created_at,
+            p.employee_id_reviewer
 
         FROM goal g
                  JOIN employee e ON g.employee_id = e.employee_id

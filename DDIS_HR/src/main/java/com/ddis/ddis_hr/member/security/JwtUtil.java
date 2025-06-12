@@ -64,9 +64,9 @@ public class JwtUtil {
             throw new RuntimeException("권한 정보가 없는 토큰입니다");
         } else {
             authorities = Arrays.stream(claims.get("auth").toString()
-                    .replace("[","")
-                    .replace("]", "")
-                    .split(", "))
+                            .replace("[","")
+                            .replace("]", "")
+                            .split(", "))
                     .map(role-> new SimpleGrantedAuthority(role))
                     .collect(Collectors.toList());
         }
@@ -77,5 +77,6 @@ public class JwtUtil {
     private Claims parseClaims(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
-    
+
 }
+

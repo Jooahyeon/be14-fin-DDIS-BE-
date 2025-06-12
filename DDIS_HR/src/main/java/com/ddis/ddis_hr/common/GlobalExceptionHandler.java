@@ -12,8 +12,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(CommonResponse.failure(e.getMessage()));
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleException(Exception e) {
-        return ResponseEntity.internalServerError().body(CommonResponse.failure("서버 오류가 발생했습니다."));
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<?> handleException(Exception e) {
+//        return ResponseEntity.internalServerError().body(CommonResponse.failure("서버 오류가 발생했습니다."));
+//    }
 }

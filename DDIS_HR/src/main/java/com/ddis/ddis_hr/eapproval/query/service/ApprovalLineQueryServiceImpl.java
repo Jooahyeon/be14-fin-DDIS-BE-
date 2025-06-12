@@ -1,35 +1,26 @@
 package com.ddis.ddis_hr.eapproval.query.service;
 
+import com.ddis.ddis_hr.eapproval.command.domain.entity.ApprovalLineType;
+import com.ddis.ddis_hr.eapproval.command.domain.entity.ApprovalType;
 import com.ddis.ddis_hr.eapproval.query.dto.ApprovalStepQueryDTO;
-import com.ddis.ddis_hr.eapproval.query.dto.ApproverQueryDTO;
 import com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO;
+import com.ddis.ddis_hr.eapproval.query.dto.ApproverQueryDTO;
+import com.ddis.ddis_hr.eapproval.query.dto.FindDrafterQueryDTO;
 import com.ddis.ddis_hr.eapproval.query.mapper.ApprovalStepMapper;
 import com.ddis.ddis_hr.eapproval.query.mapper.ApproverMapper;
-import com.ddis.ddis_hr.eapproval.query.dto.FindDrafterQueryDTO;
 import com.ddis.ddis_hr.eapproval.query.mapper.FindDrafterMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * ApprovalLineServiceImpl
- *
- * ApprovalLineService 구현체.
- * 1) FindDrafterMapper로 기안자 조직정보 조회
- * 2) ApprovalStepMapper로 단계별 직책 목록 조회
- * 3) ApproverMapper로 조직+직책 기준 실제 결재자 조회
- * 4) ApproverDTO로 조립하여 반환
- */
 @Service
 public class ApprovalLineQueryServiceImpl implements ApprovalLineQueryService {
 
-    private final FindDrafterMapper drafterMapper; // 토큰→기안자 정보 조회용 매퍼
-    private final ApprovalStepMapper stepMapper;   // 단계별 직책 목록 조회용 매퍼
-    private final ApproverMapper approverMapper;   // 조직 기준 결재자 조회용 매퍼
+    private final FindDrafterMapper drafterMapper;
+    private final ApprovalStepMapper stepMapper;
+    private final ApproverMapper approverMapper;
 
-    @Autowired
     public ApprovalLineQueryServiceImpl(
             FindDrafterMapper drafterMapper,
             ApprovalStepMapper stepMapper,
@@ -40,70 +31,99 @@ public class ApprovalLineQueryServiceImpl implements ApprovalLineQueryService {
         this.approverMapper  = approverMapper;
     }
 
-    /**
-     * generateApprovalLine
-     *
-     * 1) 기안자(employeeId) 정보 조회 → FindDrafterDTO
-     * 2) positionId 기준 ApprovalStepDTO 리스트 조회
-     * 3) 각 단계별로
-     *    - stepNo: 결재 순서
-     *    - positionName: 해당 단계 요구 직책명
-     *    - 조직 단위(team/department/head)와 ID 결정
-     *    - ApproverMapper 호출하여 EmployeeSimpleDTO 조회
-     *    - ApproverDTO에 담아 리스트에 추가
-     * 4) 완성된 ApproverDTO 리스트 반환
-     *
-     * @param employeeId 로그인한 사용자의 사번
-     * @return 단계별 결재자 정보 리스트
-     */
     @Override
     public List<ApproverQueryDTO> generateApprovalLine(Long employeeId) {
-        // 1) DrafterInfoDTO로부터 기안자 조직정보 획득
-        FindDrafterQueryDTO drafter = drafterMapper.findDrafterInfo(employeeId);
+        System.out.println("▶ [자동결재선] 호출됨 - employeeId: " + employeeId);
 
-        // 2) drafter.positionId 기준 단계별 직책 목록 조회
-        List<ApprovalStepQueryDTO> steps = stepMapper
-                .findApprovalStepsByBasePositionId(drafter.getPositionId());
+        // 1) 기안자 정보 조회
+        FindDrafterQueryDTO drafter = drafterMapper.findDrafterInfo(employeeId);
+        if (drafter == null) {
+            System.out.println("❌ 기안자 정보 조회 실패! employeeId = " + employeeId);
+            return new ArrayList<>();
+        }
+
+        System.out.println("✅ 기안자 정보: "
+                + "teamId=" + drafter.getTeam()
+                + ", departmentId=" + drafter.getDepartmentId()
+                + ", headId=" + drafter.getHeadId()
+                + ", positionId=" + drafter.getPositionId());
 
         List<ApproverQueryDTO> result = new ArrayList<>();
 
-        // 3) 단계별 실제 결재자 매칭
-        for (ApprovalStepQueryDTO stepDto : steps) {
-            int stepNo            = stepDto.getStep();          // 결재 단계 순번
-            String positionName   = stepDto.getPositionName();  // 요구 직책명
+        // ——————————————————————————————————————————————
+        // STEP 1: “기안자”를 첫 번째 단계로 추가
+        List<ApproverInfoQueryDTO> drafterList = new ArrayList<>();
+        ApproverInfoQueryDTO drafterInfo = new ApproverInfoQueryDTO();
+        drafterInfo.setEmployeeId(drafter.getEmpId());
+        drafterInfo.setEmployeeName(drafter.getName());
+        drafterInfo.setPositionName(drafter.getPosition());
+        drafterInfo.setTeamName(drafter.getTeam());
+        drafterInfo.setDepartmentName(drafter.getDepartment());
+        drafterInfo.setType(ApprovalType.INTERNAL.name());
+        drafterInfo.setLineType(ApprovalLineType.ACTUAL.name());
+        // 라벨은 자유롭게 조정하세요
+        drafterInfo.setTypeLabel("기안자");
+        drafterInfo.setLineTypeLabel("기안자");
+        drafterList.add(drafterInfo);
+        result.add(new ApproverQueryDTO(1, drafterList));
 
-            // 단계별 조직 구분 및 ID 설정
+        // 2) DB 에 정의된 실제 결재 단계 가져오기
+        List<ApprovalStepQueryDTO> steps =
+                stepMapper.findApprovalStepsByBasePositionId(drafter.getPositionId());
+        System.out.println("📌 DB 결재단계 수: " + steps.size());
+
+        // 각 단계 번호를 +1 해서 “2부터” 배치
+        for (ApprovalStepQueryDTO stepDto : steps) {
+            int stepNo = stepDto.getStep() + 1;
+            String positionName = stepDto.getPositionName();
+
+            // orgType/orgId 매핑: case 2=팀, 3=부서, 그 외=본부장
             String orgType;
-            Long   orgId;
+            Long orgId;
             switch (stepNo) {
-                case 1:
-                    orgType = "team";        // 1단계: 팀 단위 결재자
+                case 2 -> {
+                    orgType = "team";
                     orgId   = drafter.getTeamId();
-                    break;
-                case 2:
-                    orgType = "department";  // 2단계: 부서 단위 결재자
+                }
+                case 3 -> {
+                    orgType = "department";
                     orgId   = drafter.getDepartmentId();
-                    break;
-                default:
-                    orgType = "head";        // 3단계 이상: 본부 단위 결재자
+                }
+                default -> {
+                    orgType = "head";
                     orgId   = drafter.getHeadId();
-                    break;
+                }
             }
 
-            // 3-1) 조직+직책 기준 결재자 조회
+            System.out.println("🔄 Step " + stepNo
+                    + ": 직책=" + positionName
+                    + ", 조직타입=" + orgType
+                    + ", orgId=" + orgId);
+
             ApproverInfoQueryDTO approver = approverMapper
                     .findApproverByPositionAndOrg(positionName, orgType, orgId);
 
-            // 3-2) 조회 결과 null 체크 후 리스트로 래핑
             List<ApproverInfoQueryDTO> approverList = new ArrayList<>();
             if (approver != null) {
+                System.out.println("✅ 결재자 찾음: "
+                        + approver.getEmployeeName()
+                        + " (" + approver.getEmployeeId() + ")");
+
+                approver.setType(ApprovalType.INTERNAL.name());
+                approver.setLineType(ApprovalLineType.ACTUAL.name());
+                approver.setTypeLabel("내부결재");
+                approver.setLineTypeLabel("실제 결재선");
                 approverList.add(approver);
+            } else {
+                System.out.println("⚠️ 결재자 없음 → step="
+                        + stepNo + ", position=" + positionName
+                        + ", orgType=" + orgType + ", orgId=" + orgId);
             }
 
-            // 3-3) stepNo + approverList → ApproverDTO 생성
             result.add(new ApproverQueryDTO(stepNo, approverList));
         }
 
+        System.out.println("🎯 최종 결재선 단계 수: " + result.size());
         return result;
     }
 }

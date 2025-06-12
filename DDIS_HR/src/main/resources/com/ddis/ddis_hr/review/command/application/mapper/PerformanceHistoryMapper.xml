@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ddis.ddis_hr.review.command.application.mapper.PerformanceHistoryMapper">
+
+  <!-- 전체 성과 이력 조회 -->
+  <select id="findAllPerformanceHistories" resultType="com.ddis.ddis_hr.review.query.dto.PerformanceHistoryDTO">
+    SELECT
+      e.employee_id         AS employeeId,
+      e.employee_name       AS employeeName,
+      r.rank_name           AS rankName,
+      d.department_name     AS departmentName,
+      t.team_name           AS teamName,
+      DATE_FORMAT(p.reviewer_created_at, '%Y-%m-%d') AS yearMonth,
+      g.goal_content        AS performanceContent,
+      p.performance_value   AS performanceValue,
+      sr.reviewer_score     AS reviewScore
+    FROM selfreview p
+    JOIN goal g ON p.goal_id = g.goal_id
+    JOIN employee e ON g.employee_id = e.employee_id
+    LEFT JOIN rank r ON e.rank_id = r.rank_id
+    LEFT JOIN department d ON e.department_id = d.department_id
+    LEFT JOIN team t ON e.team_id = t.team_id
+    LEFT JOIN selfreview sr ON sr.goal_id = g.goal_id
+    WHERE p.selfreview_status = '승인'
+    ORDER BY p.reviewer_created_at DESC
+  </select>
+
+</mapper>

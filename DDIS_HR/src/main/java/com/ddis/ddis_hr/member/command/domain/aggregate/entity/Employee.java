@@ -1,130 +1,133 @@
 package com.ddis.ddis_hr.member.command.domain.aggregate.entity;
 
+import com.ddis.ddis_hr.organization.command.domain.aggregate.entity.*;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-@ToString
-@Table(name="employee")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity(name = "EmployeeAggregate")
+@Table(name = "employee")
 public class Employee {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "employee_id")
-    private Long employeeId;
+    private Long employeeId;                     // 사원 PK
 
-    @Column(name = "employee_name", nullable = false, length = 255)
-    private String employeeName;
+    @Column(name = "employee_name", nullable = false)
+    private String employeeName;                 // 사원 이름
 
-    @Column(name = "employee_pwd", nullable = false, length = 255)
-    private String employeePwd;
+    @Column(name = "employee_pwd", nullable = false)
+    private String employeePwd;                  // 비밀번호
 
-    @Column(name = "employee_nation", nullable = false, length = 255)
-    private String employeeNation;
+    @Column(name = "employee_photo_name")
+    private String employeePhotoName;            // 프로필 사진 파일명
 
-    @Column(name = "employee_gender", nullable = false, length = 255)
-    private String employeeGender;
+    @Column(name = "employee_photo_url")
+    private String employeePhotoUrl;             // 프로필 사진 URL
+
+    @Column(name = "employee_nation", nullable = false)
+    private String employeeNation;               // 국적
+
+    @Column(name = "employee_gender", nullable = false)
+    private String employeeGender;               // 성별
 
     @Column(name = "employee_birth", nullable = false)
-    private LocalDateTime employeeBirth;
+    private LocalDate employeeBirth;             // 생년월일
 
-    @Column(name = "employee_resident", nullable = false, length = 255)
-    private String employeeResident;
+    @Column(name = "employee_resident", nullable = false)
+    private String employeeResident;             // 주민등록번호
 
-    @Column(name = "employee_contact", nullable = false, length = 255)
-    private String employeeContact;
+    @Column(name = "employee_contact", nullable = false)
+    private String employeeContact;              // 연락처
 
-    @Column(name = "employee_email", nullable = false, length = 255)
-    private String employeeEmail;
+    @Column(name = "employee_email", nullable = false)
+    private String employeeEmail;                // 이메일
 
-    @Column(name = "employee_address", nullable = false, length = 255)
-    private String employeeAddress;
+    @Column(name = "employee_address", nullable = false)
+    private String employeeAddress;              // 주소
 
     @Column(name = "employment_date", nullable = false)
-    private LocalDateTime employmentDate;
+    private LocalDate employmentDate;            // 입사일
 
     @Column(name = "retirement_date")
-    private LocalDateTime retirementDate;
+    private LocalDate retirementDate;            // 퇴사일
 
     @Column(name = "work_type", nullable = false)
-    private Boolean workType;
+    private Boolean workType;                    // 재직 여부
 
-    @Column(name = "bank_name", nullable = false, length = 255)
-    private String bankName;
+    @Column(name = "bank_name", nullable = false)
+    private String bankName;                     // 은행명
 
-    @Column(name = "bank_depositor", nullable = false, length = 255)
-    private String bankDepositor;
+    @Column(name = "bank_depositor", nullable = false)
+    private String bankDepositor;                // 예금주
 
-    @Column(name = "bank_account", nullable = false, length = 255)
-    private String bankAccount;
+    @Column(name = "bank_account", nullable = false)
+    private String bankAccount;                  // 계좌번호
 
     @Column(name = "is_disorder", nullable = false)
-    private Boolean isDisorder;
+    private Boolean isDisorder;                  // 장애 여부
 
-    @Column(name = "military_type", nullable = false, length = 255)
-    private String isMilitary;
+    @Column(name = "military_type", nullable = false)
+    private String militaryType;                 // 군필 여부
 
     @Column(name = "is_marriage", nullable = false)
-    private Boolean isMarriage;
+    private Boolean isMarriage;                  // 결혼 여부
 
     @Column(name = "marriage_date")
-    private LocalDateTime marriageDate;
+    private LocalDate marriageDate;              // 결혼일
 
-    @Column(name = "family_count")
-    private Integer familiyCount;
+    @Column(name = "family_count", nullable = false)
+    private Integer familyCount;                 // 가족 수
 
     @Column(name = "career_year_count")
-    private Integer careerYearCount;
+    private Integer careerYearCount;             // 경력 연 수
 
-    @Column(name = "previous_company", length = 255)
-    private String previousCompany;
+    @Column(name = "previous_company")
+    private String previousCompany;              // 이전 직장
 
-    @Column(name = "final_academic", nullable = false, length = 255)
-    private String finalAcademic;
+    @Column(name = "final_academic", nullable = false)
+    private String finalAcademic;                // 최종 학력
 
-    @Column(name = "employee_school", nullable = false, length = 255)
-    private String employeeSchool;
+    @Column(name = "employee_school", nullable = false)
+    private String employeeSchool;               // 최종 학교
 
-    @Column(name = "employee_dept", length = 255)
-    private String employeeDept;
+    @Column(name = "employee_dept")
+    private String employeeDept;                 // 전공
 
     @Column(name = "graduation_year")
-    private Integer graduationYear;
+    private Integer graduationYear;              // 졸업 연도
 
     @Column(name = "is_four_insurances", nullable = false)
-    private Boolean isFourInsurances;
+    private Boolean isFourInsurances;            // 4대 보험 가입 여부
 
-    // Relationships
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "position_id", nullable = false)
-    private Position position;
+    private PositionEntity position;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rank_id", nullable = false)
-    private Rank rank;
+    private RankEntity rank;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "job_id", nullable = false)
-    private Job job;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "job_id")
+    private JobEntity job;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "head_id", nullable = false)
-    private Headquarters headquarters;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "head_id")
+    private HeadquartersEntity headquarters;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "department_id", nullable = false)
-    private Department department;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id")
+    private DepartmentEntity department;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id", nullable = false)
-    private Team team;
-
-
-
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    private TeamEntity team;
 }

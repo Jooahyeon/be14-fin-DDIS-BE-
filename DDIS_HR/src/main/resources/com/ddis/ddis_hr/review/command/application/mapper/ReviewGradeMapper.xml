@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ddis.ddis_hr.review.command.application.mapper.ReviewGradeMapper">
+
+    <resultMap id="ReviewGradeResult" type="com.ddis.ddis_hr.review.command.domain.aggregate.ReviewGrade">
+        <id     column="review_grade_id"  property="reviewGradeId"/>
+        <result column="review_min_score"  property="reviewMinScore"/>
+        <result column="review_max_score"  property="reviewMaxScore"/>
+        <result column="review_grade"      property="reviewGrade"/>
+        <association property="employeeId"
+                     javaType="com.ddis.ddis_hr.member.command.domain.aggregate.entity.Employee">
+            <!-- Employee 엔티티의 PK(=employeeId)만 매핑 -->
+            <id column="employee_id" property="employeeId"/>
+        </association>
+    </resultMap>
+
+    <select id="selectByScore"
+            parameterType="int"
+            resultMap="ReviewGradeResult">
+        SELECT
+        review_grade_id,
+        review_min_score,
+        review_max_score,
+        review_grade,
+        employee_id
+        FROM review_grade
+        WHERE review_min_score &lt;= #{score}
+        AND review_max_score &gt;= #{score}
+        LIMIT 1
+    </select>
+
+</mapper>

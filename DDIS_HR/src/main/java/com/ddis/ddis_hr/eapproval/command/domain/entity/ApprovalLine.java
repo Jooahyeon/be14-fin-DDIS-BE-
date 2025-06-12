@@ -26,8 +26,7 @@ public class ApprovalLine {
         private LocalDateTime approvedAt; // 결재 일시
 
         @Column(nullable = false)
-        @Enumerated(EnumType.STRING)
-        private ApprovalType type; // 🔸 결재유형 (INTERNAL, COOPERATIVE 등)
+        private String type; // 🔸 결재유형 (INTERNAL, COOPERATIVE 등)
 
         private String opinion; // 결재 의견
 

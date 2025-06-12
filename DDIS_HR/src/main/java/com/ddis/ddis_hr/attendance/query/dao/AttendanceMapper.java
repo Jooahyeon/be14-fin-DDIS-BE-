@@ -2,7 +2,6 @@ package com.ddis.ddis_hr.attendance.query.dao;
 
 import com.ddis.ddis_hr.attendance.query.dto.*;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
@@ -49,7 +48,9 @@ public interface AttendanceMapper {
 
     List<LeaveHistoryQueryDTO> getPendingLeaveRequests(@Param("employeeId") Long employeeId);
 
-    List<AllLeaveUsedQueryDTO> getAllLeaveUsedList();
+    List<AllLeaveHistoryQueryDTO> getAllLeaveUsedList();
+
+    List<AllLeaveHistoryQueryDTO> getAllLeavePendingList();
 
 
 }

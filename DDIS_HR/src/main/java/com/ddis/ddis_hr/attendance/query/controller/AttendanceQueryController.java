@@ -104,8 +104,14 @@ public class AttendanceQueryController {
     }
 
     @GetMapping("/leave/history/used/all")
-    public ResponseEntity<List<AllLeaveUsedQueryDTO>> getAllLeaveUsedList() {
-        List<AllLeaveUsedQueryDTO> result = attendanceQueryService.getAllLeaveUsedList();
+    public ResponseEntity<List<AllLeaveHistoryQueryDTO>> getAllLeaveUsedList() {
+        List<AllLeaveHistoryQueryDTO> result = attendanceQueryService.getAllLeaveUsedList();
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/leave/history/request/all")
+    public ResponseEntity<List<AllLeaveHistoryQueryDTO>> getAllLeavePendingList() {
+        List<AllLeaveHistoryQueryDTO> result = attendanceQueryService.getAllLeavePendingList();
         return ResponseEntity.ok(result);
     }
 

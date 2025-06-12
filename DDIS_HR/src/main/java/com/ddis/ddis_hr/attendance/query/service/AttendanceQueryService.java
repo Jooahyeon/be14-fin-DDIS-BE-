@@ -31,7 +31,9 @@ public interface AttendanceQueryService {
 
     List<LeaveHistoryQueryDTO> getPendingLeaveRequests(Long employeeId);
 
-    List<AllLeaveUsedQueryDTO> getAllLeaveUsedList();
+    List<AllLeaveHistoryQueryDTO> getAllLeaveUsedList();
+
+    List<AllLeaveHistoryQueryDTO> getAllLeavePendingList();
 
 
 

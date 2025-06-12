@@ -4,7 +4,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class AllLeaveUsedQueryDTO {
+public class AllLeaveHistoryQueryDTO {
 
     private Long historyId;
     private String employeeCode;

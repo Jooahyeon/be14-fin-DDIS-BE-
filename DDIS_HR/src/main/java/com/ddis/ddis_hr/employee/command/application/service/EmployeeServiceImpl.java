@@ -2,6 +2,8 @@
 package com.ddis.ddis_hr.employee.command.application.service;
 
 import com.ddis.ddis_hr.employee.command.application.dto.EmployeeEnrollDTO;
+import com.ddis.ddis_hr.employee.command.application.dto.EmployeeHrUpdateDTO;
+import com.ddis.ddis_hr.employee.command.application.dto.EmployeeUpdateDTO;
 import com.ddis.ddis_hr.employee.command.domain.repository.EmployeesRepository;
 import com.ddis.ddis_hr.member.command.domain.aggregate.entity.Employee;
 import com.ddis.ddis_hr.organization.command.domain.aggregate.entity.PositionEntity;
@@ -17,8 +19,8 @@ import com.ddis.ddis_hr.organization.command.domain.repository.HeadquartersRepos
 import com.ddis.ddis_hr.organization.command.domain.repository.DepartmentRepository;
 import com.ddis.ddis_hr.organization.command.domain.repository.TeamRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -137,4 +139,76 @@ public class EmployeeServiceImpl implements EmployeeService {
         em.persist(employee);
         return employee.getEmployeeId();
     }
+
+    @Override
+    public void updateEmployee(Long employeeId, EmployeeUpdateDTO dto) {
+        Employee employee = employeesRepository.findById(employeeId)
+                .orElseThrow(() -> new EntityNotFoundException("등록된 사원이 없습니다: " + employeeId));
+
+        // 수정 가능 필드만 업데이트
+        employee.setEmployeePhotoName(dto.getEmployeePhotoName());
+        employee.setEmployeePhotoUrl(dto.getEmployeePhotoUrl());
+        employee.setEmployeeBirth(dto.getEmployeeBirth());
+        employee.setEmployeeContact(dto.getEmployeeContact());
+        employee.setEmployeeEmail(dto.getEmployeeEmail());
+        employee.setEmployeeAddress(dto.getEmployeeAddress());
+        employee.setBankName(dto.getBankName());
+        employee.setBankDepositor(dto.getBankDepositor());
+        employee.setBankAccount(dto.getBankAccount());
+
+        employeesRepository.save(employee);
+    }
+
+//    @Override
+//    public void hrUpdateEmployee(Long employeeId, EmployeeHrUpdateDTO dto) {
+//        Employee e = employeesRepository.findById(employeeId)
+//                .orElseThrow(() -> new IllegalArgumentException("사원이 없습니다: "+employeeId));
+//
+//        // 비밀번호 제외 모든 필드 업데이트
+//        e.setEmployeeName     (dto.getEmployeeName());
+//        e.setEmployeePhotoName(dto.getEmployeePhotoName());
+//        e.setEmployeePhotoUrl (dto.getEmployeePhotoUrl());
+//        e.setEmployeeNation   (dto.getEmployeeNation());
+//        e.setEmployeeGender   (dto.getEmployeeGender());
+//        e.setEmployeeBirth    (dto.getEmployeeBirth());
+//        e.setEmployeeResident (dto.getEmployeeResident());
+//        e.setEmployeeContact  (dto.getEmployeeContact());
+//        e.setEmployeeEmail    (dto.getEmployeeEmail());
+//        e.setEmployeeAddress  (dto.getEmployeeAddress());
+//        e.setEmploymentDate   (dto.getEmploymentDate());
+//        e.setRetirementDate   (dto.getRetirementDate());
+//        e.setWorkType         (dto.getWorkType());
+//        e.setBankName         (dto.getBankName());
+//        e.setBankDepositor    (dto.getBankDepositor());
+//        e.setBankAccount      (dto.getBankAccount());
+//        e.setIsDisorder       (dto.getIsDisorder());
+//        e.setMilitaryType     (dto.getMilitaryType());
+//        e.setIsMarriage       (dto.getIsMarriage());
+//        e.setMarriageDate     (dto.getMarriageDate());
+//        e.setFamilyCount      (dto.getFamilyCount());
+//        e.setCareerYearCount  (dto.getCareerYearCount());
+//        e.setPreviousCompany  (dto.getPreviousCompany());
+//        e.setFinalAcademic    (dto.getFinalAcademic());
+//        e.setEmployeeSchool   (dto.getEmployeeSchool());
+//        e.setEmployeeDept     (dto.getEmployeeDept());
+//        e.setGraduationYear   (dto.getGraduationYear());
+//        e.setIsFourInsurances (dto.getIsFourInsurances());
+//
+//
+//        PositionEntity     pos = positionRepository.getReferenceById(dto.getPositionId());
+//        RankEntity         rk  = rankRepository.getReferenceById(dto.getRankId());
+//        JobEntity          jb  = jobsRepository.getReferenceById(dto.getJobId());
+//        HeadquartersEntity hq  = headquartersRepository.getReferenceById(dto.getHeadId());
+//        DepartmentEntity   dp  = departmentRepository.getReferenceById(dto.getDepartmentId());
+//        TeamEntity         tm  = teamRepository.getReferenceById(dto.getTeamId());
+//        e.setPosition(pos);
+//        e.setRank(rk);
+//        e.setJob(jb);
+//        e.setHeadquarters(hq);
+//        e.setDepartment(dp);
+//        e.setTeam(tm);
+//
+//        employeesRepository.save(e);
+//
+//    }
 }

@@ -3,15 +3,19 @@ package com.ddis.ddis_hr.organization.command.application.batch.config;
 
 import com.ddis.ddis_hr.organization.command.application.batch.domain.Appointment;
 import com.ddis.ddis_hr.organization.command.application.batch.domain.AppointmentHistory;
+import com.ddis.ddis_hr.organization.command.application.batch.listener.AppointmentHistoryNoticeListener;
 import com.ddis.ddis_hr.organization.command.application.batch.listener.JobCompletionNotificationListener;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcPagingItemReader;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
@@ -24,7 +28,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
@@ -36,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 @Configuration
+@EnableBatchProcessing
 public class BatchJobConfig {
 
     private final JobRepository jobRepository;
@@ -127,8 +135,26 @@ public class BatchJobConfig {
     // ------------------------
     // 3) ItemWriter 빈 등록
     // ------------------------
+//    @Bean
+//    public ItemWriter<AppointmentHistory> appointmentWriter() {
+//        SimpleJdbcInsert insert = new SimpleJdbcInsert(dataSource)
+//                .withTableName("appointment_history")
+//                .usingGeneratedKeyColumns("appointment_history_id");
+//
+//        return new ItemWriter<AppointmentHistory>() {
+//            @Override
+//            public void write(Chunk<? extends AppointmentHistory> chunk) throws Exception {
+//                for (AppointmentHistory hist : chunk.getItems()) {
+//                    SqlParameterSource params = new BeanPropertySqlParameterSource(hist);
+//                    Number key = insert.executeAndReturnKey(params);
+//                    hist.setAppointmentHistoryId(key.longValue());
+//                }
+//            }
+//        };
+
     @Bean
     public JdbcBatchItemWriter<AppointmentHistory> appointmentWriter() {
+
         return new JdbcBatchItemWriterBuilder<AppointmentHistory>()
                 .dataSource(dataSource)
                 .sql(
@@ -210,13 +236,15 @@ public class BatchJobConfig {
     public Step moveAppointmentToHistoryStep(
             JdbcPagingItemReader<Appointment> appointmentReader,
             ItemProcessor<Appointment, AppointmentHistory> appointmentProcessor,
-            CompositeItemWriter<AppointmentHistory> compositeWriter) {
+            CompositeItemWriter<AppointmentHistory> compositeWriter,
+            AppointmentHistoryNoticeListener noticeListener) {
 
         return new StepBuilder("moveAppointmentToHistoryStep", jobRepository)
                 .<Appointment, AppointmentHistory>chunk(100, transactionManager)
                 .reader(appointmentReader)
                 .processor(appointmentProcessor)
                 .writer(compositeWriter)
+                .listener(noticeListener)
                 .build();
     }
 

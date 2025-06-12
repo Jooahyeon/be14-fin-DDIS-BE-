@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ddis.ddis_hr.eapproval.query.mapper.DraftMapper">
+
+    <!-- ✅ 전체 기안 상세 정보 + 결재라인 + 파일 조회 (1:N 구조 포함) -->
+    <select id="selectDraftDetail" resultMap="DraftDetailResultMap">
+        SELECT
+            dd.doc_id,
+            dd.doc_title AS content_title,                  -- 📝 본문 제목
+            dd.doc_content AS doc_content,                -- 📝 본문 내용
+            dd.preserve_period AS keep_year,              -- 🗂️  보존연한
+            dd.created_at AS date,                         -- 🕒 기안일
+            e.employee_name AS drafter,                             -- 🧑‍💼 기안자 이름
+            t.team_name AS team,                           -- 🧑‍🤝‍🧑 기안자 팀
+            p.position_name AS position,                   -- 🧑‍💼 기안자 직책
+
+            -- 🗂️ 결재라인 정보 (여러 명 가능)
+            al.approval_line_id AS approvalLine_id,
+            ae.employee_name AS approvalLine_name,
+            at.team_name AS approvalLine_team,
+            ap.position_name AS approvalLine_position,
+            al.status AS approvalLine_status,
+            al.type AS approvalLine_type,
+            al.approved_at AS approvalLine_approveDate,
+            al.opinion AS approvalLine_comment,
+            dd.submitted_at AS approvalLine_submitDate,
+
+            -- 📎 첨부파일 (다중 파일을 위해 별도 쿼리로 분리 권장)
+            df.file_name AS file_name,
+            df.file_size AS file_size,
+            df.file_type AS file_type
+
+        FROM draft_documents dd
+                 LEFT JOIN employee e ON dd.employee_id = e.employee_id
+                 LEFT JOIN team t ON e.team_id = t.team_id
+                 LEFT JOIN position p ON e.position_id = p.position_id
+
+                 LEFT JOIN approval_line al ON dd.doc_id = al.doc_id AND al.line_type = 'ACTUAL'
+                 LEFT JOIN employee ae ON al.employee_id = ae.employee_id
+                 LEFT JOIN team at ON ae.team_id = at.team_id
+                 LEFT JOIN position ap ON ae.position_id = ap.position_id
+
+                 LEFT JOIN document_attachment df ON dd.doc_id = df.doc_id
+
+        WHERE dd.doc_id = #{docId}
+    </select>
+
+    <select id="test" resultType="String">
+        SELECT 'Hello Mapper!'
+    </select>
+    <!-- ✅ DTO 맵핑 설정 -->
+    <resultMap id="DraftDetailResultMap" type="com.ddis.ddis_hr.eapproval.query.dto.DraftDetailResponseQueryDTO">
+        <!-- 기본 정보 매핑 -->
+        <id property="docId" column="doc_id" />
+        <result property="team" column="team" />
+        <result property="position" column="position" />
+        <result property="drafter" column="drafter" />
+        <result property="date" column="date" />
+        <result property="docContent" column="doc_content" /> <!-- ✅ 이거 하나만! -->
+        <result property="keepYear" column="keep_year" />
+
+        <!-- 🗂️ 결재라인 리스트 매핑 (1:N) -->
+        <collection property="approvalLine" ofType="com.ddis.ddis_hr.eapproval.query.dto.ApprovalLineQueryDTO">
+            <result property="id" column="approvalLine_id" />
+            <result property="name" column="approvalLine_name" />
+            <result property="team" column="approvalLine_team" />
+            <result property="position" column="approvalLine_position" />
+            <result property="status" column="approvalLine_status" />
+            <result property="type" column="approvalLine_type" />
+            <result property="submitDate" column="approvalLine_submitDate" />
+            <result property="approveDate" column="approvalLine_approveDate" />
+            <result property="comment" column="approvalLine_comment" />
+        </collection>
+    </resultMap>
+</mapper>

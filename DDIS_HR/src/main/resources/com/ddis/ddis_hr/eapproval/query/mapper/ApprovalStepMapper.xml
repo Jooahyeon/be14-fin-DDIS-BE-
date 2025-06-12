@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ddis.ddis_hr.eapproval.query.mapper.ApprovalStepMapper">
+
+
+    <resultMap id="ApprovalStepMap" type="com.ddis.ddis_hr.eapproval.query.dto.ApprovalStepQueryDTO">
+        <result property="step" column="step"/>
+        <result property="positionName" column="position_name"/>
+    </resultMap>
+
+    <!-- 2. drafter의 position 기준으로 결재 단계(position_name) 정의 -->
+    <select id="findApprovalStepsByBasePositionId"
+            resultType="com.ddis.ddis_hr.eapproval.query.dto.ApprovalStepQueryDTO"
+            parameterType="long">
+        SELECT step, position_name
+        FROM (
+        <choose>
+            <when test="positionId == 1">
+                SELECT 1 AS step, '팀장' AS position_name
+                UNION ALL
+                SELECT 2 AS step, '부서장' AS position_name
+                UNION ALL
+                SELECT 3 AS step, '본부장' AS position_name
+            </when>
+            <when test="positionId == 2">
+                SELECT 1 AS step, '부서장' AS position_name
+                UNION ALL
+                SELECT 2 AS step, '본부장' AS position_name
+            </when>
+            <otherwise>
+                SELECT 1 AS step, '본부장' AS position_name
+            </otherwise>
+        </choose>
+        ) AS steps
+    </select>
+
+
+    <!-- 3. 실제 조직 기준으로 결재자 매칭 -->
+    <select id="findApproverByPositionAndOrg"
+            resultType="com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO">
+        SELECT
+        e.employee_id AS employeeId,
+        e.position_id AS positionId,
+        e.employee_name AS name
+        FROM employee e
+        JOIN position p ON e.position_id = p.position_id
+        WHERE p.position_name = #{positionName}
+        <choose>
+            <when test="organizationType == 'team'">
+                AND e.team_id = #{organizationId}
+            </when>
+            <when test="organizationType == 'department'">
+                AND e.department_id = #{organizationId}
+            </when>
+            <when test="organizationType == 'head'">
+                AND e.head_id = #{organizationId}
+            </when>
+        </choose>
+        LIMIT 1
+    </select>
+
+
+    <!-- 3-1. 팀 기준 결재자 조회 -->
+    <select id="findApproverByTeamAndPosition"
+            resultType="com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO">
+    SELECT
+    e.employee_id     AS employeeId,
+    e.employee_name   AS employeeName,
+    p.position_id     AS positionId
+    FROM employee e
+    JOIN position p ON e.position_id = p.position_id
+    WHERE p.position_name = #{positionName}
+    AND e.team_id = #{teamId}
+    LIMIT 1
+    </select>
+
+            <!-- 3-2. 부서 기준 결재자 조회 -->
+    <select id="findApproverByDepartmentAndPosition"
+            resultType="com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO">
+    SELECT
+    e.employee_id     AS employeeId,
+    e.employee_name   AS employeeName,
+    p.position_id     AS positionId
+    FROM employee e
+    JOIN position p ON e.position_id = p.position_id
+    WHERE p.position_name = #{positionName}
+    AND e.department_id = #{departmentId}
+    LIMIT 1
+    </select>
+
+            <!-- 3-3. 본부 기준 결재자 조회 -->
+    <select id="findApproverByHeadAndPosition"
+            resultType="com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO">
+    SELECT
+    e.employee_id     AS employeeId,
+    e.employee_name   AS employeeName,
+    p.position_id     AS positionId
+    FROM employee e
+    JOIN position p ON e.position_id = p.position_id
+    WHERE p.position_name = #{positionName}
+    AND e.head_id = #{headId}
+    LIMIT 1
+    </select>
+</mapper>

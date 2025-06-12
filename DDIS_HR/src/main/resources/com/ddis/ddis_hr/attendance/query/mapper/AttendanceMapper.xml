@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ddis.ddis_hr.attendance.query.dao.AttendanceMapper">
+
+    <select id="findById" resultType="com.ddis.ddis_hr.attendance.query.dto.EmployeeInfoQueryDTO">
+        SELECT
+               employee_id
+             , employee_name
+             , team_id
+          FROM employee
+         WHERE employee_id = #{employeeId}
+    </select>
+
+    <select id="findPersonalSchedules" resultType="com.ddis.ddis_hr.attendance.query.dto.PersonalScheduleQueryDTO">
+        SELECT
+               employee_id
+             , schedule_date
+             , schedule_title
+             , schedule_time
+          FROM personal_schedule
+         WHERE employee_id = #{employeeId}
+    </select>
+
+    <select id="findMeetings" resultType="com.ddis.ddis_hr.attendance.query.dto.MeetingQueryDTO">
+        SELECT
+               team_id
+             , meeting_date
+             , meeting_title
+             , meeting_time
+          FROM meeting
+         WHERE team_id = #{team_id}
+    </select>
+
+    <select id="findWorkStatuses" resultType="com.ddis.ddis_hr.attendance.query.dto.AttendanceQueryDTO">
+        SELECT
+               a.attendance_id
+             , a.employee_id
+             , a.work_date
+             , a.work_status_id
+             , e.employee_name
+             , ws.work_status_name
+          FROM attendance a
+          JOIN employee e ON a.employee_id = e.employee_id
+          JOIN work_status ws ON a.work_status_id = ws.work_status_id
+         WHERE (a.employee_id = #{employeeId} OR e.team_id = #{teamId})
+           AND ws.work_status_id IN
+        <foreach item="status" collection="statuses" open="(" separator="," close=")">
+            #{status}
+        </foreach>
+    </select>
+
+    <select id="findMeetingsToday" resultType="com.ddis.ddis_hr.attendance.query.dto.MeetingQueryDTO">
+        SELECT
+               team_id
+             , meeting_date
+             , meeting_title
+             , meeting_time
+          FROM meeting
+         WHERE team_id = #{teamId}
+           AND meeting_date = #{today}
+    </select>
+
+    <select id="findSchedulesToday" resultType="com.ddis.ddis_hr.attendance.query.dto.PersonalScheduleQueryDTO">
+        SELECT
+               personal_schedule_id
+             , employee_id
+             , schedule_date
+             , schedule_title
+             , schedule_time
+        FROM personal_schedule
+        WHERE employee_id = #{employeeId}
+          AND schedule_date = #{today}
+    </select>
+
+    <select id="findTodayTeamStatuses" resultType="com.ddis.ddis_hr.attendance.query.dto.TeamWorkStatusQueryDTO">
+        SELECT
+               e.employee_id
+             , e.employee_name
+             , p.position_name
+             , e.employee_photo_name AS employeePhotoName
+             , e.employee_photo_url AS employeePhotoUrl
+             , COALESCE(ws.work_status_name, '-') AS work_status_name
+             , p.position_id
+          FROM employee e
+          LEFT JOIN attendance a ON e.employee_id = a.employee_id AND a.work_date = #{today}
+          LEFT JOIN work_status ws ON a.work_status_id = ws.work_status_id
+          JOIN position p ON e.position_id = p.position_id
+         WHERE e.team_id = #{teamId}
+         ORDER BY p.position_id DESC, e.employee_name ASC
+    </select>
+
+    <select id="findTeamNameById" resultType="string">
+        SELECT team_name
+          FROM team
+         WHERE team_id = #{teamId}
+    </select>
+
+    <select id="findMyWorkStatus" resultType="com.ddis.ddis_hr.attendance.query.dto.MyWorkStatusQueryDTO">
+        SELECT
+               e.employee_name
+             , r.rank_name
+             , ws.work_status_name
+             , a.check_in_time
+             , a.check_out_time
+          FROM employee e
+          JOIN rank r ON e.rank_id = r.rank_id
+          LEFT JOIN attendance a ON e.employee_id = a.employee_id AND a.work_date = #{today}
+          LEFT JOIN work_status ws ON a.work_status_id = ws.work_status_id
+         WHERE e.employee_id = #{employeeId}
+    </select>
+
+    <select id="findWeeklyOvertimeSummary" resultType="com.ddis.ddis_hr.attendance.query.dto.WeeklyOvertimeSummaryQueryDTO">
+        SELECT
+               COALESCE(SUM(CASE WHEN overtime_type = '시간외근무' THEN overtime_duration ELSE 0 END), 0) AS regularOvertime
+             , COALESCE(SUM(CASE WHEN overtime_type = '야간근무' THEN overtime_duration ELSE 0 END), 0) AS nightOvertime
+             , COALESCE(SUM(CASE WHEN overtime_type = '휴일근무' THEN overtime_duration ELSE 0 END), 0) AS holidayOvertime
+          FROM attendance
+         WHERE employee_id = #{employeeId}
+           AND overtime_type IN ('시간외근무', '야간근무', '휴일근무')
+           AND work_date BETWEEN #{startDate} AND #{endDate}
+    </select>
+
+    <select id="findWeeklyWorkDuration" resultType="com.ddis.ddis_hr.attendance.query.dto.WeeklyWorkDurationQueryDTO">
+        SELECT
+               COALESCE(SUM(work_duration), 0) AS totalWorkDuration
+          FROM attendance
+         WHERE employee_id = #{employeeId}
+           AND work_date BETWEEN #{startDate} AND #{endDate}
+    </select>
+
+    <select id="getLeaveStatus" resultType="com.ddis.ddis_hr.attendance.query.dto.LeaveStatusQueryDTO">
+        SELECT
+               total_days AS totalLeave
+             , used_days AS usedLeave
+             , pending_leave_days AS pendingLeave
+             , remaining_days AS remainingLeave
+             , first_notice_date AS firstPromotionDate
+             , second_notice_date AS secondPromotionDate
+          FROM `leave`
+         WHERE employee_id = #{employeeId}
+    </select>
+
+    <select id="getLeaveHistoryByEmployeeId" resultType="com.ddis.ddis_hr.attendance.query.dto.LeaveHistoryQueryDTO">
+        SELECT
+               history_id AS historyId
+             , leave_type AS leaveType
+             , request_date AS requestDate
+             , start_date AS startDate
+             , end_date AS endDate
+             , reason
+             , leave_days AS leaveDays
+             , approval_status AS approvalStatus
+             , reject_reason  AS rejectReason
+          FROM leave_history
+         WHERE employee_id = #{employeeId}
+           AND approval_status IN ('승인', '반려')
+         ORDER BY request_date DESC
+    </select>
+
+    <select id="getPendingLeaveRequests" resultType="com.ddis.ddis_hr.attendance.query.dto.LeaveHistoryQueryDTO">
+        SELECT
+               history_id AS historyId
+             , leave_type AS leaveType
+             , request_date AS requestDate
+             , start_date AS startDate
+             , end_date AS endDate
+             , reason
+             , leave_days AS leaveDays
+             , approval_status AS approvalStatus
+             , reject_reason AS rejectReason
+          FROM leave_history
+         WHERE employee_id = #{employeeId}
+           AND approval_status = '대기중'
+         ORDER BY request_date DESC
+    </select>
+
+    <select id="getAllLeaveUsedList" resultType="com.ddis.ddis_hr.attendance.query.dto.AllLeaveHistoryQueryDTO">
+        SELECT
+               h.history_id AS historyId
+             , e.employee_id AS employeeCode
+             , e.employee_name AS employeeName
+             , hd.head_name AS headName
+             , d.department_name AS departmentName
+             , t.team_name AS teamName
+             , r.rank_name AS rankName
+             , h.leave_type AS leaveType
+             , h.approval_status AS approvalStatus
+             , h.request_date AS requestDate
+             , h.start_date AS startDate
+             , h.end_date AS endDate
+             , h.leave_days AS leaveDays
+             , h.reason AS reason
+             , h.reject_reason AS rejectReason
+          FROM leave_history h
+          JOIN employee e ON h.employee_id = e.employee_id
+          LEFT JOIN headquarters hd ON e.head_id = hd.head_id
+          LEFT JOIN department d ON e.department_id = d.department_id
+          LEFT JOIN team t ON e.team_id = t.team_id
+          LEFT JOIN rank r ON e.rank_id = r.rank_id
+         WHERE h.approval_status IN ('승인', '반려')
+         ORDER BY h.request_date DESC
+    </select>
+
+    <select id="getAllLeavePendingList" resultType="com.ddis.ddis_hr.attendance.query.dto.AllLeaveHistoryQueryDTO">
+        SELECT
+            h.history_id AS historyId
+             , e.employee_id AS employeeCode
+             , e.employee_name AS employeeName
+             , hd.head_name AS headName
+             , d.department_name AS departmentName
+             , t.team_name AS teamName
+             , r.rank_name AS rankName
+             , h.leave_type AS leaveType
+             , h.approval_status AS approvalStatus
+             , h.request_date AS requestDate
+             , h.start_date AS startDate
+             , h.end_date AS endDate
+             , h.leave_days AS leaveDays
+             , h.reason AS reason
+             , h.reject_reason AS rejectReason
+        FROM leave_history h
+                 JOIN employee e ON h.employee_id = e.employee_id
+                 LEFT JOIN headquarters hd ON e.head_id = hd.head_id
+                 LEFT JOIN department d ON e.department_id = d.department_id
+                 LEFT JOIN team t ON e.team_id = t.team_id
+                 LEFT JOIN rank r ON e.rank_id = r.rank_id
+        WHERE h.approval_status = '대기중'
+        ORDER BY h.request_date DESC
+    </select>
+
+    <select id="getMyCommuteList" resultType="com.ddis.ddis_hr.attendance.query.dto.MyCommuteQueryDTO">
+        SELECT
+               a.work_date AS workDate
+             , ws.work_status_name AS workStatus
+             , a.check_in_time AS checkInTime
+             , a.check_out_time AS checkOutTime
+             , a.work_duration AS workDuration
+             , SUM(CASE WHEN a.overtime_type = '시간외근무' THEN a.overtime_duration ELSE 0 END) AS overtimeExtra
+             , SUM(CASE WHEN a.overtime_type = '야간근무' THEN a.overtime_duration ELSE 0 END) AS overtimeNight
+             , SUM(CASE WHEN a.overtime_type = '휴일근무' THEN a.overtime_duration ELSE 0 END) AS overtimeHoliday
+             , a.work_duration + IFNULL(a.overtime_duration, 0) AS totalWorkTime
+          FROM attendance a
+          JOIN work_status ws ON a.work_status_id = ws.work_status_id
+         WHERE a.employee_id = #{employeeId}
+           AND DATE_FORMAT(a.work_date, '%Y-%m') BETWEEN #{startDate} AND #{endDate}
+         GROUP BY a.attendance_id
+         ORDER BY a.work_date DESC
+    </select>
+
+    <select id="getAllCommuteSummaryList" resultType="com.ddis.ddis_hr.attendance.query.dto.AllCommuteSummaryDTO">
+        SELECT
+               e.employee_id AS employeeId
+             , e.employee_name AS employeeName
+             , h.head_name AS headName
+             , d.department_name AS departmentName
+             , t.team_name AS teamName
+             , r.rank_name AS rankName
+             , SUM(CASE WHEN ws.work_status_name = '연차' THEN 1 ELSE 0 END) AS annualCount
+             , SUM(CASE WHEN ws.work_status_name = '반차' THEN 1 ELSE 0 END) AS halfCount
+             , SUM(CASE WHEN ws.work_status_name = '출장' THEN 1 ELSE 0 END) AS businessTripCount
+             , SUM(CASE WHEN ws.work_status_name = '외근' THEN 1 ELSE 0 END) AS outsideWorkCount
+             , SUM(CASE WHEN a.overtime_type IS NOT NULL THEN 1 ELSE 0 END) AS overtimeCount
+             , SUM(CASE WHEN ws.work_status_name = '지각' THEN 1 ELSE 0 END) AS lateCount
+             , SUM(CASE WHEN ws.work_status_name = '결근' THEN 1 ELSE 0 END) AS absentCount
+             , SUM(CASE WHEN a.check_in_time IS NOT NULL THEN 1 ELSE 0 END) AS presentCount
+             , SUM(CASE WHEN a.work_duration IS NOT NULL THEN a.work_duration ELSE 0 END +
+                   CASE WHEN a.overtime_duration IS NOT NULL THEN a.overtime_duration ELSE 0 END) AS totalWorkMinutes
+          FROM attendance a
+          JOIN employee e ON a.employee_id = e.employee_id
+          JOIN work_status ws ON a.work_status_id = ws.work_status_id
+          JOIN rank r ON e.rank_id = r.rank_id
+          JOIN team t ON e.team_id = t.team_id
+          JOIN department d ON t.department_id = d.department_id
+          JOIN headquarters h ON d.head_id = h.head_id
+         WHERE DATE_FORMAT(a.work_date, '%Y-%m') BETWEEN #{startDate} AND #{endDate}
+         GROUP BY e.employee_id
+         ORDER BY e.employee_id
+    </select>
+
+    <select id="getEmployeeInfoById" resultType="com.ddis.ddis_hr.attendance.query.dto.CommuteEmployeeInfoDTO">
+        SELECT
+               e.employee_id AS employeeId
+             , e.employee_name AS employeeName
+             , r.rank_name AS rankName
+             , h.head_name AS headName
+             , d.department_name AS departmentName
+             , t.team_name AS teamName
+          FROM employee e
+          JOIN rank r ON e.rank_id = r.rank_id
+          JOIN team t ON e.team_id = t.team_id
+          JOIN department d ON t.department_id = d.department_id
+          JOIN headquarters h ON d.head_id = h.head_id
+         WHERE e.employee_id = #{employeeId}
+    </select>
+
+    <select id="getCommuteDetailByIdAndDate" resultType="com.ddis.ddis_hr.attendance.query.dto.MyCommuteQueryDTO">
+        SELECT
+               a.work_date AS workDate
+             , ws.work_status_name AS workStatus
+             , a.check_in_time AS checkInTime
+             , a.check_out_time AS checkOutTime
+             , a.work_duration AS workDuration
+             , SUM(CASE WHEN a.overtime_type = '시간외근무' THEN a.overtime_duration ELSE 0 END) AS overtimeExtra
+             , SUM(CASE WHEN a.overtime_type = '야간근무' THEN a.overtime_duration ELSE 0 END) AS overtimeNight
+             , SUM(CASE WHEN a.overtime_type = '휴일근무' THEN a.overtime_duration ELSE 0 END) AS overtimeHoliday
+             , a.work_duration + IFNULL(a.overtime_duration, 0) AS totalWorkTime
+          FROM attendance a
+          JOIN work_status ws ON a.work_status_id = ws.work_status_id
+         WHERE a.employee_id = #{employeeId}
+           AND DATE_FORMAT(a.work_date, '%Y-%m') BETWEEN #{startDate} AND #{endDate}
+         GROUP BY a.attendance_id
+         ORDER BY a.work_date DESC
+    </select>
+
+
+</mapper>

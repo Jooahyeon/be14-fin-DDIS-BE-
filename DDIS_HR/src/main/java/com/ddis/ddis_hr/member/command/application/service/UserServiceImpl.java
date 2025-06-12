@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails loadUserByUsername(String employeeId) throws UsernameNotFoundException {
 
-        Employee loginUser = userRepository.findById(Long.parseLong(employeeId)).get();
+        Employee loginUser = userRepository.findById(Long.parseLong(employeeId)).orElseThrow(() -> new UsernameNotFoundException(employeeId + " 아이디가 존재하지 않습니다."));
 
         if(loginUser == null) {
             throw new UsernameNotFoundException(employeeId + "아이디가 존재하지 않습니다.");

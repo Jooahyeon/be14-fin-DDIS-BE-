@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ddis.ddis_hr.eapproval.query.mapper.FindDrafterMapper">
+
+    <!-- 1) 결과 매핑 정의: DTO의 프로퍼티 ↔ SQL 컬럼 -->
+    <resultMap id="DrafterMap"
+               type="com.ddis.ddis_hr.eapproval.query.dto.FindDrafterQueryDTO">
+        <result property="empId"        column="empId"/>
+        <result property="name"         column="name"/>
+        <result property="position"     column="position"/>    <!-- 직급명 -->
+        <result property="positionId"   column="positionId"/>  <!-- 직급 ID -->
+        <result property="team"         column="team"/>
+        <result property="teamId"       column="teamId"/>
+        <result property="department"   column="department"/>
+        <result property="departmentId" column="departmentId"/>
+        <result property="head"         column="head"/>
+        <result property="headId"       column="headId"/>
+    </resultMap>
+
+    <!-- 2) 실제 SELECT: 컬럼에 alias를 DTO 프로퍼티명과 맞추고, resultMap 사용 -->
+    <select id="findDrafterInfo"
+            parameterType="Long"
+            resultMap="DrafterMap">
+        SELECT
+            e.employee_id     AS empId,
+            e.employee_name   AS name,
+
+            p.position_name   AS position,
+            e.position_id     AS positionId,      -- ★ 추가!
+
+            t.team_name       AS team,
+            e.team_id         AS teamId,          -- 조직 ID
+
+            d.department_name AS department,
+            e.department_id   AS departmentId,
+
+            h.head_name       AS head,
+            e.head_id         AS headId
+        FROM employee e
+                 LEFT JOIN position    p ON e.position_id   = p.position_id
+                 LEFT JOIN team        t ON e.team_id       = t.team_id
+                 LEFT JOIN department  d ON e.department_id = d.department_id
+                 LEFT JOIN headquarters h ON e.head_id      = h.head_id
+        WHERE e.employee_id = #{empId}
+    </select>
+
+
+</mapper>

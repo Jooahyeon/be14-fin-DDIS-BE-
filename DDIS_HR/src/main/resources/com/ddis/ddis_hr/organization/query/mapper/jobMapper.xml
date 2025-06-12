@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ddis.ddis_hr.organization.query.dao.JobQueryMapper">
+
+    <resultMap id="JobResultMap" type="com.ddis.ddis_hr.organization.query.dto.JobIntroductionQueryDTO">
+        <id property="jobId" column="job_id"/>
+        <result property="jobName" column="job_name"/>
+        <result property="jobCode" column="job_code"/>
+        <result property="jobRole" column="job_role"/>
+        <result property="jobNeed" column="job_need"/>
+        <result property="jobNecessary" column="job_necessary"/>
+        <result property="jobPreference" column="job_preference"/>
+        <result property="teamId" column="team_id"/>
+    </resultMap>
+
+    <!-- team_id 로 소속된 모든 Job 조회 -->
+    <select id="selectByTeamId" resultMap="JobResultMap">
+        SELECT
+            job_id           AS jobId,
+            job_name         AS jobName,
+            job_code         AS jobCode,
+            job_role         AS jobRole,
+            job_need         AS jobNeed,
+            job_necessary    AS jobNecessary,
+            job_preference   AS jobPreference,
+            team_id          AS teamId
+        FROM job
+        WHERE team_id = #{teamId}
+        ORDER BY job_id
+    </select>
+
+    <!-- job_id 로 단일 Job 조회 -->
+    <select id="selectByJobId" resultMap="JobResultMap">
+        SELECT
+            job_id           AS jobId,
+            job_name         AS jobName,
+            job_code         AS jobCode,
+            job_role         AS jobRole,
+            job_need         AS jobNeed,
+            job_necessary    AS jobNecessary,
+            job_preference   AS jobPreference,
+            team_id          AS teamId
+        FROM job
+        WHERE job_id = #{jobId}
+    </select>
+</mapper>

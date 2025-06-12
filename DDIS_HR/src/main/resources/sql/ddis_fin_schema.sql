@@ -1,3 +1,5 @@
+
+
 SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS `notice`;
@@ -37,10 +39,9 @@ DROP TABLE IF EXISTS `headquarters`;
 DROP TABLE IF EXISTS `rank`;
 DROP TABLE IF EXISTS `holiday`;
 DROP TABLE IF EXISTS `dictionary`;
+DROP TABLE IF EXISTS `menu`;
+DROP TABLE IF EXISTS `favorite_menu`;
 
--- 주석 처리된 항목들
--- DROP TABLE IF EXISTS `menu`;
--- DROP TABLE IF EXISTS `favorite_menu`;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -55,7 +56,7 @@ CREATE TABLE `holiday` (
     `holiday_name`    VARCHAR(255),
     `is_weekend`      BOOLEAN      NOT NULL,
     PRIMARY KEY (`date`)
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 용어사전
 CREATE TABLE `dictionary` (
@@ -64,7 +65,7 @@ CREATE TABLE `dictionary` (
     `dictionary_content`	TEXT	NOT NULL,
     `dictionary_type`	VARCHAR(255)	NOT NULL,
     PRIMARY KEY (`dictionary_id`)
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 2. 직무 쪽
 -- 본부
@@ -73,7 +74,7 @@ CREATE TABLE `headquarters` (
     `head_name` VARCHAR(255) NOT NULL,
     `head_code` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`head_id`)
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 부서
 CREATE TABLE `department` (
@@ -83,7 +84,7 @@ CREATE TABLE `department` (
     `head_id`        BIGINT NOT NULL,
     PRIMARY KEY (`department_id`),
     FOREIGN KEY (`head_id`) REFERENCES `headquarters`(`head_id`)
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 팀
 CREATE TABLE `team` (
@@ -93,7 +94,7 @@ CREATE TABLE `team` (
     `department_id` BIGINT      NOT NULL,
     PRIMARY KEY (`team_id`),
     FOREIGN KEY (`department_id`) REFERENCES `department`(`department_id`)
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 소개
 CREATE TABLE introduction (
@@ -107,7 +108,7 @@ CREATE TABLE introduction (
     FOREIGN KEY (`department_id`) REFERENCES department(`department_id`),
     FOREIGN KEY (`team_id`) REFERENCES team(`team_id`),
     CHECK (`introduction_type` IN ('부서', '팀'))
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 직책
 CREATE TABLE `position` (
@@ -115,7 +116,7 @@ CREATE TABLE `position` (
     `position_name` VARCHAR(255) NOT NULL,
     `position_code` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`position_id`)
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 직급
 CREATE TABLE `rank` (
@@ -124,7 +125,7 @@ CREATE TABLE `rank` (
     `rank_order` INT NOT NULL,
     `rank_code` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`rank_id`)
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 직무
 CREATE TABLE `job` (
@@ -138,7 +139,7 @@ CREATE TABLE `job` (
     `team_id` BIGINT NOT NULL,
     PRIMARY KEY (`job_id`),
     FOREIGN KEY (`team_id`) REFERENCES team(`team_id`)
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 -- 3. 독립 테이블
 -- 근무 상태
 CREATE TABLE `work_status` (
@@ -147,7 +148,7 @@ CREATE TABLE `work_status` (
     `label_color`    VARCHAR(255) NOT NULL,
     `sort_order`     INT NOT NULL,
     PRIMARY KEY (`work_status_id`)
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 4. 연결 테이블
 -- 사원
@@ -155,7 +156,8 @@ CREATE TABLE `employee` (
     `employee_id`   BIGINT NOT NULL,
     `employee_name` VARCHAR(255) NOT NULL,
     `employee_pwd`  VARCHAR(255) NOT NULL,
-    `employee_profile` VARCHAR(255),
+    `employee_photo_name`  VARCHAR(255),
+    `employee_photo_url`  VARCHAR(255),
     `employee_nation` VARCHAR(255) NOT NULL,
     `employee_gender` VARCHAR(255) NOT NULL,
     `employee_birth` DATE NOT NULL,
@@ -170,7 +172,7 @@ CREATE TABLE `employee` (
     `bank_depositor` VARCHAR(255) NOT NULL,
     `bank_account`  VARCHAR(255) NOT NULL,
     `is_disorder`   BOOLEAN NOT NULL DEFAULT FALSE,
-    `military_type`   VARCHAR(255) NOT NULL,
+    `military_type`   VARCHAR(255) NOT NULL DEFAULT '미필',
     `is_marriage`   BOOLEAN NOT NULL DEFAULT TRUE,
     `marriage_date` DATE,
     `family_count` INT NOT NULL,
@@ -195,7 +197,7 @@ CREATE TABLE `employee` (
     FOREIGN KEY (`department_id`) REFERENCES `department`(`department_id`),
     FOREIGN KEY (`team_id`)       REFERENCES `team`(`team_id`),
     CHECK (`military_type` IN ('군필', '보충역', '면제', '미필'))
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 전자결재양식
 CREATE TABLE `document_form` (
@@ -206,7 +208,7 @@ CREATE TABLE `document_form` (
      `employee_id`  BIGINT,                          -- ✅ 컬럼 추가!
      PRIMARY KEY (`form_id`),
      FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`)
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 
 -- 5. 이어지는 자식 테이블들
@@ -232,7 +234,7 @@ CREATE TABLE `draft_documents` (
     FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`),
     CHECK (`preserve_period` IN (1, 3, 5)),
     CHECK (doc_status IN ('대기중','임시저장','심사중','반려','회수','결재완료'))
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 전자결재 파일 첨부
 CREATE TABLE `document_attachment` (
@@ -245,7 +247,7 @@ CREATE TABLE `document_attachment` (
     `doc_id`        BIGINT NOT NULL,
     PRIMARY KEY (`attachment_id`),
     FOREIGN KEY (`doc_id`) REFERENCES `draft_documents`(`doc_id`) ON DELETE CASCADE
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 결재라인
 CREATE TABLE `approval_line` (
@@ -270,7 +272,7 @@ CREATE TABLE `approval_line` (
      PRIMARY KEY (`approval_line_id`,`step`),
      FOREIGN KEY (`doc_id`)  REFERENCES `draft_documents`(`doc_id`),
      FOREIGN KEY (`form_id`) REFERENCES `document_form`(`form_id`)
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 문서결재함
 CREATE TABLE `document_box` (
@@ -284,7 +286,7 @@ CREATE TABLE `document_box` (
     FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`) ON DELETE CASCADE,
     FOREIGN KEY (`doc_id`)      REFERENCES `draft_documents`(`doc_id`) ON DELETE CASCADE,
     CHECK(`role` IN ('미정', '기안자', '결재자', '협조자', '수신자', '참조자'))
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 급여 부분
 -- 급여 기초
@@ -293,7 +295,7 @@ CREATE TABLE `salary_base` (
    `annual_income` INT   NOT NULL,
    PRIMARY KEY (`rank_id`),
    FOREIGN KEY (`rank_id`) REFERENCES `rank`(`rank_id`)
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 급여
 CREATE TABLE `salary` (
@@ -318,7 +320,7 @@ CREATE TABLE `salary` (
     `net_salary`    INT NOT NULL DEFAULT 0,
     PRIMARY KEY (`salary_id`),
     FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`)
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 퇴직금
 CREATE TABLE `retirement_pay` (
@@ -343,7 +345,7 @@ CREATE TABLE `retirement_pay` (
     PRIMARY KEY (`retirement_id`),
     FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`),
     CHECK ( `provision_situation` IN ('미지급', '지급완료', '지연'))
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 근태 부분
 -- 연차
@@ -357,7 +359,7 @@ CREATE TABLE `leave` (
      `second_notice_date` DATE,
      PRIMARY KEY (`employee_id`),
      FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`) ON DELETE CASCADE
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 연차사용이력
 CREATE TABLE `leave_history` (
@@ -375,7 +377,7 @@ CREATE TABLE `leave_history` (
     FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`) ON DELETE CASCADE,
     CHECK(`leave_type` IN ('연차','오전반차','오후반차')),
     CHECK(`approval_status` IN ('승인','대기중','반려'))
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 촉진이력
 CREATE TABLE `leave_alert_log` (
@@ -386,7 +388,7 @@ CREATE TABLE `leave_alert_log` (
     PRIMARY KEY (`leave_alert_log_id`),
     FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`),
     CHECK(`alert_type` IN ('FIRST', 'SECOND'))
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 근무
 CREATE TABLE `attendance` (
@@ -397,11 +399,11 @@ CREATE TABLE `attendance` (
     `check_in_time`  TIME,
     `check_out_time` TIME,
     `work_duration` INT,
-    `overtime_type` VARCHAR(255) DEFAULT '시간외근무',
+    `overtime_type` VARCHAR(255),
     `overtime_duration` INT,
     `request_time`   DATETIME,
     `requested_time_change` DATETIME,
-    `approval_status` VARCHAR(255) DEFAULT '대기중',
+    `approval_status` VARCHAR(255),
     `processed_time` DATETIME,
     `reason` VARCHAR(255),
     `reject_reason` VARCHAR(255),
@@ -410,7 +412,7 @@ CREATE TABLE `attendance` (
     FOREIGN KEY (`work_status_id`)  REFERENCES `work_status`(`work_status_id`) ON DELETE CASCADE,
     CHECK(overtime_type IN ('시간외근무','야간근무','휴일근무')),
     CHECK(approval_status IN ('승인','대기중','반려'))
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 회의
 CREATE TABLE `meeting` (
@@ -423,7 +425,7 @@ CREATE TABLE `meeting` (
    PRIMARY KEY (`meeting_id`),
    FOREIGN KEY (`team_id`)     REFERENCES `team`(`team_id`),
    FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`)
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 회의참여인원
 CREATE TABLE `participant` (
@@ -433,7 +435,7 @@ CREATE TABLE `participant` (
     PRIMARY KEY (`participant_id`),
     FOREIGN KEY (`meeting_id`)  REFERENCES `meeting`(`meeting_id`) ON DELETE CASCADE,
     FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`) ON DELETE CASCADE
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 개인일정
 CREATE TABLE `personal_schedule` (
@@ -444,7 +446,7 @@ CREATE TABLE `personal_schedule` (
      `schedule_time`        VARCHAR(255) NOT NULL,
      PRIMARY KEY (`personal_schedule_id`),
      FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`)
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 계약 및 징계
 -- 계약
@@ -459,7 +461,7 @@ CREATE TABLE `contract` (
     `end_date`	DATE	NOT NULL,
     PRIMARY KEY (`contract_id`),
     FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`) ON DELETE CASCADE
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 징계
 CREATE TABLE `disciplinary` (
@@ -468,7 +470,7 @@ CREATE TABLE `disciplinary` (
     `disciplinary_descrip` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`disciplinary_id`),
     FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`) ON DELETE CASCADE
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 평가 및 성과 부분
 -- 목표
@@ -482,7 +484,7 @@ CREATE TABLE `goal` (
     `employee_id`    BIGINT NOT NULL,
     PRIMARY KEY (`goal_id`),
     FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`)
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 자기평가
 CREATE TABLE `selfreview` (
@@ -497,12 +499,12 @@ CREATE TABLE `selfreview` (
     `reviewer_score`   INT,
     `reviewer_created_at` DATETIME,
     `reviewer_content` TEXT,
-    `employee_id_reviewer` BIGINT NOT NULL,
+    `employee_id_reviewer` BIGINT,
     PRIMARY KEY (`selfreview_id`),
     FOREIGN KEY (`goal_id`)                 REFERENCES `goal`(`goal_id`),
     FOREIGN KEY (`employee_id_selfreviewer`) REFERENCES `employee`(`employee_id`),
     FOREIGN KEY (`employee_id_reviewer`)     REFERENCES `employee`(`employee_id`)
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 실적파일
 CREATE TABLE `selfreviewfile` (
@@ -517,7 +519,7 @@ CREATE TABLE `selfreviewfile` (
     PRIMARY KEY (`selfreview_file_id`),
     FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`) ON DELETE CASCADE,
     FOREIGN KEY (`selfreview_id`) REFERENCES `selfreview`(selfreview_id) ON DELETE CASCADE
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 평가등급
 CREATE TABLE `review_grade` (
@@ -528,7 +530,7 @@ CREATE TABLE `review_grade` (
     `employee_id`      BIGINT NOT NULL,
     PRIMARY KEY (`review_grade_id`),
     FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`)
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 평가
 CREATE TABLE `review` (
@@ -541,7 +543,7 @@ CREATE TABLE `review` (
     FOREIGN KEY (`review_grade_id`) REFERENCES `review_grade`(`review_grade_id`),
     FOREIGN KEY (`employee_id`)     REFERENCES `employee`(`employee_id`),
     FOREIGN KEY (`selfreview_id`)   REFERENCES `selfreview`(`selfreview_id`)
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 인사발령 부분
 -- 인사발령
@@ -570,7 +572,7 @@ CREATE TABLE `appointment` (
     FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`),
     CHECK (`appointment_type` IN ('전보', '전직', '승진', '직급조정', '입사', '퇴사')),
     CHECK (`appointment_status` IN ('대기', '승인', '반려'))
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 발령이력
 CREATE TABLE `appointment_history` (
@@ -591,12 +593,14 @@ CREATE TABLE `appointment_history` (
     `to_job_code`            VARCHAR(255),
     `appointment_type`       VARCHAR(255) NOT NULL,
     `appointment_reason`     VARCHAR(255) NOT NULL,
+    `appointment_created_at`  DATE NOT NULL,
     `appointment_effective_date` DATE NOT NULL,
+    `appointment_status`      VARCHAR(255) NOT NULL DEFAULT '대기',
     `appointment_history_created_at` DATE NOT NULL,
     PRIMARY KEY (`appointment_history_id`),
     FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`),
     CHECK (`appointment_type` IN ('전보', '전직', '승진', '직급조정', '입사', '퇴사'))
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 알림 및 공지사항
 -- 알림
@@ -609,7 +613,7 @@ CREATE TABLE `notice` (
     PRIMARY KEY (`notice_id`),
     FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`)
     # type check 필요
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 공지사항
 CREATE TABLE `board` (
@@ -622,5 +626,26 @@ CREATE TABLE `board` (
     `employee_id`   BIGINT NOT NULL,
     PRIMARY KEY (`board_id`),
     FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`)
-);
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
+-- 메뉴
+CREATE TABLE `menu` (
+    `menu_id` BIGINT NOT NULL AUTO_INCREMENT,
+    `menu_name` VARCHAR(255) NOT NULL,
+    `parent_menu_id` BIGINT,
+    `menu_path` VARCHAR(255),
+    PRIMARY KEY (`menu_id`),
+    FOREIGN KEY (`parent_menu_id`) REFERENCES menu(`menu_id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
+
+-- 자주찾는메뉴
+CREATE TABLE `favorite_menu` (
+    `favorite_menu_id` BIGINT NOT NULL AUTO_INCREMENT,
+    `display_order` BIGINT NOT NULL,
+    `menu_id` BIGINT NOT NULL,
+    `employee_id` BIGINT NOT NULL,
+    PRIMARY KEY (`favorite_menu_id`),
+    FOREIGN KEY (`employee_id`) REFERENCES employee(`employee_id`),
+    FOREIGN KEY (`menu_id`) REFERENCES menu(`menu_id`),
+    UNIQUE KEY `uk_employee_menu` (`employee_id`, `menu_id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;

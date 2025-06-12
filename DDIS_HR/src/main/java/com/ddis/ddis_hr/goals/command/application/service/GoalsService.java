@@ -8,4 +8,6 @@ import java.util.List;
 public interface GoalsService {
     List<GoalDTO> getGoals(Long employeeId);
     Long createGoal(GoalInsertDTO req);
+
+    void deleteGoal(Long goalId);
 }

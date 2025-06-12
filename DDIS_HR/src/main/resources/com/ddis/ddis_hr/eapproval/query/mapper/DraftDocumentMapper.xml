@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ddis.ddis_hr.eapproval.query.mapper.DraftDocumentMapper">
+
+    <resultMap id="DocumentMap" type="com.ddis.ddis_hr.eapproval.query.dto.DocumentDTO">
+        <id     column="doc_id"             property="docId"/>
+        <result column="doc_title"          property="title"/>
+        <result column="created_at"         property="createdAt"/>
+        <result column="submitted_at"       property="submittedAt"/>
+        <result column="final_approval_at"  property="approvedAt"/>
+        <result column="doc_status"         property="status"/>
+        <result column="employee_name"      property="writer"/>
+        <result column="form_name"          property="type"/>
+    </resultMap>
+
+    <select id="selectDraftsByDrafter" resultMap="DocumentMap">
+        SELECT
+        d.doc_id,
+        d.doc_title,
+        d.created_at,
+        d.submitted_at,
+        d.final_approval_at,            <!-- approvedAt -->
+        d.doc_status,
+        e.employee_name,                <!-- writer -->
+        f.form_name                     <!-- type -->
+        FROM draft_documents d
+        INNER JOIN approval_line al
+        ON d.doc_id = al.doc_id
+        LEFT JOIN employee e
+        ON d.employee_id = e.employee_id
+        LEFT JOIN document_form f
+        ON d.form_id = f.form_id
+        WHERE al.employee_id = #{employeeId}
+        AND al.status = '기안'
+        ORDER BY d.submitted_at DESC
+    </select>
+</mapper>

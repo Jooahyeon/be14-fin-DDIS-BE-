@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +23,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -59,6 +62,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         // CustomUserDetails로 올바르게 캐스팅하여 사용
         CustomUserDetails userDetails = (CustomUserDetails) authResult.getPrincipal();
+        byte[] keyBytes = Decoders.BASE64.decode(env.getProperty("token.secret"));
+        Key key = Keys.hmacShaKeyFor(keyBytes);
 
         String employeeId = userDetails.getUsername();
         List<String> roles = userDetails.getAuthorities().stream()
@@ -85,7 +90,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String token = Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("token.expiration_time"))))
-                .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret"))
+                .signWith(SignatureAlgorithm.HS512, key)
                 .compact();
 
         response.addHeader("Authorization", "Bearer " + token);

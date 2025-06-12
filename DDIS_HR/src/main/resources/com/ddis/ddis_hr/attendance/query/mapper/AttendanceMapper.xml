@@ -230,4 +230,89 @@
         ORDER BY h.request_date DESC
     </select>
 
+    <select id="getMyCommuteList" resultType="com.ddis.ddis_hr.attendance.query.dto.MyCommuteQueryDTO">
+        SELECT
+               a.work_date AS workDate
+             , ws.work_status_name AS workStatus
+             , a.check_in_time AS checkInTime
+             , a.check_out_time AS checkOutTime
+             , a.work_duration AS workDuration
+             , SUM(CASE WHEN a.overtime_type = '시간외근무' THEN a.overtime_duration ELSE 0 END) AS overtimeExtra
+             , SUM(CASE WHEN a.overtime_type = '야간근무' THEN a.overtime_duration ELSE 0 END) AS overtimeNight
+             , SUM(CASE WHEN a.overtime_type = '휴일근무' THEN a.overtime_duration ELSE 0 END) AS overtimeHoliday
+             , a.work_duration + IFNULL(a.overtime_duration, 0) AS totalWorkTime
+          FROM attendance a
+          JOIN work_status ws ON a.work_status_id = ws.work_status_id
+         WHERE a.employee_id = #{employeeId}
+           AND DATE_FORMAT(a.work_date, '%Y-%m') BETWEEN #{startDate} AND #{endDate}
+         GROUP BY a.attendance_id
+         ORDER BY a.work_date DESC
+    </select>
+
+    <select id="getAllCommuteSummaryList" resultType="com.ddis.ddis_hr.attendance.query.dto.AllCommuteSummaryDTO">
+        SELECT
+               e.employee_id AS employeeId
+             , e.employee_name AS employeeName
+             , h.head_name AS headName
+             , d.department_name AS departmentName
+             , t.team_name AS teamName
+             , r.rank_name AS rankName
+             , SUM(CASE WHEN ws.work_status_name = '연차' THEN 1 ELSE 0 END) AS annualCount
+             , SUM(CASE WHEN ws.work_status_name = '반차' THEN 1 ELSE 0 END) AS halfCount
+             , SUM(CASE WHEN ws.work_status_name = '출장' THEN 1 ELSE 0 END) AS businessTripCount
+             , SUM(CASE WHEN ws.work_status_name = '외근' THEN 1 ELSE 0 END) AS outsideWorkCount
+             , SUM(CASE WHEN a.overtime_type IS NOT NULL THEN 1 ELSE 0 END) AS overtimeCount
+             , SUM(CASE WHEN ws.work_status_name = '지각' THEN 1 ELSE 0 END) AS lateCount
+             , SUM(CASE WHEN ws.work_status_name = '결근' THEN 1 ELSE 0 END) AS absentCount
+             , SUM(CASE WHEN a.check_in_time IS NOT NULL THEN 1 ELSE 0 END) AS presentCount
+             , SUM(CASE WHEN a.work_duration IS NOT NULL THEN a.work_duration ELSE 0 END +
+                   CASE WHEN a.overtime_duration IS NOT NULL THEN a.overtime_duration ELSE 0 END) AS totalWorkMinutes
+          FROM attendance a
+          JOIN employee e ON a.employee_id = e.employee_id
+          JOIN work_status ws ON a.work_status_id = ws.work_status_id
+          JOIN rank r ON e.rank_id = r.rank_id
+          JOIN team t ON e.team_id = t.team_id
+          JOIN department d ON t.department_id = d.department_id
+          JOIN headquarters h ON d.head_id = h.head_id
+         WHERE DATE_FORMAT(a.work_date, '%Y-%m') BETWEEN #{startDate} AND #{endDate}
+         GROUP BY e.employee_id
+         ORDER BY e.employee_id
+    </select>
+
+    <select id="getEmployeeInfoById" resultType="com.ddis.ddis_hr.attendance.query.dto.CommuteEmployeeInfoDTO">
+        SELECT
+               e.employee_id AS employeeId
+             , e.employee_name AS employeeName
+             , r.rank_name AS rankName
+             , h.head_name AS headName
+             , d.department_name AS departmentName
+             , t.team_name AS teamName
+          FROM employee e
+          JOIN rank r ON e.rank_id = r.rank_id
+          JOIN team t ON e.team_id = t.team_id
+          JOIN department d ON t.department_id = d.department_id
+          JOIN headquarters h ON d.head_id = h.head_id
+         WHERE e.employee_id = #{employeeId}
+    </select>
+
+    <select id="getCommuteDetailByIdAndDate" resultType="com.ddis.ddis_hr.attendance.query.dto.MyCommuteQueryDTO">
+        SELECT
+               a.work_date AS workDate
+             , ws.work_status_name AS workStatus
+             , a.check_in_time AS checkInTime
+             , a.check_out_time AS checkOutTime
+             , a.work_duration AS workDuration
+             , SUM(CASE WHEN a.overtime_type = '시간외근무' THEN a.overtime_duration ELSE 0 END) AS overtimeExtra
+             , SUM(CASE WHEN a.overtime_type = '야간근무' THEN a.overtime_duration ELSE 0 END) AS overtimeNight
+             , SUM(CASE WHEN a.overtime_type = '휴일근무' THEN a.overtime_duration ELSE 0 END) AS overtimeHoliday
+             , a.work_duration + IFNULL(a.overtime_duration, 0) AS totalWorkTime
+          FROM attendance a
+          JOIN work_status ws ON a.work_status_id = ws.work_status_id
+         WHERE a.employee_id = #{employeeId}
+           AND DATE_FORMAT(a.work_date, '%Y-%m') BETWEEN #{startDate} AND #{endDate}
+         GROUP BY a.attendance_id
+         ORDER BY a.work_date DESC
+    </select>
+
+
 </mapper>

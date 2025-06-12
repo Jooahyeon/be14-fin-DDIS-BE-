@@ -35,7 +35,10 @@ public interface AttendanceQueryService {
 
     List<AllLeaveHistoryQueryDTO> getAllLeavePendingList();
 
+    List<MyCommuteQueryDTO> getMyCommuteList(Long employeeId, String startDate, String endDate);
 
+    List<AllCommuteSummaryDTO> getAllCommuteSummaryList(String startDate, String endDate);
 
+    CommuteDetailDTO getCommuteDetail(Long employeeId, String startDate, String endDate);
 
 }

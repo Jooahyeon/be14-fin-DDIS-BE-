@@ -141,6 +141,14 @@ public class AttendanceQueryController {
         return ResponseEntity.ok(attendanceQueryService.getCommuteDetail(employeeId, startDate, endDate));
     }
 
+    @GetMapping("/correction/history/process/me")
+    public ResponseEntity<List<MyCommuteCorrectionQueryDTO>> getCommuteCorrectionHistory(@AuthenticationPrincipal CustomUserDetails user) {
+        Long employeeId = user.getEmployeeId();
+        List<MyCommuteCorrectionQueryDTO> list = attendanceQueryService.getCorrectionHistory(employeeId);
+        return ResponseEntity.ok(list);
+    }
+
+
 
 
 

@@ -43,4 +43,6 @@ public interface AttendanceQueryService {
 
     List<MyCommuteCorrectionQueryDTO> getCorrectionHistory(Long employeeId);
 
+    List<MyCommuteCorrectionQueryDTO> getCorrectionRequestHistory(Long employeeId);
+
 }

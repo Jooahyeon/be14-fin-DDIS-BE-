@@ -330,5 +330,21 @@
          ORDER BY request_time DESC
     </select>
 
+    <select id="findCommuteCorrectionsRequestByEmployeeId" resultType="com.ddis.ddis_hr.attendance.query.dto.MyCommuteCorrectionQueryDTO">
+        SELECT
+               approval_status
+             , request_time
+             , check_in_time
+             , requested_time_change
+             , processed_time
+             , reason
+             , reject_reason
+          FROM attendance
+         WHERE employee_id = #{employeeId}
+           AND requested_time_change IS NOT NULL
+           AND approval_status = '대기중'
+         ORDER BY request_time DESC
+    </select>
+
 
 </mapper>

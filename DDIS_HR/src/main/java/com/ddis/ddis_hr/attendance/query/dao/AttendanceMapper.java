@@ -66,4 +66,9 @@ public interface AttendanceMapper {
                                                         @Param("endDate") String endDate);
 
     List<MyCommuteCorrectionQueryDTO> findCommuteCorrectionsByEmployeeId(@Param("employeeId") Long employeeId);
+
+    List<MyCommuteCorrectionQueryDTO> findCommuteCorrectionsRequestByEmployeeId(@Param("employeeId") Long employeeId);
+
+
+
 }

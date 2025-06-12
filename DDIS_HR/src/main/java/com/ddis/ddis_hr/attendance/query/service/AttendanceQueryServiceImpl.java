@@ -142,8 +142,8 @@ public class AttendanceQueryServiceImpl implements AttendanceQueryService {
     }
 
     @Override
-    public List<MyCommuteQueryDTO> getMyCommuteList(Long employeeId) {
-        return attendanceMapper.getMyCommuteList(employeeId);
+    public List<MyCommuteQueryDTO> getMyCommuteList(Long employeeId, String startDate, String endDate) {
+        return attendanceMapper.getMyCommuteList(employeeId, startDate, endDate);
     }
 
 

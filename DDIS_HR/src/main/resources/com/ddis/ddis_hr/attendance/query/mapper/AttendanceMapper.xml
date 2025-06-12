@@ -244,6 +244,7 @@
           FROM attendance a
           JOIN work_status ws ON a.work_status_id = ws.work_status_id
          WHERE a.employee_id = #{employeeId}
+           AND DATE_FORMAT(a.work_date, '%Y-%m') BETWEEN #{startDate} AND #{endDate}
          GROUP BY a.attendance_id
          ORDER BY a.work_date DESC
     </select>

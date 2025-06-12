@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -116,9 +117,13 @@ public class AttendanceQueryController {
     }
 
     @GetMapping("/commute/me")
-    public ResponseEntity<List<MyCommuteQueryDTO>> getMyAttendanceList(@AuthenticationPrincipal CustomUserDetails user) {
+    public ResponseEntity<List<MyCommuteQueryDTO>> getMyCommuteList(
+            @AuthenticationPrincipal CustomUserDetails user,
+            @RequestParam String startDate,
+            @RequestParam String endDate) {
         Long employeeId = user.getEmployeeId();
-        return ResponseEntity.ok(attendanceQueryService.getMyCommuteList(employeeId));
+        List<MyCommuteQueryDTO> commuteList = attendanceQueryService.getMyCommuteList(employeeId, startDate, endDate);
+        return ResponseEntity.ok(commuteList);
     }
 
 

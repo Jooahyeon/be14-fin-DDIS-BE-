@@ -346,5 +346,31 @@
          ORDER BY request_time DESC
     </select>
 
+    <select id="findAllCommuteCorrections" resultType="com.ddis.ddis_hr.attendance.query.dto.AllCommuteCorrectionQueryDTO">
+        SELECT
+               e.employee_id AS employeeId
+             , e.employee_name AS employeeName
+             , h.head_name AS headName
+             , d.department_name AS departmentName
+             , t.team_name AS teamName
+             , r.rank_name AS rankName
+             , a.approval_status AS approvalStatus
+             , a.request_time AS requestTime
+             , a.check_in_time AS checkInTime
+             , a.requested_time_change AS requestedTimeChange
+             , a.processed_time AS processedTime
+             , a.reason AS reason
+             , a.reject_reason AS rejectReason
+          FROM attendance a
+          JOIN employee e ON a.employee_id = e.employee_id
+          LEFT JOIN headquarters h ON e.head_id = h.head_id
+          LEFT JOIN department d ON e.department_id = d.department_id
+          LEFT JOIN team t ON e.team_id = t.team_id
+          LEFT JOIN rank r ON e.rank_id = r.rank_id
+         WHERE a.requested_time_change IS NOT NULL
+           AND a.approval_status IN ('승인', '반려')
+         ORDER BY a.request_time DESC
+    </select>
+
 
 </mapper>

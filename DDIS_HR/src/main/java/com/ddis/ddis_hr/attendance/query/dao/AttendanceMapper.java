@@ -69,6 +69,6 @@ public interface AttendanceMapper {
 
     List<MyCommuteCorrectionQueryDTO> findCommuteCorrectionsRequestByEmployeeId(@Param("employeeId") Long employeeId);
 
-
+    List<AllCommuteCorrectionQueryDTO> findAllCommuteCorrections();
 
 }

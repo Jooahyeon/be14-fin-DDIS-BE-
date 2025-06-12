@@ -1,6 +1,5 @@
 package com.ddis.ddis_hr.eapproval.query.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

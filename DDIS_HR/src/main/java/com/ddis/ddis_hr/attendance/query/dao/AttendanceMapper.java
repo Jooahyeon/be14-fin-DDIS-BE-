@@ -52,5 +52,6 @@ public interface AttendanceMapper {
 
     List<AllLeaveHistoryQueryDTO> getAllLeavePendingList();
 
+    List<MyCommuteQueryDTO> getMyCommuteList(@Param("employeeId") Long employeeId);
 
 }

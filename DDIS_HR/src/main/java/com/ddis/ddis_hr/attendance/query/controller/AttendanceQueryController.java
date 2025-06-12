@@ -115,6 +115,13 @@ public class AttendanceQueryController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/commute/me")
+    public ResponseEntity<List<MyCommuteQueryDTO>> getMyAttendanceList(@AuthenticationPrincipal CustomUserDetails user) {
+        Long employeeId = user.getEmployeeId();
+        return ResponseEntity.ok(attendanceQueryService.getMyCommuteList(employeeId));
+    }
+
+
 
 
 

@@ -230,4 +230,22 @@
         ORDER BY h.request_date DESC
     </select>
 
+    <select id="getMyCommuteList" resultType="com.ddis.ddis_hr.attendance.query.dto.MyCommuteQueryDTO">
+        SELECT
+               a.work_date AS workDate
+             , ws.work_status_name AS workStatus
+             , a.check_in_time AS checkInTime
+             , a.check_out_time AS checkOutTime
+             , a.work_duration AS workDuration
+             , SUM(CASE WHEN a.overtime_type = '시간외근무' THEN a.overtime_duration ELSE 0 END) AS overtimeExtra
+             , SUM(CASE WHEN a.overtime_type = '야간근무' THEN a.overtime_duration ELSE 0 END) AS overtimeNight
+             , SUM(CASE WHEN a.overtime_type = '휴일근무' THEN a.overtime_duration ELSE 0 END) AS overtimeHoliday
+             , a.work_duration + IFNULL(a.overtime_duration, 0) AS totalWorkTime
+          FROM attendance a
+          JOIN work_status ws ON a.work_status_id = ws.work_status_id
+         WHERE a.employee_id = #{employeeId}
+         GROUP BY a.attendance_id
+         ORDER BY a.work_date DESC
+    </select>
+
 </mapper>

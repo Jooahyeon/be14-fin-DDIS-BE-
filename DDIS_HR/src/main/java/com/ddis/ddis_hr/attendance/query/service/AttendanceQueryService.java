@@ -35,6 +35,9 @@ public interface AttendanceQueryService {
 
     List<AllLeaveHistoryQueryDTO> getAllLeavePendingList();
 
+    List<MyCommuteQueryDTO> getMyCommuteList(Long employeeId);
+
+
 
 
 

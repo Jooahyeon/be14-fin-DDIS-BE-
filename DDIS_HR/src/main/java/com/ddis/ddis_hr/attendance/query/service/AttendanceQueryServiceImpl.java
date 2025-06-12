@@ -141,6 +141,11 @@ public class AttendanceQueryServiceImpl implements AttendanceQueryService {
         return attendanceMapper.getAllLeavePendingList();
     }
 
+    @Override
+    public List<MyCommuteQueryDTO> getMyCommuteList(Long employeeId) {
+        return attendanceMapper.getMyCommuteList(employeeId);
+    }
+
 
 
 }

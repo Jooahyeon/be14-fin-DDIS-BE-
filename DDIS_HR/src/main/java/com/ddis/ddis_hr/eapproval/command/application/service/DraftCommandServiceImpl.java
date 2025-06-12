@@ -1,85 +1,101 @@
 package com.ddis.ddis_hr.eapproval.command.application.service;
 
+import com.ddis.ddis_hr.eapproval.command.application.dto.ApprovalLineDTO;
 import com.ddis.ddis_hr.eapproval.command.application.dto.DraftCreateCommandDTO;
 import com.ddis.ddis_hr.eapproval.command.application.dto.DraftCreateResponseCommandDTO;
+import com.ddis.ddis_hr.eapproval.command.domain.entity.DocumentBox;
+import com.ddis.ddis_hr.eapproval.command.domain.entity.DocumentBoxId;
 import com.ddis.ddis_hr.eapproval.command.domain.entity.Draft;
+import com.ddis.ddis_hr.eapproval.command.domain.repository.DocumentBoxRepository;
 import com.ddis.ddis_hr.eapproval.command.domain.repository.DraftRepository;
-
-import com.ddis.ddis_hr.eapproval.query.service.ApprovalLineQueryService;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.ArrayList;
 
-import java.util.Map;
-
-
-@RequiredArgsConstructor
 @Service
-@Slf4j
+@RequiredArgsConstructor
 public class DraftCommandServiceImpl implements DraftCommandService {
 
     private final DraftRepository draftRepository;
     private final ApprovalLineCommandService approvalLineCommandService;
+    private final DocumentBoxRepository documentBoxRepository;
+    private final ObjectMapper objectMapper;  // Spring Bean 으로 등록되어 있어야 합니다.
 
-    /**
-     * 기안문 생성 로직 / 결재라인 자동매칭
-     */
     @Transactional
     @Override
     public DraftCreateResponseCommandDTO createDraft(DraftCreateCommandDTO dto) {
+        // 1) Draft 저장 → docId 획득
+        Draft savedDraft = draftRepository.save(dto.toEntity());
+        Long docId = savedDraft.getDocId();
 
-        // 1) 기안 저장 → docId 생성
-        Draft saved = draftRepository.save(dto.toEntity());
+        // 2) 기안자 저장
+        saveDocumentBoxEntry(dto.getEmployeeId(), docId, "기안자");
 
-        // 2) 결재라인 자동 생성 및 저장
-        Long approvalLineId = approvalLineCommandService
-                .createAutoLine(saved.getDocId(), dto.getEmployeeId());
+        // 3) 결재라인 자동 생성 & 결재자 저장
+        List<Long> approvalLineIds = null;
+        List<ApprovalLineDTO> lines = dto.getApprovalLines();
+        if (lines != null && !lines.isEmpty()) {
+            approvalLineIds = approvalLineCommandService.saveManualLine(docId, lines, dto.getFormId(), dto.getEmployeeId());
+            lines.forEach(line -> saveDocumentBoxEntry(line.getEmployeeId(), docId, "결재자"));
+        } else {
+            // fallback → 기존 자동 결재선 로직 유지
+            Long approvalLineId = approvalLineCommandService.createAutoLine(docId, dto.getEmployeeId());
+            approvalLineIds = List.of(approvalLineId);
+            List<Long> approvers = dto.getApprovers() != null ? dto.getApprovers() : List.of();
+            approvers.forEach(empId -> saveDocumentBoxEntry(empId, docId, "결재자"));
+        }
+        // 4) 협조자 저장 (DocumentBox만)
+        List<Long> cooperators = dto.getCooperators() != null ? dto.getCooperators() : List.of();
+        cooperators.forEach(empId -> saveDocumentBoxEntry(empId, docId, "협조자"));
 
-        // 3) docId + approvalLineId(결재라인) 를 응답 DTO 로 반환
-        return new DraftCreateResponseCommandDTO(saved.getDocId(), approvalLineId);
+        // 5) 수신자 저장 (DocumentBox만)
+        List<Long> receivers = dto.getReceivers() != null ? dto.getReceivers() : List.of();
+        receivers.forEach(empId -> saveDocumentBoxEntry(empId, docId, "수신자"));
+
+        // 6) 참조자 저장 (DocumentBox만)
+        List<Long> ccs = dto.getCcs() != null ? dto.getCcs() : List.of();
+        ccs.forEach(empId -> saveDocumentBoxEntry(empId, docId, "참조자"));
+
+        Long representativeLineId = (approvalLineIds != null && !approvalLineIds.isEmpty())
+                ? approvalLineIds.get(0)
+                : null;
+
+        // 7) 응답 반환
+        return new DraftCreateResponseCommandDTO(docId, representativeLineId);
     }
-//    /**
-//     * 기안문 상세 조회 로직
-//     */
-//    @Override
-//    @Transactional(readOnly = true)
-//    public DraftDetailResponseQueryDTO getDraftDetail(Long docId) {
-//        // 1) 엔티티 조회
-//        Draft draft = draftRepository.findById(docId)
-//                .orElseThrow(() -> new IllegalArgumentException("해당 문서를 찾을 수 없습니다. docId=" + docId));
-//
-//        // 2) JSON → 객체 변환 (예: EditorData)
-//        EditorData editorData = null;
-//        try {
-//            editorData = objectMapper.readValue(draft.getDocContent(), EditorData.class);
-//        } catch (Exception e) {
-//            throw new RuntimeException("문서 내용을 파싱하는 데 실패했습니다.", e);
-//        }
-//
-//        // 3) 부가정보 조회 (부서·팀·직책·작성자 이름 등)
-//        String departmentName = departmentService.getNameById(editorData.getDepartmentId());
-//        String teamName       = teamService.getNameById(editorData.getTeamId());
-//        String positionName   = positionService.getNameById(editorData.getPositionId());
-//        String drafterName    = userService.getNameById(draft.getEmployeeId());
-//
-//        // 4) 화면용 DTO 조립
-//        return DraftDetailResponseQueryDTO.builder()
-//                .docId(draft.getDocId())
-//                .docTitle(draft.getDocTitle())
-//                .editorData(editorData)
-//                .preservePeriod(draft.getPreservePeriod())
-//                .expirationDate(draft.getExpirationDate())
-//                .docStatus(draft.getDocStatus())
-//                .createdAt(draft.getCreatedAt())
-//                .submittedAt(draft.getSubmittedAt())
-//                .draftVersion(draft.getDraftVersion())
-//                .formId(draft.getFormId())
-//                .employeeId(draft.getEmployeeId())
-//                .departmentName(departmentName)
-//                .teamName(teamName)
-//                .positionName(positionName)
-//                .drafterName(drafterName)
-//                .build();
-//    }
+    /**
+     * JSON 배열 노드에서 long 리스트로 변환
+     */
+    private List<Long> parseLongList(JsonNode root, String fieldName) {
+        JsonNode arr = root.path(fieldName);
+        if (!arr.isArray()) {
+            return List.of();
+        }
+        List<Long> list = new ArrayList<>();
+        for (JsonNode node : arr) {
+            if (node.canConvertToLong()) {
+                list.add(node.asLong());
+            }
+        }
+        return list;
+    }
+
+    /**
+     * Builder 로 DocumentBox 엔티티 생성 후 저장
+     */
+    private void saveDocumentBoxEntry(Long employeeId, Long docId, String role) {
+        DocumentBox box = DocumentBox.builder()
+                .id(new DocumentBoxId(employeeId, docId))
+                .role(role)
+                .isRead(false)
+                .isDeleted(false)
+                .build();
+
+        documentBoxRepository.save(box);
+    }
 }
+

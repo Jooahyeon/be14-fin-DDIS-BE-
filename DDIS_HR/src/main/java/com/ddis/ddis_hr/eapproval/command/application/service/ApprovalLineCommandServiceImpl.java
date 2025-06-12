@@ -1,5 +1,6 @@
 package com.ddis.ddis_hr.eapproval.command.application.service;
 
+import com.ddis.ddis_hr.eapproval.command.application.dto.ApprovalLineDTO;
 import com.ddis.ddis_hr.eapproval.command.domain.entity.ApprovalLine;
 import com.ddis.ddis_hr.eapproval.command.domain.entity.ApprovalLineType;
 import com.ddis.ddis_hr.eapproval.command.domain.entity.ApprovalType;
@@ -72,5 +73,29 @@ public class ApprovalLineCommandServiceImpl implements ApprovalLineCommandServic
 
         // 4) 첫 행의 PK 반환
         return saved.isEmpty() ? 0L : saved.get(0).getApprovalLineId();
+    }
+
+    @Override
+    public List<Long> saveManualLine(Long docId, List<ApprovalLineDTO> lines,Long form, Long drafterId) {
+        Draft draft = draftRepository.findById(docId)
+                .orElseThrow(() -> new IllegalArgumentException("Draft not found: " + docId));
+        Long formId = draft.getFormId();
+
+        List<ApprovalLine> entities = new ArrayList<>();
+        for (ApprovalLineDTO dto : lines) {
+            String status = dto.getEmployeeId().equals(drafterId) ? "기안" : "대기중";
+
+            entities.add(ApprovalLine.builder()
+                    .docId(docId)
+                    .formId(formId)
+                    .step(dto.getStep())
+                    .employeeId(dto.getEmployeeId())
+                    .status(status)
+                    .type(dto.getType()) // 또는 dto.getType()으로 받으면 유연함
+                    .lineType(ApprovalLineType.ACTUAL)
+                    .build());
+        }
+        List<ApprovalLine> saved = approvalLineRepository.saveAll(entities);
+        return saved.stream().map(ApprovalLine::getApprovalLineId).toList();
     }
 }

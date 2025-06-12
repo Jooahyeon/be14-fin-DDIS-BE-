@@ -55,4 +55,13 @@ public interface AttendanceMapper {
     List<MyCommuteQueryDTO> getMyCommuteList(@Param("employeeId") Long employeeId,
                                              @Param("startDate") String startDate,
                                              @Param("endDate") String endDate);
+
+    List<AllCommuteSummaryDTO> getAllCommuteSummaryList(@Param("startDate") String startDate,
+                                                        @Param("endDate") String endDate);
+
+    CommuteEmployeeInfoDTO getEmployeeInfoById(@Param("employeeId") Long employeeId);
+
+    List<MyCommuteQueryDTO> getCommuteDetailByIdAndDate(@Param("employeeId") Long employeeId,
+                                                        @Param("startDate") String startDate,
+                                                        @Param("endDate") String endDate);
 }

@@ -146,6 +146,21 @@ public class AttendanceQueryServiceImpl implements AttendanceQueryService {
         return attendanceMapper.getMyCommuteList(employeeId, startDate, endDate);
     }
 
+    @Override
+    public List<AllCommuteSummaryDTO> getAllCommuteSummaryList(String startDate, String endDate) {
+        return attendanceMapper.getAllCommuteSummaryList(startDate, endDate);
+    }
+
+    @Override
+    public CommuteDetailDTO getCommuteDetail(Long employeeId, String startDate, String endDate) {
+        CommuteEmployeeInfoDTO employeeInfo = attendanceMapper.getEmployeeInfoById(employeeId);
+        List<MyCommuteQueryDTO> commuteList = attendanceMapper.getCommuteDetailByIdAndDate(employeeId, startDate, endDate);
+
+        CommuteDetailDTO result = new CommuteDetailDTO();
+        result.setEmployeeInfo(employeeInfo);
+        result.setCommuteList(commuteList);
+        return result;
+    }
 
 
 }

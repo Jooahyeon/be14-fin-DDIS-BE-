@@ -6,9 +6,7 @@ import com.ddis.ddis_hr.member.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -81,5 +79,70 @@ public class AttendanceQueryController {
         WeeklyWorkDurationQueryDTO dto = attendanceQueryService.getWeeklyWorkDuration(employeeId);
         return ResponseEntity.ok(dto);
     }
+
+    @GetMapping("/leave/status/me")
+    public ResponseEntity<LeaveStatusQueryDTO> getMyLeaveStatus(@AuthenticationPrincipal CustomUserDetails user) {
+        Long employeeId = user.getEmployeeId();
+        LeaveStatusQueryDTO status = attendanceQueryService.getLeaveStatus(employeeId);
+        return ResponseEntity.ok(status);
+    }
+
+    @GetMapping("/leave/history/used/me")
+    public ResponseEntity<List<LeaveHistoryQueryDTO>> getLeaveHistory(@AuthenticationPrincipal CustomUserDetails user) {
+        Long employeeId = user.getEmployeeId();
+        List<LeaveHistoryQueryDTO> historyList = attendanceQueryService.getLeaveHistory(employeeId);
+        return ResponseEntity.ok(historyList);
+    }
+
+    @GetMapping("/leave/history/request/me")
+    public ResponseEntity<List<LeaveHistoryQueryDTO>> getPendingLeaveRequests(@AuthenticationPrincipal CustomUserDetails user) {
+        Long employeeId = user.getEmployeeId();
+        List<LeaveHistoryQueryDTO> result = attendanceQueryService.getPendingLeaveRequests(employeeId);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/leave/history/used/all")
+    public ResponseEntity<List<AllLeaveHistoryQueryDTO>> getAllLeaveUsedList() {
+        List<AllLeaveHistoryQueryDTO> result = attendanceQueryService.getAllLeaveUsedList();
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/leave/history/request/all")
+    public ResponseEntity<List<AllLeaveHistoryQueryDTO>> getAllLeavePendingList() {
+        List<AllLeaveHistoryQueryDTO> result = attendanceQueryService.getAllLeavePendingList();
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/commute/me")
+    public ResponseEntity<List<MyCommuteQueryDTO>> getMyCommuteList(
+            @AuthenticationPrincipal CustomUserDetails user,
+            @RequestParam String startDate,
+            @RequestParam String endDate) {
+        Long employeeId = user.getEmployeeId();
+        List<MyCommuteQueryDTO> commuteList = attendanceQueryService.getMyCommuteList(employeeId, startDate, endDate);
+        return ResponseEntity.ok(commuteList);
+    }
+
+    @GetMapping("/commute/summary/all")
+    public ResponseEntity<List<AllCommuteSummaryDTO>> getAllCommuteSummary(
+            @RequestParam String startDate,
+            @RequestParam String endDate
+    ) {
+        List<AllCommuteSummaryDTO> result = attendanceQueryService.getAllCommuteSummaryList(startDate, endDate);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/commute/{employeeId}")
+    public ResponseEntity<CommuteDetailDTO> getCommuteDetail(
+            @PathVariable Long employeeId,
+            @RequestParam String startDate,
+            @RequestParam String endDate
+    ) {
+        return ResponseEntity.ok(attendanceQueryService.getCommuteDetail(employeeId, startDate, endDate));
+    }
+
+
+
+
 
 }

@@ -4,6 +4,7 @@ import com.ddis.ddis_hr.eapproval.command.application.dto.DraftCreateCommandDTO;
 import com.ddis.ddis_hr.eapproval.query.dto.DocumentDTO;
 import com.ddis.ddis_hr.eapproval.query.dto.DraftDTO;
 import com.ddis.ddis_hr.eapproval.query.dto.DraftDetailResponseQueryDTO;
+import com.ddis.ddis_hr.eapproval.query.dto.FindDrafterQueryDTO;
 
 import java.util.List;
 
@@ -13,5 +14,8 @@ public interface DraftQueryService {
     Long createDraft(DraftCreateCommandDTO requestDto);
 
     List<DraftDTO> getMyDrafts(Long employeeId);
+
+
+//    FindDrafterQueryDTO getfindDrafterInfo(Long employeeId);
 }
 

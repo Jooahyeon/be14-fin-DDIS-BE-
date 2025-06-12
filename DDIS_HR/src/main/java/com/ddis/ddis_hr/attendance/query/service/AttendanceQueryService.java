@@ -25,4 +25,20 @@ public interface AttendanceQueryService {
 
     WeeklyWorkDurationQueryDTO getWeeklyWorkDuration(Long employeeId);
 
+    LeaveStatusQueryDTO getLeaveStatus(Long employeeId);
+
+    List<LeaveHistoryQueryDTO> getLeaveHistory(Long employeeId);
+
+    List<LeaveHistoryQueryDTO> getPendingLeaveRequests(Long employeeId);
+
+    List<AllLeaveHistoryQueryDTO> getAllLeaveUsedList();
+
+    List<AllLeaveHistoryQueryDTO> getAllLeavePendingList();
+
+    List<MyCommuteQueryDTO> getMyCommuteList(Long employeeId, String startDate, String endDate);
+
+    List<AllCommuteSummaryDTO> getAllCommuteSummaryList(String startDate, String endDate);
+
+    CommuteDetailDTO getCommuteDetail(Long employeeId, String startDate, String endDate);
+
 }

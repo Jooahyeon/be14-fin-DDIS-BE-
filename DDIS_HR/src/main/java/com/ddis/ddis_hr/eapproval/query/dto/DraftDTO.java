@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class DraftDTO {
     private Long docId;
     private String title;
@@ -20,6 +19,6 @@ public class DraftDTO {
     private String status;        // "대기중", "반려", "회수" 등
     private String type;          // 양식명
     private String writer;        // 기안자 이름
-    private String approver;      // ← 추가
+    private String approver;
 
 }

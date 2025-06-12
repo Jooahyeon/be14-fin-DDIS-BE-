@@ -44,6 +44,8 @@ public class ApprovalLineQueryController {
         // HTTP 200 응답으로 DTO 리스트 반환
         return ResponseEntity.ok(line);
     }
+
+
 }
 
 

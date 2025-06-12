@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.ddis.ddis_hr.eapproval.query.mapper.ApproverMapper">
-    <!--
-      포지션 이름과 조직 타입/ID를 받아 단일 결재자 조회
-    -->
+
     <select id="findApproverByPositionAndOrg"
-            resultType="com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO">
+            resultType="com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO"
+            parameterType="map">
         SELECT
-        e.employee_id   AS employeeId,
-        e.position_id   AS positionId,
-        e.employee_name AS employeeName,
-        t.team_name     AS teamName,
-        d.department_name AS departmentName
+        e.employee_id     AS employeeId,
+        e.position_id     AS positionId,
+        e.employee_name   AS employeeName,
+        p.position_name   AS positionName,
+        t.team_name       AS teamName,
+        d.department_name AS departmentName,
+        'INTERNAL'        AS type,
+        'ACTUAL'          AS lineType,
+        '내부결재'        AS typeLabel,
+        '실제 결재선'     AS lineTypeLabel
         FROM employee e
         JOIN position p ON e.position_id = p.position_id
         LEFT JOIN team t       ON e.team_id = t.team_id
@@ -26,10 +31,11 @@
             <when test="organizationType == 'department'">
                 AND e.department_id = #{organizationId}
             </when>
-            <when test="organizationType == 'head'">
+            <otherwise>
                 AND e.head_id = #{organizationId}
-            </when>
+            </otherwise>
         </choose>
         LIMIT 1
     </select>
+
 </mapper>

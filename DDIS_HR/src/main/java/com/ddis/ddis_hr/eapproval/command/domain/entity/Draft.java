@@ -77,5 +77,4 @@ public class Draft {
     @Column(name = "employee_id", nullable = false)
     private Long employeeId;
 
-    // 필요하다면 getter, toString 등 추가…
 }

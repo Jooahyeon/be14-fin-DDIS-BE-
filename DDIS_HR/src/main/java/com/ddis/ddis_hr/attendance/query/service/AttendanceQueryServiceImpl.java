@@ -115,4 +115,52 @@ public class AttendanceQueryServiceImpl implements AttendanceQueryService {
         return attendanceMapper.findWeeklyWorkDuration(employeeId, startOfWeek, endOfWeek);
     }
 
+    @Override
+    public LeaveStatusQueryDTO getLeaveStatus(Long employeeId) {
+        return Optional.ofNullable(attendanceMapper.getLeaveStatus(employeeId))
+                .orElseThrow(() -> new EntityNotFoundException("연차 정보가 없습니다."));
+    }
+
+    @Override
+    public List<LeaveHistoryQueryDTO> getLeaveHistory(Long employeeId) {
+        return attendanceMapper.getLeaveHistoryByEmployeeId(employeeId);
+    }
+
+    @Override
+    public List<LeaveHistoryQueryDTO> getPendingLeaveRequests(Long employeeId) {
+        return attendanceMapper.getPendingLeaveRequests(employeeId);
+    }
+
+    @Override
+    public List<AllLeaveHistoryQueryDTO> getAllLeaveUsedList() {
+        return attendanceMapper.getAllLeaveUsedList();
+    }
+
+    @Override
+    public List<AllLeaveHistoryQueryDTO> getAllLeavePendingList() {
+        return attendanceMapper.getAllLeavePendingList();
+    }
+
+    @Override
+    public List<MyCommuteQueryDTO> getMyCommuteList(Long employeeId, String startDate, String endDate) {
+        return attendanceMapper.getMyCommuteList(employeeId, startDate, endDate);
+    }
+
+    @Override
+    public List<AllCommuteSummaryDTO> getAllCommuteSummaryList(String startDate, String endDate) {
+        return attendanceMapper.getAllCommuteSummaryList(startDate, endDate);
+    }
+
+    @Override
+    public CommuteDetailDTO getCommuteDetail(Long employeeId, String startDate, String endDate) {
+        CommuteEmployeeInfoDTO employeeInfo = attendanceMapper.getEmployeeInfoById(employeeId);
+        List<MyCommuteQueryDTO> commuteList = attendanceMapper.getCommuteDetailByIdAndDate(employeeId, startDate, endDate);
+
+        CommuteDetailDTO result = new CommuteDetailDTO();
+        result.setEmployeeInfo(employeeInfo);
+        result.setCommuteList(commuteList);
+        return result;
+    }
+
+
 }

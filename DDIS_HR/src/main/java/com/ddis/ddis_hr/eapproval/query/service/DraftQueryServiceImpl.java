@@ -2,11 +2,15 @@ package com.ddis.ddis_hr.eapproval.query.service;
 
 import com.ddis.ddis_hr.eapproval.command.application.dto.DraftCreateCommandDTO;
 import com.ddis.ddis_hr.eapproval.query.dto.ContentQueryDTO;
+import com.ddis.ddis_hr.eapproval.query.dto.DocumentDTO;
+import com.ddis.ddis_hr.eapproval.query.mapper.DraftDocumentMapper;
 import com.ddis.ddis_hr.eapproval.query.mapper.DraftMapper;
 import com.ddis.ddis_hr.eapproval.query.dto.DraftDetailResponseQueryDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +19,7 @@ public class DraftQueryServiceImpl implements DraftQueryService {
 
     private final DraftMapper draftMapper;
     private final ObjectMapper objectMapper;
+    private final DraftDocumentMapper draftDocumentMapper;
 
     @Override
     public DraftDetailResponseQueryDTO getDraftDetail(Long docId) {
@@ -56,5 +61,10 @@ public class DraftQueryServiceImpl implements DraftQueryService {
     @Override
     public Long createDraft(DraftCreateCommandDTO requestDto) {
         return 0L;
+    }
+
+    @Override
+    public List<DocumentDTO> getMyDrafts(Long employeeId) {
+        return draftDocumentMapper.selectDraftsByDrafter(employeeId);
     }
 }

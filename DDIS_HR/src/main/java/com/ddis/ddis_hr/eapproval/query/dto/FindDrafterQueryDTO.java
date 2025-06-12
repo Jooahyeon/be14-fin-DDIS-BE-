@@ -46,11 +46,5 @@ public class FindDrafterQueryDTO {
     /** 본부 기준 결재자 매칭용 본부 ID */
     private Long headId;
 
-    /**
-     * positionId 필드를 그대로 반환
-     * - 서비스 레이어에서 단계별 승인 직급 조회 시 사용
-     */
-    public Long getPositionId() {
-        return this.positionId;
-    }
+
 }

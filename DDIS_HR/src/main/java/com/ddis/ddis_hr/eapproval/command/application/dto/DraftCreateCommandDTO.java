@@ -50,7 +50,7 @@ public class DraftCreateCommandDTO {
                 .expirationDate(calculatedExpiration)
                 .docStatus(this.docStatus != null ? this.docStatus : "대기중")
                 .createdAt(this.createdAt != null ? this.createdAt : LocalDateTime.now())
-                .submittedAt(this.submittedAt)
+                .submittedAt(LocalDateTime.now())
                 .draftSavedAt(this.draftSavedAt)
                 .finalApprovalAt(this.finalApprovalAt)
                 .deletedAt(this.deletedAt)

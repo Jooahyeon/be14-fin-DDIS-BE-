@@ -17,6 +17,9 @@ public class DocumentDTO {
     private String title;
     private LocalDateTime createdAt;
     private LocalDateTime submittedAt;
+    private LocalDateTime approvedAt;
     private String status;
+    private String writer;              // ← 추가 (기안자 이름)
+    private String type;
 
 }

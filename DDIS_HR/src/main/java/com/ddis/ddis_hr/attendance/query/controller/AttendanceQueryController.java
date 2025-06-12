@@ -103,6 +103,12 @@ public class AttendanceQueryController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/leave/history/used/all")
+    public ResponseEntity<List<AllLeaveUsedQueryDTO>> getAllLeaveUsedList() {
+        List<AllLeaveUsedQueryDTO> result = attendanceQueryService.getAllLeaveUsedList();
+        return ResponseEntity.ok(result);
+    }
+
 
 
 

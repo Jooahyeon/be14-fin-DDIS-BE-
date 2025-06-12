@@ -24,9 +24,6 @@ public class Employee {
     @Column(name = "employee_pwd", nullable = false, length = 255)
     private String employeePwd;
 
-    @Column(name = "employee_profile", nullable = false, length = 255)
-    private String employeeProfile;
-
     @Column(name = "employee_nation", nullable = false, length = 255)
     private String employeeNation;
 
@@ -51,7 +48,7 @@ public class Employee {
     @Column(name = "employment_date", nullable = false)
     private LocalDateTime employmentDate;
 
-    @Column(name = "returement_date")
+    @Column(name = "retirement_date")
     private LocalDateTime retirementDate;
 
     @Column(name = "work_type", nullable = false)
@@ -69,7 +66,7 @@ public class Employee {
     @Column(name = "is_disorder", nullable = false)
     private Boolean isDisorder;
 
-    @Column(name = "is_military", nullable = false, length = 255)
+    @Column(name = "military_type", nullable = false, length = 255)
     private String isMilitary;
 
     @Column(name = "is_marriage", nullable = false)
@@ -78,7 +75,7 @@ public class Employee {
     @Column(name = "marriage_date")
     private LocalDateTime marriageDate;
 
-    @Column(name = "familiy_count")
+    @Column(name = "family_count")
     private Integer familiyCount;
 
     @Column(name = "career_year_count")

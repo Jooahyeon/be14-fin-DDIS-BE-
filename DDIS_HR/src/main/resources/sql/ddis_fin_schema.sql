@@ -624,8 +624,6 @@ CREATE TABLE `board` (
     `board_id`	BIGINT	NOT NULL AUTO_INCREMENT,
     `board_title`	VARCHAR(255)	NOT NULL,
     `board_file_name`	VARCHAR(255)	NULL,
-    `board_file`	VARCHAR(255)	NULL,
-    `board_file_size`	BIGINT	NULL,
     `board_content`	VARCHAR(255)	NOT NULL,
     `board_created_at`	DATE	NOT NULL,
     `employee_id`	BIGINT	NOT NULL,
@@ -633,6 +631,15 @@ CREATE TABLE `board` (
     FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE board_file (
+    board_file_id BIGINT       AUTO_INCREMENT PRIMARY KEY,
+    board_id      BIGINT       NOT NULL,
+    file_name     VARCHAR(255) NOT NULL,
+    file_url      VARCHAR(1024) NOT NULL,
+    file_size     BIGINT       NOT NULL,
+    uploaded_at   DATETIME     DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (board_id) REFERENCES board(board_id)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 -- 메뉴
 CREATE TABLE `menu` (
     `menu_id` BIGINT NOT NULL AUTO_INCREMENT,

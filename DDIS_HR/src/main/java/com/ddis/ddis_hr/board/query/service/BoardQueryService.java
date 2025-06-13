@@ -5,8 +5,6 @@ import com.ddis.ddis_hr.board.query.dto.BoardDTO;
 import com.ddis.ddis_hr.board.query.dto.BoardListDTO;
 
 public interface BoardQueryService {
-    BoardDTO             getBoardById(Long boardId);
-
-    /** 목록 조회 */
-    List<BoardListDTO>  getBoardList();
+    List<BoardListDTO> getBoardList();
+    BoardDTO           getBoardById(Long boardId);
 }

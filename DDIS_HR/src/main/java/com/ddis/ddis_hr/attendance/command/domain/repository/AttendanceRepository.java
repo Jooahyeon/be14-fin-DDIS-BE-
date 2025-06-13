@@ -12,4 +12,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     Optional<Attendance> findByEmployeeAndWorkDate(Employee employee, LocalDate workDate);
 
     boolean existsByEmployeeAndWorkDate(Employee employee, LocalDate workDate);
+
+    Optional<Attendance> findByEmployee_EmployeeIdAndWorkDate(Long employeeId, LocalDate workDate);
+
 }

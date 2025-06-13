@@ -1,5 +1,6 @@
 package com.ddis.ddis_hr.attendance.command.application.service;
 
+import com.ddis.ddis_hr.attendance.command.application.dto.AttendanceCorrectionRequestDTO;
 import com.ddis.ddis_hr.attendance.command.application.dto.MeetingScheduleRequestDTO;
 import com.ddis.ddis_hr.attendance.command.application.dto.PersonalScheduleRequestDTO;
 import com.ddis.ddis_hr.attendance.command.domain.aggregate.Attendance;
@@ -10,10 +11,12 @@ import com.ddis.ddis_hr.attendance.command.domain.repository.*;
 import com.ddis.ddis_hr.member.command.domain.aggregate.entity.Employee;
 import com.ddis.ddis_hr.organization.command.domain.aggregate.entity.TeamEntity;
 import com.ddis.ddis_hr.organization.command.domain.repository.TeamRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Service
@@ -55,7 +58,8 @@ public class AttendanceCommandServiceImpl implements AttendanceCommandService{
                 employee,
                 today,
                 now,
-                workStatus
+                workStatus,
+                now
         );
 
         attendanceRepository.save(attendance);
@@ -111,5 +115,55 @@ public class AttendanceCommandServiceImpl implements AttendanceCommandService{
 
         meetingScheduleRepository.save(meeting);
     }
+
+    @Transactional
+    @Override
+    public void requestCorrection(Long employeeId, AttendanceCorrectionRequestDTO dto) {
+        LocalDate today = LocalDate.now();
+        Attendance attendance = attendanceRepository.findByEmployee_EmployeeIdAndWorkDate(employeeId, today)
+                .orElseThrow(() -> new IllegalStateException("출근 기록이 없습니다. 먼저 출근해주세요."));
+
+        attendance.applyCorrection(
+                LocalTime.parse(dto.getRequestedTimeChange()),
+                dto.getReason()
+        );
+    }
+
+    @Transactional
+    @Override
+    public void approveCorrection(Long attendanceId) {
+        Attendance attendance = attendanceRepository.findById(attendanceId)
+                .orElseThrow(() -> new IllegalArgumentException("출근 기록을 찾을 수 없습니다."));
+
+        attendance.setApprovalStatus("승인");
+        attendance.setProcessedTime(LocalDateTime.now());
+
+        LocalTime correctedTime = attendance.getRequestedTimeChange().toLocalTime();
+        attendance.setCheckInTime(correctedTime);
+
+        if (correctedTime.isBefore(LocalTime.of(9, 0))) {
+            WorkStatus normal = workStatusRepository.findById("NORMAL")
+                    .orElseThrow(() -> new IllegalArgumentException("정상근무 상태가 없습니다."));
+            attendance.setWorkStatus(normal);
+
+        } else if (correctedTime.isBefore(LocalTime.of(12, 0))) {
+            WorkStatus late = workStatusRepository.findById("LATE")
+                    .orElseThrow(() -> new IllegalArgumentException("지각 상태가 없습니다."));
+            attendance.setWorkStatus(late);
+        }
+    }
+
+
+    @Transactional
+    @Override
+    public void rejectCorrection(Long attendanceId, String rejectReason) {
+        Attendance attendance = attendanceRepository.findById(attendanceId)
+                .orElseThrow(() -> new IllegalArgumentException("출근 기록을 찾을 수 없습니다."));
+
+        attendance.setApprovalStatus("반려");
+        attendance.setProcessedTime(LocalDateTime.now());
+        attendance.setRejectReason(rejectReason);
+    }
+
 
 }

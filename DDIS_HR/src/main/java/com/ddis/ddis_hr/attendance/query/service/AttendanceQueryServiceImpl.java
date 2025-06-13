@@ -162,5 +162,24 @@ public class AttendanceQueryServiceImpl implements AttendanceQueryService {
         return result;
     }
 
+    @Override
+    public List<MyCommuteCorrectionQueryDTO> getCorrectionHistory(Long employeeId) {
+        return attendanceMapper.findCommuteCorrectionsByEmployeeId(employeeId);
+    }
+
+    @Override
+    public List<MyCommuteCorrectionQueryDTO> getCorrectionRequestHistory(Long employeeId) {
+        return attendanceMapper.findCommuteCorrectionsRequestByEmployeeId(employeeId);
+    }
+
+    @Override
+    public List<AllCommuteCorrectionQueryDTO> getAllCorrectionHistory() {
+        return attendanceMapper.findAllCommuteCorrections();
+    }
+
+    @Override
+    public List<AllCommuteCorrectionQueryDTO> getAllCorrectionRequestHistory() {
+        return attendanceMapper.findAllCommuteCorrectionsRequest();
+    }
 
 }

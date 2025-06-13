@@ -161,6 +161,12 @@ public class AttendanceQueryController {
         return ResponseEntity.ok(list);
     }
 
+    @GetMapping("/correction/history/request/all")
+    public ResponseEntity<List<AllCommuteCorrectionQueryDTO>> getAllCorrectionRequestHistory() {
+        List<AllCommuteCorrectionQueryDTO> list = attendanceQueryService.getAllCorrectionRequestHistory();
+        return ResponseEntity.ok(list);
+    }
+
 
 
 

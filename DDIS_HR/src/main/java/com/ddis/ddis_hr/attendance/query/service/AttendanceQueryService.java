@@ -47,4 +47,6 @@ public interface AttendanceQueryService {
 
     List<AllCommuteCorrectionQueryDTO> getAllCorrectionHistory();
 
+    List<AllCommuteCorrectionQueryDTO> getAllCorrectionRequestHistory();
+
 }

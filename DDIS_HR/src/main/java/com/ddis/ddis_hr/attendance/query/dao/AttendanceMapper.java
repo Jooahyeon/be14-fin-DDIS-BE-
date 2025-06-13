@@ -71,4 +71,6 @@ public interface AttendanceMapper {
 
     List<AllCommuteCorrectionQueryDTO> findAllCommuteCorrections();
 
+    List<AllCommuteCorrectionQueryDTO> findAllCommuteCorrectionsRequest();
+
 }

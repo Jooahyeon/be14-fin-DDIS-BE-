@@ -177,4 +177,9 @@ public class AttendanceQueryServiceImpl implements AttendanceQueryService {
         return attendanceMapper.findAllCommuteCorrections();
     }
 
+    @Override
+    public List<AllCommuteCorrectionQueryDTO> getAllCorrectionRequestHistory() {
+        return attendanceMapper.findAllCommuteCorrectionsRequest();
+    }
+
 }

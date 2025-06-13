@@ -7,18 +7,18 @@ import com.ddis.ddis_hr.eapproval.query.dto.DraftDetailResponseQueryDTO;
 import com.ddis.ddis_hr.eapproval.query.service.DraftQueryService;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/drafts")
 @RequiredArgsConstructor
 public class DraftCommandController {
 
     private final DraftQueryService draftQueryService;
-    private final DraftCommandService draftCommandService;
-
     /**
      * 기안문 생성 요청
      * @para requestDto JSON 본문(DraftCreateCommandDTO)
@@ -29,16 +29,19 @@ public class DraftCommandController {
 //        Long docId = draftCommandService.createDraft(requestDto);
 //        return ResponseEntity.ok(docId);
 //    }
-
     @PostMapping("/creation")
     public ResponseEntity<DraftCreateResponseCommandDTO> createDraft(
             @RequestBody DraftCreateCommandDTO dto,
             @AuthenticationPrincipal CustomUserDetails user) {
 
+
+        log.info("DTO: {}", dto);
         dto.setEmployeeId(user.getEmployeeId());        // 사번 주입
         DraftCreateResponseCommandDTO resp = draftCommandService.createDraft(dto);
         return ResponseEntity.ok(resp);
     }
+
+    private final DraftCommandService draftCommandService;
 
 
     /**
@@ -52,4 +55,3 @@ public class DraftCommandController {
         return ResponseEntity.ok(response);
     }
 }
-

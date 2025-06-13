@@ -32,9 +32,14 @@ public class DraftCreateCommandDTO {
     private int draftVersion;           // 차수
     private Long formId;                // 양식 ID
     private Long employeeId;            // 작성자 사번
+    private List<ApprovalLineDTO> approvalLines;
+    private List<Long> approvers;
+    private List<Long> cooperators;
+    private List<Long> receivers;
+    private List<Long> ccs;
+
 
     public Draft toEntity() {
-
         // 1) 기준 날짜 계산: submittedAt이 있으면 그 날짜, 없으면 지금 날짜
         LocalDate baseDate = (this.submittedAt != null
                 ? this.submittedAt.toLocalDate()

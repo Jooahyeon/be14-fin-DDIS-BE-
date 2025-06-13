@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@PreAuthorize("hasAnyRole('HR')")
+//@PreAuthorize("hasAnyRole('HR')")
 @RequestMapping("/payroll")
 public class PayrollQueryController {
 

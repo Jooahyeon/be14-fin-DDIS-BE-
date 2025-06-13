@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface PerformanceHistoryService {
     List<PerformanceHistoryDTO> getAllPerformanceHistory();
+
+    List<PerformanceHistoryDTO> getPerformanceHistoriesByEmployee(Long employeeId);
 }

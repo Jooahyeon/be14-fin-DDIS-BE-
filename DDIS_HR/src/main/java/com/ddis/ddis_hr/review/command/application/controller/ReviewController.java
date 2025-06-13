@@ -34,6 +34,7 @@ public class ReviewController {
     @GetMapping("/history/{employeeId}")
     public ResponseEntity<List<ReviewHistoryDTO>> getHistoryByEmployeeId(@PathVariable("employeeId") Long employeeId){
         List<ReviewHistoryDTO> historyList = reviewMapper.selectHistoryByEmployeeId(employeeId);
+        System.out.println("▶ history size = " + historyList.size());
         return ResponseEntity.ok(historyList);
     }
 

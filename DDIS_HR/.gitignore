@@ -19,8 +19,8 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
-.idea/
 *.iws
+.idea/
 *.iml
 *.ipr
 *.xml
@@ -40,4 +40,5 @@ out/
 
 ### application.yml ###
 **/application.yml
-.idea/
+
+

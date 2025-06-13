@@ -141,6 +141,33 @@ public class AttendanceQueryController {
         return ResponseEntity.ok(attendanceQueryService.getCommuteDetail(employeeId, startDate, endDate));
     }
 
+    @GetMapping("/correction/history/process/me")
+    public ResponseEntity<List<MyCommuteCorrectionQueryDTO>> getCommuteCorrectionHistory(@AuthenticationPrincipal CustomUserDetails user) {
+        Long employeeId = user.getEmployeeId();
+        List<MyCommuteCorrectionQueryDTO> list = attendanceQueryService.getCorrectionHistory(employeeId);
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/correction/history/request/me")
+    public ResponseEntity<List<MyCommuteCorrectionQueryDTO>> getCorrectionRequestHistory(@AuthenticationPrincipal CustomUserDetails user) {
+        Long employeeId = user.getEmployeeId();
+        List<MyCommuteCorrectionQueryDTO> list = attendanceQueryService.getCorrectionRequestHistory(employeeId);
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/correction/history/process/all")
+    public ResponseEntity<List<AllCommuteCorrectionQueryDTO>> getAllCorrectionHistory() {
+        List<AllCommuteCorrectionQueryDTO> list = attendanceQueryService.getAllCorrectionHistory();
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/correction/history/request/all")
+    public ResponseEntity<List<AllCommuteCorrectionQueryDTO>> getAllCorrectionRequestHistory() {
+        List<AllCommuteCorrectionQueryDTO> list = attendanceQueryService.getAllCorrectionRequestHistory();
+        return ResponseEntity.ok(list);
+    }
+
+
 
 
 

@@ -41,4 +41,12 @@ public interface AttendanceQueryService {
 
     CommuteDetailDTO getCommuteDetail(Long employeeId, String startDate, String endDate);
 
+    List<MyCommuteCorrectionQueryDTO> getCorrectionHistory(Long employeeId);
+
+    List<MyCommuteCorrectionQueryDTO> getCorrectionRequestHistory(Long employeeId);
+
+    List<AllCommuteCorrectionQueryDTO> getAllCorrectionHistory();
+
+    List<AllCommuteCorrectionQueryDTO> getAllCorrectionRequestHistory();
+
 }

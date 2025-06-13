@@ -388,15 +388,15 @@
              , a.processed_time AS processedTime
              , a.reason AS reason
              , a.reject_reason AS rejectReason
-        FROM attendance a
-                 JOIN employee e ON a.employee_id = e.employee_id
-                 LEFT JOIN headquarters h ON e.head_id = h.head_id
-                 LEFT JOIN department d ON e.department_id = d.department_id
-                 LEFT JOIN team t ON e.team_id = t.team_id
-                 LEFT JOIN rank r ON e.rank_id = r.rank_id
-        WHERE a.requested_time_change IS NOT NULL
-          AND a.approval_status = '대기중'
-        ORDER BY a.request_time DESC
+          FROM attendance a
+          JOIN employee e ON a.employee_id = e.employee_id
+          LEFT JOIN headquarters h ON e.head_id = h.head_id
+          LEFT JOIN department d ON e.department_id = d.department_id
+          LEFT JOIN team t ON e.team_id = t.team_id
+          LEFT JOIN rank r ON e.rank_id = r.rank_id
+         WHERE a.requested_time_change IS NOT NULL
+           AND a.approval_status = '대기중'
+         ORDER BY a.request_time DESC
     </select>
 
 

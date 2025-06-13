@@ -115,8 +115,8 @@ public class AttendanceCommandServiceImpl implements AttendanceCommandService{
         meetingScheduleRepository.save(meeting);
     }
 
-    @Override
     @Transactional
+    @Override
     public void requestCorrection(Long employeeId, AttendanceCorrectionRequestDTO dto) {
         LocalDate today = LocalDate.now();
         Attendance attendance = attendanceRepository.findByEmployee_EmployeeIdAndWorkDate(employeeId, today)
@@ -127,5 +127,42 @@ public class AttendanceCommandServiceImpl implements AttendanceCommandService{
                 dto.getReason()
         );
     }
+
+    @Transactional
+    @Override
+    public void approveCorrection(Long attendanceId) {
+        Attendance attendance = attendanceRepository.findById(attendanceId)
+                .orElseThrow(() -> new IllegalArgumentException("출근 기록을 찾을 수 없습니다."));
+
+        attendance.setApprovalStatus("승인");
+        attendance.setProcessedTime(LocalDateTime.now());
+
+        LocalTime correctedTime = attendance.getRequestedTimeChange().toLocalTime();
+        attendance.setCheckInTime(correctedTime);
+
+        if (correctedTime.isBefore(LocalTime.of(9, 0))) {
+            WorkStatus normal = workStatusRepository.findById("NORMAL")
+                    .orElseThrow(() -> new IllegalArgumentException("정상근무 상태가 없습니다."));
+            attendance.setWorkStatus(normal);
+
+        } else if (correctedTime.isBefore(LocalTime.of(12, 0))) {
+            WorkStatus late = workStatusRepository.findById("LATE")
+                    .orElseThrow(() -> new IllegalArgumentException("지각 상태가 없습니다."));
+            attendance.setWorkStatus(late);
+        }
+    }
+
+
+    @Transactional
+    @Override
+    public void rejectCorrection(Long attendanceId, String rejectReason) {
+        Attendance attendance = attendanceRepository.findById(attendanceId)
+                .orElseThrow(() -> new IllegalArgumentException("출근 기록을 찾을 수 없습니다."));
+
+        attendance.setApprovalStatus("반려");
+        attendance.setProcessedTime(LocalDateTime.now());
+        attendance.setRejectReason(rejectReason);
+    }
+
 
 }

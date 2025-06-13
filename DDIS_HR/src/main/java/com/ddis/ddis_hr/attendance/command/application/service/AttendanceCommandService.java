@@ -16,4 +16,7 @@ public interface AttendanceCommandService {
 
     void requestCorrection(Long employeeId, AttendanceCorrectionRequestDTO dto);
 
+    void approveCorrection(Long attendanceId);
+
+    void rejectCorrection(Long attendanceId, String rejectReason);
 }

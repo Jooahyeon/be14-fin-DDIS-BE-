@@ -1,8 +1,6 @@
 package com.ddis.ddis_hr.attendance.command.application.controller;
 
-import com.ddis.ddis_hr.attendance.command.application.dto.AttendanceCorrectionRequestDTO;
-import com.ddis.ddis_hr.attendance.command.application.dto.MeetingScheduleRequestDTO;
-import com.ddis.ddis_hr.attendance.command.application.dto.PersonalScheduleRequestDTO;
+import com.ddis.ddis_hr.attendance.command.application.dto.*;
 import com.ddis.ddis_hr.attendance.command.application.service.AttendanceCommandService;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +48,18 @@ public class AttendanceCommandController {
             @RequestBody AttendanceCorrectionRequestDTO dto) {
 
         attendanceCommandService.requestCorrection(user.getEmployeeId(), dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/correction/approve")
+    public ResponseEntity<Void> approveCorrection(@RequestBody AttendanceApproveRequestDTO dto) {
+        attendanceCommandService.approveCorrection(dto.attendanceId());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/correction/reject")
+    public ResponseEntity<Void> rejectCorrection(@RequestBody AttendanceRejectRequestDTO dto) {
+        attendanceCommandService.rejectCorrection(dto.attendanceId(), dto.rejectReason());
         return ResponseEntity.ok().build();
     }
 

@@ -7,7 +7,7 @@ public class MyCommuteCorrectionQueryDTO {
 
     private String approvalStatus;
     private String requestTime;
-    private String checkInTime;
+    private String beforeCheckInTime;
     private String requestedTimeChange;
     private String processedTime;
     private String reason;

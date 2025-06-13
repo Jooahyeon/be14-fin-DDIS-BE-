@@ -14,7 +14,7 @@ public class AllCommuteCorrectionQueryDTO {
     private String rankName;
     private String approvalStatus;
     private String requestTime;
-    private String checkInTime;
+    private String beforeCheckInTime;
     private String requestedTimeChange;
     private String processedTime;
     private String reason;

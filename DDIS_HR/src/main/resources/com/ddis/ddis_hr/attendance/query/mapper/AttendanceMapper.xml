@@ -318,7 +318,7 @@
         SELECT
                approval_status
              , request_time
-             , check_in_time
+             , before_check_in_time
              , requested_time_change
              , processed_time
              , reason
@@ -334,7 +334,7 @@
         SELECT
                approval_status
              , request_time
-             , check_in_time
+             , before_check_in_time
              , requested_time_change
              , processed_time
              , reason
@@ -356,7 +356,7 @@
              , r.rank_name AS rankName
              , a.approval_status AS approvalStatus
              , a.request_time AS requestTime
-             , a.check_in_time AS checkInTime
+             , a.before_check_in_time AS beforeCheckInTime
              , a.requested_time_change AS requestedTimeChange
              , a.processed_time AS processedTime
              , a.reason AS reason
@@ -383,7 +383,7 @@
              , r.rank_name AS rankName
              , a.approval_status AS approvalStatus
              , a.request_time AS requestTime
-             , a.check_in_time AS checkInTime
+             , a.before_check_in_time AS beforeCheckInTime
              , a.requested_time_change AS requestedTimeChange
              , a.processed_time AS processedTime
              , a.reason AS reason

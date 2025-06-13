@@ -406,6 +406,7 @@ CREATE TABLE `attendance` (
     `processed_time` DATETIME,
     `reason` VARCHAR(255),
     `reject_reason` VARCHAR(255),
+    `before_check_in_time` TIME,
     PRIMARY KEY (`attendance_id`),
     FOREIGN KEY (`employee_id`)     REFERENCES `employee`(`employee_id`) ON DELETE CASCADE,
     FOREIGN KEY (`work_status_id`)  REFERENCES `work_status`(`work_status_id`) ON DELETE CASCADE,

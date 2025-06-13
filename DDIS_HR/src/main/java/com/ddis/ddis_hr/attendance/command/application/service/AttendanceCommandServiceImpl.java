@@ -58,7 +58,8 @@ public class AttendanceCommandServiceImpl implements AttendanceCommandService{
                 employee,
                 today,
                 now,
-                workStatus
+                workStatus,
+                now
         );
 
         attendanceRepository.save(attendance);

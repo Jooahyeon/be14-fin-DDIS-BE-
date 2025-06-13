@@ -65,11 +65,15 @@ public class Attendance {
     @Column
     private String rejectReason;
 
-    public Attendance(Employee employee, LocalDate workDate, LocalTime checkInTime, WorkStatus workStatus) {
+    @Column
+    private LocalTime beforeCheckInTime;
+
+    public Attendance(Employee employee, LocalDate workDate, LocalTime checkInTime, WorkStatus workStatus, LocalTime beforeCheckInTime) {
         this.employee = employee;
         this.workDate = workDate;
         this.checkInTime = checkInTime;
         this.workStatus = workStatus;
+        this.beforeCheckInTime = beforeCheckInTime;
     }
 
     public void updateCheckOutTime(LocalTime time) {

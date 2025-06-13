@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ddis.ddis_hr.dictionary.query.dao.DictionaryMapper">
+
+    <select id="selectAllDictionary" resultType="com.ddis.ddis_hr.dictionary.query.dto.DictionaryQueryDTO">
+        SELECT
+        dictionary_id     AS dictionaryId,
+        dictionary_name   AS dictionaryName,
+        dictionary_content AS dictionaryContent,
+        dictionary_type   AS dictionaryType
+        FROM dictionary
+        ORDER BY dictionary_id
+    </select>
+
+</mapper>

@@ -87,4 +87,8 @@ public class Attendance {
         this.approvalStatus = "대기중";
     }
 
+    public void updateWorkDuration(int minutes) {
+        this.workDuration = minutes;
+    }
+
 }

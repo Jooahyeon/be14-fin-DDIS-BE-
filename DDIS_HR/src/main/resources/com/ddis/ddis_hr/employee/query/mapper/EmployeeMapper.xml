@@ -254,6 +254,7 @@
         SELECT
             e.employee_id      AS employeeId,
             e.employee_name    AS employeeName,
+            e.employee_birth   AS employeeBirth,
             p.position_name    AS positionName,
             r.rank_name        AS rankName,
             j.job_name         AS jobName,

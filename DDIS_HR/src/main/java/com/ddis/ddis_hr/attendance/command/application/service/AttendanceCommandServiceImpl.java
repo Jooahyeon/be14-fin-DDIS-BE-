@@ -1,5 +1,6 @@
 package com.ddis.ddis_hr.attendance.command.application.service;
 
+import com.ddis.ddis_hr.attendance.command.application.dto.AttendanceCorrectionRequestDTO;
 import com.ddis.ddis_hr.attendance.command.application.dto.MeetingScheduleRequestDTO;
 import com.ddis.ddis_hr.attendance.command.application.dto.PersonalScheduleRequestDTO;
 import com.ddis.ddis_hr.attendance.command.domain.aggregate.Attendance;
@@ -10,10 +11,12 @@ import com.ddis.ddis_hr.attendance.command.domain.repository.*;
 import com.ddis.ddis_hr.member.command.domain.aggregate.entity.Employee;
 import com.ddis.ddis_hr.organization.command.domain.aggregate.entity.TeamEntity;
 import com.ddis.ddis_hr.organization.command.domain.repository.TeamRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Service
@@ -110,6 +113,19 @@ public class AttendanceCommandServiceImpl implements AttendanceCommandService{
                 .build();
 
         meetingScheduleRepository.save(meeting);
+    }
+
+    @Override
+    @Transactional
+    public void requestCorrection(Long employeeId, AttendanceCorrectionRequestDTO dto) {
+        LocalDate today = LocalDate.now();
+        Attendance attendance = attendanceRepository.findByEmployee_EmployeeIdAndWorkDate(employeeId, today)
+                .orElseThrow(() -> new IllegalStateException("출근 기록이 없습니다. 먼저 출근해주세요."));
+
+        attendance.applyCorrection(
+                LocalTime.parse(dto.getRequestedTimeChange()),
+                dto.getReason()
+        );
     }
 
 }

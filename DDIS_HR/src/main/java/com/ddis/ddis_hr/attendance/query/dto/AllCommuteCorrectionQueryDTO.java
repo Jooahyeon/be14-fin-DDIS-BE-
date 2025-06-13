@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class AllCommuteCorrectionQueryDTO {
 
+    private Long attendanceId;
     private Long employeeId;
     private String employeeName;
     private String headName;

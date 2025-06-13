@@ -374,7 +374,8 @@
 
     <select id="findAllCommuteCorrectionsRequest" resultType="com.ddis.ddis_hr.attendance.query.dto.AllCommuteCorrectionQueryDTO">
         SELECT
-            e.employee_id AS employeeId
+               a.attendance_id AS attendanceId
+             , e.employee_id AS employeeId
              , e.employee_name AS employeeName
              , h.head_name AS headName
              , d.department_name AS departmentName

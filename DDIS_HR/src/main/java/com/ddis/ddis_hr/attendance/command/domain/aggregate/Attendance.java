@@ -4,6 +4,7 @@ import com.ddis.ddis_hr.member.command.domain.aggregate.entity.Employee;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ import java.time.LocalTime;
 @Entity
 @Table(name = "attendance")
 @Getter
+@Setter
 @NoArgsConstructor
 public class Attendance {
 
@@ -72,6 +74,13 @@ public class Attendance {
 
     public void updateCheckOutTime(LocalTime time) {
         this.checkOutTime = time;
+    }
+
+    public void applyCorrection(LocalTime requestedTime, String reason) {
+        this.requestedTimeChange = LocalDateTime.of(this.workDate, requestedTime);
+        this.reason = reason;
+        this.requestTime = LocalDateTime.now();
+        this.approvalStatus = "대기중";
     }
 
 }

@@ -12,6 +12,7 @@ import com.ddis.ddis_hr.eapproval.query.dto.ApproverQueryDTO;
 import com.ddis.ddis_hr.eapproval.query.service.ApprovalLineQueryService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ApprovalLineCommandServiceImpl implements ApprovalLineCommandService {
 
     private final ApprovalLineQueryService approvalLineQueryService; // 미리보기 재활용
@@ -85,6 +87,9 @@ public class ApprovalLineCommandServiceImpl implements ApprovalLineCommandServic
         for (ApprovalLineDTO dto : lines) {
             String status = dto.getEmployeeId().equals(drafterId) ? "기안" : "대기중";
 
+            log.info("⛳ 결재라인 저장 시도 → step: {}, type: {}, empId: {}, docId: {}",
+                    dto.getStep(), dto.getType(), dto.getEmployeeId(), docId);
+
             entities.add(ApprovalLine.builder()
                     .docId(docId)
                     .formId(formId)
@@ -98,4 +103,8 @@ public class ApprovalLineCommandServiceImpl implements ApprovalLineCommandServic
         List<ApprovalLine> saved = approvalLineRepository.saveAll(entities);
         return saved.stream().map(ApprovalLine::getApprovalLineId).toList();
     }
+
+
+
+
 }

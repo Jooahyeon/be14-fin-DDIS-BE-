@@ -1,6 +1,5 @@
 package com.ddis.ddis_hr.eapproval.command.application.dto;
 
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

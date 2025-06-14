@@ -21,6 +21,7 @@ bin/
 ### IntelliJ IDEA ###
 *.iws
 .idea/
+.idea/*
 *.iml
 *.ipr
 *.xml

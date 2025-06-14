@@ -18,9 +18,9 @@ public interface EmployeeMapper {
 
     EmployeeDTO findMyInfo(@Param("employeeId") Long employeeId);
 
-//    EmployeePublicDTO findPublicById(@Param("employeeId") Long employeeId);
-//
-//    EmployeeHrDTO findHrById(@Param("employeeId") Long employeeId);
+    EmployeePublicDTO findPublicById(@Param("employeeId") Long employeeId);
+
+    EmployeeHrDTO findHrById(@Param("employeeId") Long employeeId);
 
     List<EmployeeListDTO> findAll();
 }

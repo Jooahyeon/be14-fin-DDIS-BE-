@@ -32,21 +32,13 @@ public class EmployeeController {
 
     // 사원 등록 API
     @PostMapping("/enroll")
-//    @PreAuthorize("hasRole('HR')")
+// @PreAuthorize("hasRole('HR')")
     public ResponseEntity<Long> enroll(
             @RequestBody EmployeeEnrollDTO dto,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
         log.debug("▶ EnrollDTO.photoKey = '{}'", dto.getEmployeePhotoUrl());
-        // 프론트가 보낸 employeePhotoUrl 필드에 S3 key가 담겨 있음
-        if (dto.getEmployeePhotoUrl() != null) {
-            // key → 실제 접근 가능한 presigned GET URL 로 변환
-            String presignedGetUrl = s3Service.generateDownloadUrl(
-                    dto.getEmployeePhotoUrl(),
-                    ""
-            );
-            dto.setEmployeePhotoUrl(presignedGetUrl);
-        }
+
         Long id = employeeService.enrollEmployee(dto);
         return ResponseEntity.ok(id);
     }

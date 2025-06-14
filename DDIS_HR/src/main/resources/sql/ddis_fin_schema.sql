@@ -166,13 +166,13 @@ CREATE TABLE `employee` (
     `employee_address` VARCHAR(255) NOT NULL,
     `employment_date` DATE NOT NULL,
     `retirement_date` DATE,
-    `work_type`     BOOLEAN NOT NULL DEFAULT TRUE,
+    `work_type`     VARCHAR(10) NOT NULL DEFAULT '정규직',
     `bank_name`     VARCHAR(255) NOT NULL,
     `bank_depositor` VARCHAR(255) NOT NULL,
     `bank_account`  VARCHAR(255) NOT NULL,
-    `is_disorder`   BOOLEAN NOT NULL DEFAULT FALSE,
+    `is_disorder`   VARCHAR(10) NOT NULL DEFAULT '비장애',
     `military_type`   VARCHAR(255) NOT NULL DEFAULT '미필',
-    `is_marriage`   BOOLEAN NOT NULL DEFAULT TRUE,
+    `is_marriage`   VARCHAR(10) NOT NULL DEFAULT '미혼',
     `marriage_date` DATE,
     `family_count` INT NOT NULL,
     `career_year_count` INT,
@@ -181,7 +181,7 @@ CREATE TABLE `employee` (
     `employee_school` VARCHAR(255) NOT NULL,
     `employee_dept`  VARCHAR(255),
     `graduation_year` INT,
-    `is_four_insurances` BOOLEAN NOT NULL DEFAULT TRUE,
+    `is_four_insurances` VARCHAR(10) NOT NULL DEFAULT '가입',
     `position_id`   BIGINT NOT NULL,
     `rank_id`       BIGINT NOT NULL,
     `job_id`        BIGINT,
@@ -195,7 +195,11 @@ CREATE TABLE `employee` (
     FOREIGN KEY (`head_id`)       REFERENCES `headquarters`(`head_id`),
     FOREIGN KEY (`department_id`) REFERENCES `department`(`department_id`),
     FOREIGN KEY (`team_id`)       REFERENCES `team`(`team_id`),
-    CHECK (`military_type` IN ('군필', '보충역', '면제', '미필'))
+    CHECK (`military_type` IN ('군필', '보충역', '면제', '미필')),
+    CHECK (`work_type` IN ('정규직', '계약직')),
+    CHECK (`is_disorder` IN ('장애', '비장애')),
+    CHECK (`is_marriage` IN ('미혼', '기혼')),
+    CHECK (`is_four_insurances` IN ('가입', '미가입'))
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 전자결재양식

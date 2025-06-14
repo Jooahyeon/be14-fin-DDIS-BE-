@@ -30,14 +30,14 @@ public class EmployeeHrDTO {
     private LocalDate employmentDate;
     private LocalDate retirementDate;
 
-    private Boolean workType;
+    private String workType;
     private String bankName;
     private String bankDepositor;
     private String bankAccount;
 
-    private Boolean isDisorder;
+    private String isDisorder;
     private String militaryType;
-    private Boolean isMarriage;
+    private String isMarriage;
     private LocalDate marriageDate;
     private Integer familyCount;
 
@@ -49,7 +49,7 @@ public class EmployeeHrDTO {
     private String employeeDept;
     private Integer graduationYear;
 
-    private Boolean isFourInsurances;
+    private String isFourInsurances;
     private Long positionId;
     private Long rankId;
     private Long jobId;

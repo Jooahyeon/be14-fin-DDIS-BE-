@@ -1,9 +1,7 @@
 package com.ddis.ddis_hr.eapproval.query.controller;
 
-import com.ddis.ddis_hr.eapproval.query.dto.DocumentDTO;
 import com.ddis.ddis_hr.eapproval.query.dto.DraftDTO;
 import com.ddis.ddis_hr.eapproval.query.dto.DraftDetailResponseQueryDTO;
-import com.ddis.ddis_hr.eapproval.query.mapper.DraftMapper;
 import com.ddis.ddis_hr.eapproval.query.service.DraftQueryService;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +27,7 @@ public class DraftQueryController {
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<List<DraftDTO>> getMyDrafts(
             @AuthenticationPrincipal CustomUserDetails user) {
         Long employeeId = user.getEmployeeId();

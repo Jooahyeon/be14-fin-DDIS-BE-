@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class DraftDTO {
     private Long docId;
-    private String title;
+    private String docTitle;
     private LocalDateTime createdAt;     // 생성일
     private LocalDateTime submittedAt;   // 상신일
     private String status;        // "대기중", "반려", "회수" 등

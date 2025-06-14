@@ -1,11 +1,5 @@
 package com.ddis.ddis_hr.eapproval.query.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.time.LocalDateTime;
-
 //// 조회 응답 DTO
 //@Getter
 //@Setter

@@ -8,5 +8,10 @@ import java.util.List;
 
 @Mapper
 public interface ApprovalDocumentMapper {
-    List<DocumentDTO> selectDocumentsByApprover(@Param("employeeId") Long employeeId);
-}
+    List<DocumentDTO> selectDocumentsByStatus(
+            @Param("employeeId") Long employeeId,
+            @Param("docStatus") String docStatus,
+            @Param("lineStatus") String lineStatus
+    );
+
+    List<DocumentDTO> selectAllDocuments(@Param("employeeId") Long employeeId);}

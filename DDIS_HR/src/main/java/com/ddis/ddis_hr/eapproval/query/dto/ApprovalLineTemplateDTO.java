@@ -1,4 +1,4 @@
-//package com.ddis.ddis_hr.eapproval.query.dto;
+package com.ddis.ddis_hr.eapproval.query.dto;//package com.ddis.ddis_hr.eapproval.query.dto;
 //
 //
 //import lombok.*;

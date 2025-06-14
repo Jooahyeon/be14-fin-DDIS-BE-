@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)    // ← 여기에도!
 public class Draft {
 
     /** 문서번호 (PK, AUTO_INCREMENT) */
@@ -77,4 +77,9 @@ public class Draft {
     @Column(name = "employee_id", nullable = false)
     private Long employeeId;
 
+    public Draft withStatus(String newStatus) {
+        return this.toBuilder()
+                .docStatus(newStatus)
+                .build();
+    }
 }

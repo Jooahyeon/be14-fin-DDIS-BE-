@@ -4,71 +4,50 @@
 
 <mapper namespace="com.ddis.ddis_hr.eapproval.query.mapper.ApprovalDocumentMapper">
 
-    <resultMap id="DocumentMap" type="com.ddis.ddis_hr.eapproval.query.dto.DocumentDTO">
-        <id     column="doc_id"             property="docId"/>
-        <result column="doc_title"          property="title"/>
-        <result column="created_at"         property="createdAt"/>
-        <result column="submitted_at"       property="submittedAt"/>
-        <result column="final_approval_at"  property="approvedAt"/>
-        <result column="doc_status"         property="status"/>
-        <result column="employee_name"      property="writer"/>    <!-- 기안자 이름 -->
-        <result column="form_name"          property="type"/>
-    </resultMap>
-
-    <select id="selectDocumentsByApprover" resultMap="DocumentMap">
+    <!-- 특정 상태 문서 조회 (결재 / 진행 / 완료 탭 전용) -->
+    <select id="selectDocumentsByStatus" resultType="com.ddis.ddis_hr.eapproval.query.dto.DocumentDTO">
         SELECT
-        d.doc_id,
-        d.doc_title,
-        d.created_at,
-        d.submitted_at,
-        d.final_approval_at,            <!-- approvedAt -->
-        d.doc_status,
-        e.employee_name,                <!-- writer -->
-        f.form_name                     <!-- type -->
-        FROM draft_documents d
-        INNER JOIN approval_line al
-        ON d.doc_id = al.doc_id
-        LEFT JOIN employee e
-        ON d.employee_id = e.employee_id
-        LEFT JOIN document_form f
-        ON d.form_id = f.form_id
-        WHERE al.employee_id = #{employeeId}
-        AND al.status != '기안'
+            d.doc_id         AS docId,
+            d.doc_title      AS title,
+            d.created_at     AS createdAt,
+            d.submitted_at   AS submittedAt,
+            al.approved_at   AS approvedAt,
+            d.doc_status     AS docStatus,
+            al.status        AS lineStatus,
+            e.employee_name  AS writer,
+            f.form_name      AS type
+        FROM
+            draft_documents d
+                INNER JOIN approval_line al ON d.doc_id = al.doc_id
+                LEFT JOIN employee e ON d.employee_id = e.employee_id
+                LEFT JOIN document_form f ON d.form_id = f.form_id
+        WHERE
+            al.employee_id = #{employeeId}
+          AND d.doc_status = #{docStatus}
+          AND al.status = #{lineStatus}
         ORDER BY d.submitted_at DESC
     </select>
 
-
-<!--    <resultMap id="DocumentMap" type="com.ddis.ddis_hr.eapproval.query.dto.DocumentDTO">-->
-<!--        <id     column="doc_id"             property="docId"/>-->
-<!--        <result column="doc_title"          property="title"/>-->
-<!--        <result column="created_at"         property="createdAt"/>-->
-<!--        <result column="submitted_at"       property="submittedAt"/>-->
-<!--        <result column="final_approval_at"  property="approvedAt"/>-->
-<!--        <result column="doc_status"         property="status"/>-->
-<!--        <result column="employee_name"      property="writer"/>    &lt;!&ndash; 기안자 이름 &ndash;&gt;-->
-<!--        <result column="form_name"          property="type"/>-->
-<!--    </resultMap>-->
-
-<!--    <select id="selectDocumentsByDrafter" resultMap="DocumentMap">-->
-<!--        SELECT-->
-<!--        d.doc_id,-->
-<!--        d.doc_title,-->
-<!--        d.created_at,-->
-<!--        d.submitted_at,-->
-<!--        d.final_approval_at,            &lt;!&ndash; approvedAt &ndash;&gt;-->
-<!--        d.doc_status,-->
-<!--        e.employee_name,                &lt;!&ndash; writer &ndash;&gt;-->
-<!--        f.form_name                     &lt;!&ndash; type &ndash;&gt;-->
-<!--        FROM draft_documents d-->
-<!--        INNER JOIN approval_line al-->
-<!--        ON d.doc_id = al.doc_id-->
-<!--        LEFT JOIN employee e-->
-<!--        ON d.employee_id = e.employee_id-->
-<!--        LEFT JOIN document_form f-->
-<!--        ON d.form_id = f.form_id-->
-<!--        WHERE al.employee_id = #{employeeId}-->
-<!--        AND al.status == '기안'-->
-<!--        ORDER BY d.submitted_at DESC-->
-<!--    </select>-->
+    <select id="selectAllDocuments" resultType="com.ddis.ddis_hr.eapproval.query.dto.DocumentDTO">
+        SELECT
+            d.doc_id         AS docId,
+            d.doc_title      AS title,
+            d.created_at     AS createdAt,
+            d.submitted_at   AS submittedAt,
+            al.approved_at   AS approvedAt,
+            d.doc_status     AS docStatus,
+            al.status        AS lineStatus,
+            e.employee_name  AS writer,
+            f.form_name      AS type
+        FROM
+            draft_documents d
+                INNER JOIN approval_line al ON d.doc_id = al.doc_id
+                LEFT JOIN employee e ON d.employee_id = e.employee_id
+                LEFT JOIN document_form f ON d.form_id = f.form_id
+        WHERE
+            al.employee_id = #{employeeId}
+        ORDER BY d.submitted_at DESC
+    </select>
 
 </mapper>
+

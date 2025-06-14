@@ -13,7 +13,9 @@ import java.time.LocalDateTime;
 public class ApprovalLineQueryDTO {
 
     private int id;                        // 결재라인번호
+    private int step;                      // 결재 순번
     private String name;                   // 결재자 이름
+    private Long employeeId;                // 결재자 사번
     private String team;                   // 팀 이름
     private String position;               // 직책명
     private String status;                 // 결재상태

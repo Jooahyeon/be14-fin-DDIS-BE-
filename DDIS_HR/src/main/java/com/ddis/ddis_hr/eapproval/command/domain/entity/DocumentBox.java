@@ -1,10 +1,10 @@
 package com.ddis.ddis_hr.eapproval.command.domain.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.*;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "document_box")

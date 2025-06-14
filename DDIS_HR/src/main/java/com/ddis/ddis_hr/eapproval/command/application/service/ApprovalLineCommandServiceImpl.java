@@ -3,7 +3,6 @@ package com.ddis.ddis_hr.eapproval.command.application.service;
 import com.ddis.ddis_hr.eapproval.command.application.dto.ApprovalLineDTO;
 import com.ddis.ddis_hr.eapproval.command.domain.entity.ApprovalLine;
 import com.ddis.ddis_hr.eapproval.command.domain.entity.ApprovalLineType;
-import com.ddis.ddis_hr.eapproval.command.domain.entity.ApprovalType;
 import com.ddis.ddis_hr.eapproval.command.domain.entity.Draft;
 import com.ddis.ddis_hr.eapproval.command.domain.repository.ApprovalLineRepository;
 import com.ddis.ddis_hr.eapproval.command.domain.repository.DraftRepository;
@@ -14,6 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 

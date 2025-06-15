@@ -240,7 +240,7 @@
              , SUM(CASE WHEN a.overtime_type = '시간외근무' THEN a.overtime_duration ELSE 0 END) AS overtimeExtra
              , SUM(CASE WHEN a.overtime_type = '야간근무' THEN a.overtime_duration ELSE 0 END) AS overtimeNight
              , SUM(CASE WHEN a.overtime_type = '휴일근무' THEN a.overtime_duration ELSE 0 END) AS overtimeHoliday
-             , a.work_duration + IFNULL(a.overtime_duration, 0) AS totalWorkTime
+             , IFNULL(a.work_duration, 0) + IFNULL(a.overtime_duration, 0) AS totalWorkTime
           FROM attendance a
           JOIN work_status ws ON a.work_status_id = ws.work_status_id
          WHERE a.employee_id = #{employeeId}
@@ -265,8 +265,7 @@
              , SUM(CASE WHEN ws.work_status_name = '지각' THEN 1 ELSE 0 END) AS lateCount
              , SUM(CASE WHEN ws.work_status_name = '결근' THEN 1 ELSE 0 END) AS absentCount
              , SUM(CASE WHEN a.check_in_time IS NOT NULL THEN 1 ELSE 0 END) AS presentCount
-             , SUM(CASE WHEN a.work_duration IS NOT NULL THEN a.work_duration ELSE 0 END +
-                   CASE WHEN a.overtime_duration IS NOT NULL THEN a.overtime_duration ELSE 0 END) AS totalWorkMinutes
+             , SUM(IFNULL(a.work_duration, 0)) + SUM(IFNULL(a.overtime_duration, 0)) AS totalWorkTime
           FROM attendance a
           JOIN employee e ON a.employee_id = e.employee_id
           JOIN work_status ws ON a.work_status_id = ws.work_status_id
@@ -305,7 +304,7 @@
              , SUM(CASE WHEN a.overtime_type = '시간외근무' THEN a.overtime_duration ELSE 0 END) AS overtimeExtra
              , SUM(CASE WHEN a.overtime_type = '야간근무' THEN a.overtime_duration ELSE 0 END) AS overtimeNight
              , SUM(CASE WHEN a.overtime_type = '휴일근무' THEN a.overtime_duration ELSE 0 END) AS overtimeHoliday
-             , a.work_duration + IFNULL(a.overtime_duration, 0) AS totalWorkTime
+             , IFNULL(a.work_duration, 0) + IFNULL(a.overtime_duration, 0) AS totalWorkTime
           FROM attendance a
           JOIN work_status ws ON a.work_status_id = ws.work_status_id
          WHERE a.employee_id = #{employeeId}

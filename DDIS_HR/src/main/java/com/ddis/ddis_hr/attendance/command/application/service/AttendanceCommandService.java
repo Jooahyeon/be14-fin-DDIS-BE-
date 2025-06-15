@@ -2,6 +2,7 @@ package com.ddis.ddis_hr.attendance.command.application.service;
 
 import com.ddis.ddis_hr.attendance.command.application.dto.AttendanceCorrectionRequestDTO;
 import com.ddis.ddis_hr.attendance.command.application.dto.MeetingScheduleRequestDTO;
+import com.ddis.ddis_hr.attendance.command.application.dto.OvertimeRequestDTO;
 import com.ddis.ddis_hr.attendance.command.application.dto.PersonalScheduleRequestDTO;
 
 public interface AttendanceCommandService {
@@ -19,4 +20,6 @@ public interface AttendanceCommandService {
     void approveCorrection(Long attendanceId);
 
     void rejectCorrection(Long attendanceId, String rejectReason);
+
+    void handleOvertimeRequest(OvertimeRequestDTO dto, Long employeeId);
 }

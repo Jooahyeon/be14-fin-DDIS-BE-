@@ -148,7 +148,11 @@ public class AttendanceQueryServiceImpl implements AttendanceQueryService {
 
     @Override
     public List<AllCommuteSummaryDTO> getAllCommuteSummaryList(String startDate, String endDate) {
-        return attendanceMapper.getAllCommuteSummaryList(startDate, endDate);
+
+        String startMonth = startDate.substring(0, 7);
+        String endMonth = endDate.substring(0, 7);
+
+        return attendanceMapper.getAllCommuteSummaryList(startMonth, endMonth);
     }
 
     @Override

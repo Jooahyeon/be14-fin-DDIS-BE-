@@ -2,6 +2,7 @@ package com.ddis.ddis_hr.eapproval.query.controller;
 // 결재함 (결재 - 진행 - 완료 분기처리)
 
 import com.ddis.ddis_hr.eapproval.query.dto.DocumentDTO;
+import com.ddis.ddis_hr.eapproval.query.dto.DraftDTO;
 import com.ddis.ddis_hr.eapproval.query.service.ApprovalDocumentQueryService;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class ApprovalDocumentQueryController {
 //        return ResponseEntity.ok(documents);
 //    }
 
-
+    // 결재함
     @GetMapping
     public ResponseEntity<List<DocumentDTO>> getApprovals(
             @AuthenticationPrincipal CustomUserDetails user,
@@ -57,6 +58,17 @@ public class ApprovalDocumentQueryController {
         }
 
         return ResponseEntity.ok(documents);
+    }
+
+
+    // 기안함 ( 추후 ApprovalDcoumentQueryController랑 병합)
+    @GetMapping("/draftDoc")
+    public ResponseEntity<List<DraftDTO>> getMyDrafts(
+            @AuthenticationPrincipal CustomUserDetails user) {
+
+        Long employeeId = user.getEmployeeId();
+        List<DraftDTO> drafts = approvalDocumentQueryService.getMyDrafts(employeeId);
+        return ResponseEntity.ok(drafts);
     }
 
 }

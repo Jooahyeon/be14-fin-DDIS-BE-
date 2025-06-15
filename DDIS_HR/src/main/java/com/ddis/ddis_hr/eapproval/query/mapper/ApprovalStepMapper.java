@@ -5,8 +5,8 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
-@Mapper
-public interface ApprovalStepMapper {
-    List<ApprovalStepQueryDTO> findApprovalStepsByBasePositionId(Long positionId);
-
-}
+//@Mapper
+//public interface ApprovalStepMapper {
+//    List<ApprovalStepQueryDTO> findApprovalStepsByBaseRankOrder(Long positionId);
+//
+//}

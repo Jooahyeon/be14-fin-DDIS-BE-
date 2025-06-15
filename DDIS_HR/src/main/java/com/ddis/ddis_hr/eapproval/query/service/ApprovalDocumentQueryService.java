@@ -1,6 +1,7 @@
 package com.ddis.ddis_hr.eapproval.query.service;
 
 import com.ddis.ddis_hr.eapproval.query.dto.DocumentDTO;
+import com.ddis.ddis_hr.eapproval.query.dto.DraftDTO;
 
 import java.util.List;
 
@@ -17,5 +18,7 @@ public interface ApprovalDocumentQueryService {
 
     // 전체 탭 (모든 문서 + 반려 포함)
     List<DocumentDTO> getAllApprovals(Long employeeId);
+
+    List<DraftDTO> getMyDrafts(Long employeeId);
 
 }

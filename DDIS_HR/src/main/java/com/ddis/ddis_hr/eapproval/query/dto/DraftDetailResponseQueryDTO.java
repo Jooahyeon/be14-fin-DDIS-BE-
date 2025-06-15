@@ -23,6 +23,9 @@ public class DraftDetailResponseQueryDTO {
     private String receiver;                        // 수신자 이름
     private String referer;                         // 참조자 이름
     private String docContent;                      // 원본 JSON 문자열
+    private Long rankId;                            // 기안자 직급
+    private String rankName;                        // 기안자 직급명
+    private String role;                            // 역할
 
     private ContentQueryDTO contentDto;             // 파싱한 객체
 

@@ -21,19 +21,22 @@ public class DraftQueryController {
 
     private final DraftQueryService draftQueryService;
 
-    @GetMapping("/{docId}")
-    public ResponseEntity<DraftDetailResponseQueryDTO> getDraftDetail(@PathVariable Long docId) {
+    // 상세조회
+    @GetMapping("/{id}")
+    public ResponseEntity<DraftDetailResponseQueryDTO> getDraftDetail(@PathVariable("id") Long docId) {
         DraftDetailResponseQueryDTO dto = draftQueryService.getDraftDetail(docId);
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping()
-    public ResponseEntity<List<DraftDTO>> getMyDrafts(
-            @AuthenticationPrincipal CustomUserDetails user) {
-        Long employeeId = user.getEmployeeId();
-        List<DraftDTO> dtos = draftQueryService.getMyDrafts(employeeId);
-        return ResponseEntity.ok(dtos);
-    }
+//    // 기안함 ( 추후 ApprovalDcoumentQueryController랑 병합)
+//    @GetMapping()
+//    public ResponseEntity<List<DraftDTO>> getMyDrafts(
+//            @AuthenticationPrincipal CustomUserDetails user) {
+//
+//        Long employeeId = user.getEmployeeId();
+//        List<DraftDTO> drafts = draftQueryService.getMyDrafts(employeeId);
+//        return ResponseEntity.ok(drafts);
+//    }
 
 
 

@@ -2,6 +2,7 @@ package com.ddis.ddis_hr.attendance.command.application.service;
 
 import com.ddis.ddis_hr.attendance.command.application.dto.AttendanceCorrectionRequestDTO;
 import com.ddis.ddis_hr.attendance.command.application.dto.MeetingScheduleRequestDTO;
+import com.ddis.ddis_hr.attendance.command.application.dto.OvertimeRequestDTO;
 import com.ddis.ddis_hr.attendance.command.application.dto.PersonalScheduleRequestDTO;
 import com.ddis.ddis_hr.attendance.command.domain.aggregate.Attendance;
 import com.ddis.ddis_hr.attendance.command.domain.aggregate.Meeting;
@@ -15,10 +16,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -217,6 +218,70 @@ public class AttendanceCommandServiceImpl implements AttendanceCommandService{
         attendance.setProcessedTime(LocalDateTime.now());
         attendance.setRejectReason(rejectReason);
     }
+
+    @Transactional
+    @Override
+    public void handleOvertimeRequest(OvertimeRequestDTO dto, Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException("사원이 존재하지 않습니다."));
+
+        LocalDate targetDate = dto.getDate() != null
+                ? LocalDate.parse(dto.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                : LocalDate.now();
+
+        LocalDate startOfWeek = targetDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
+        LocalDate endOfWeek = startOfWeek.plusDays(6);
+
+        List<Attendance> weeklyAttendance = attendanceRepository.findByEmployee_EmployeeIdAndWorkDateBetween(employeeId, startOfWeek, endOfWeek);
+
+        int totalOvertimeMinutes = weeklyAttendance.stream()
+                .mapToInt(a -> a.getOvertimeDuration() != null ? a.getOvertimeDuration() : 0)
+                .sum();
+
+        int requestedMinutes = dto.getDuration() != null ? dto.getDuration() * 60 : 300; // 300 = 5시간
+
+        System.out.println("이번 주 범위: " + startOfWeek + " ~ " + endOfWeek);
+
+        System.out.println("이번주 누적 초과근무: " + totalOvertimeMinutes + "분");
+        System.out.println("신청 요청 시간: " + requestedMinutes + "분");
+
+        System.out.println("이번 주 출근 기록 수: " + weeklyAttendance.size());
+        weeklyAttendance.forEach(a -> {
+            System.out.println("날짜: " + a.getWorkDate() +
+                    ", OT: " + a.getOvertimeDuration());
+        });
+
+        if (totalOvertimeMinutes + requestedMinutes > 720) {
+            throw new IllegalArgumentException("이번 주 초과 근무 시간은 최대 12시간입니다.");
+        }
+
+        if ("휴일근무".equals(dto.getType())) {
+            WorkStatus normalStatus = workStatusRepository.findById("NORMAL")
+                    .orElseThrow(() -> new IllegalArgumentException("정상근무 상태(NORMAL)가 존재하지 않습니다."));
+
+            Attendance newAttendance = new Attendance(
+                    employee,
+                    targetDate,
+                    LocalTime.of(10, 0),
+                    normalStatus,
+                    LocalTime.of(10, 0)
+            );
+            newAttendance.setCheckOutTime(LocalTime.of(16, 0));
+            newAttendance.setOvertimeType("휴일근무");
+            newAttendance.setOvertimeDuration(300);
+
+            attendanceRepository.save(newAttendance);
+        } else {
+            Attendance todayAttendance = attendanceRepository.findByEmployee_EmployeeIdAndWorkDate(employeeId, targetDate)
+                    .orElseThrow(() -> new IllegalArgumentException("해당 일자의 출근 기록이 없습니다."));
+
+            todayAttendance.setOvertimeType(dto.getType());
+            todayAttendance.setOvertimeDuration(requestedMinutes);
+
+            attendanceRepository.save(todayAttendance);
+        }
+    }
+
 
 
 }

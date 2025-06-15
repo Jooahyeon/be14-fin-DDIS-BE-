@@ -1,5 +1,6 @@
 package com.ddis.ddis_hr.employee.query.controller;
 
+import com.ddis.ddis_hr.employee.query.dto.DisciplinaryListDTO;
 import com.ddis.ddis_hr.employee.query.dto.MyDisciplinaryDTO;
 import com.ddis.ddis_hr.employee.query.service.DisciplinaryQueryService;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
@@ -44,9 +45,9 @@ public class DisciplinaryQueryController {
      *    - ROLE_HR 전용
      *    - GET /disciplinary
      */
-    @PreAuthorize("hasRole('HR')")
+//    @PreAuthorize("hasRole('HR')")
     @GetMapping
-    public ResponseEntity<List<MyDisciplinaryDTO>> getAllDisciplinary() {
+    public ResponseEntity<List<DisciplinaryListDTO>> getAllDisciplinary() {
         return ResponseEntity.ok(
                 service.findAll()
         );

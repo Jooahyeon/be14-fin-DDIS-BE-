@@ -1,18 +1,21 @@
 package com.ddis.ddis_hr.eapproval.query.service;
 
+import com.ddis.ddis_hr.S3Config.service.S3Service;
 import com.ddis.ddis_hr.eapproval.command.application.dto.DraftCreateCommandDTO;
 import com.ddis.ddis_hr.eapproval.query.dto.ContentQueryDTO;
 import com.ddis.ddis_hr.eapproval.query.dto.DraftDTO;
 import com.ddis.ddis_hr.eapproval.query.dto.DraftDetailResponseQueryDTO;
+import com.ddis.ddis_hr.eapproval.query.dto.FileQueryDTO;
 import com.ddis.ddis_hr.eapproval.query.mapper.DraftDocumentMapper;
 import com.ddis.ddis_hr.eapproval.query.mapper.DraftMapper;
 import com.ddis.ddis_hr.eapproval.query.mapper.FindDrafterMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DraftQueryServiceImpl implements DraftQueryService {
@@ -22,6 +25,7 @@ public class DraftQueryServiceImpl implements DraftQueryService {
 
     private final DraftMapper draftMapper;
     private final ObjectMapper objectMapper;
+    private final S3Service s3Service;
     private final DraftDocumentMapper draftDocumentMapper;
 
 //    @Override
@@ -63,37 +67,44 @@ public class DraftQueryServiceImpl implements DraftQueryService {
 
     @Override
     public DraftDetailResponseQueryDTO getDraftDetail(Long docId) {
+        // 1) MyBatis 로 DTO + contentDto.refFile (SQL 매핑) 까지 한 번에 가져옴
         DraftDetailResponseQueryDTO dto = draftMapper.selectDraftDetail(docId);
 
-        String rawContent = dto.getDocContent();
+        // 2) rawContent(JSON 또는 HTML) 꺼내기
+        String raw = dto.getDocContent();
 
-        System.out.println("✔ docContent from DB: " + rawContent);
-
-        try {
-            if (rawContent != null && rawContent.trim().startsWith("{")) {
-                // ✅ JSON 형식인 경우 → 파싱 시도
-                ContentQueryDTO parsed = objectMapper.readValue(rawContent, ContentQueryDTO.class);
-                dto.setContentDto(parsed);
-
-                if (parsed.getReceiver() != null)
-                    dto.setReceiver(String.join(", ", parsed.getReceiver()));
-                if (parsed.getReference() != null)
-                    dto.setReferer(String.join(", ", parsed.getReference()));
-
-            } else {
-                // ✅ HTML 또는 단순 텍스트인 경우 → body 필드에 직접 할당
-                ContentQueryDTO fallback = new ContentQueryDTO();
-                fallback.setBody(rawContent);
-                dto.setContentDto(fallback);
-            }
-        } catch (Exception e) {
-            System.err.println("❌ doc_content 파싱 오류: " + e.getMessage());
-
-            // 예외 발생 시에도 최소한 body 값은 보여지도록 fallback 처리
-            ContentQueryDTO fallback = new ContentQueryDTO();
-            fallback.setBody(rawContent);
-            dto.setContentDto(fallback);
+        // 3) SQL 매핑으로 이미 채워진 contentDto 객체 얻기
+        ContentQueryDTO content = dto.getContentDto();
+        if (content == null) {
+            content = new ContentQueryDTO();
+            dto.setContentDto(content);
         }
+
+        // 4) JSON 본문(body)만 덮어쓰기
+        if (raw != null && raw.trim().startsWith("{")) {
+            try {
+                ContentQueryDTO parsedJson = objectMapper.readValue(raw, ContentQueryDTO.class);
+                content.setBody(parsedJson.getBody());
+                // (필요하면 parsedJson.getTitle(), receiver/reference 도 덮어쓰세요)
+            } catch (Exception e) {
+                log.warn("doc_content JSON 파싱 실패, 본문만 fallback", e);
+                content.setBody(raw);
+            }
+        } else {
+            content.setBody(raw);
+        }
+
+        // 5) S3 presigned URL 채우기
+        if (content.getRefFile() != null) {
+            for (FileQueryDTO f : content.getRefFile()) {
+                String url = s3Service.generateDownloadUrl(f.getKey(), f.getType());
+                f.setUrl(url);
+            }
+        }
+
+        // 6) 수신자·참조자 문자열 조립
+        if (content.getReceiver()  != null) dto.setReceiver(String.join(", ", content.getReceiver()));
+        if (content.getReference() != null) dto.setReferer(String.join(", ", content.getReference()));
 
         return dto;
     }
@@ -110,6 +121,11 @@ public class DraftQueryServiceImpl implements DraftQueryService {
         return draftDocumentMapper.selectDraftsByDrafter(employeeId);
     }
 
+    @Override
+    public List<DraftDTO> getMyReference(Long employeeId) {
+        return draftDocumentMapper.selectReferenceByemp(employeeId);
+
+    }
 
 
 }

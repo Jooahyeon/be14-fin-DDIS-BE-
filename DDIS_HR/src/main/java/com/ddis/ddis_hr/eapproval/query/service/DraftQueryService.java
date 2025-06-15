@@ -13,6 +13,8 @@ public interface DraftQueryService {
 
     List<DraftDTO> getMyDrafts(Long employeeId);
 
+    List<DraftDTO> getMyReference(Long employeeId);
+
 
 //    FindDrafterQueryDTO getfindDrafterInfo(Long employeeId);
 }

@@ -5,10 +5,13 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @ToString
 @Builder
 public class FileQueryDTO {
+    private String key;
     private String name;            // 파일명
-    private int size;               // 파일용량
+    private Long size;               // 파일용량
     private String type;            // 파일종류
+    private String url;
 }

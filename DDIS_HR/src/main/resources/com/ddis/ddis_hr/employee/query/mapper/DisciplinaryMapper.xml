@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ddis.ddis_hr.employee.query.dao.DisciplinaryMapper">
+
+    <!-- 본인 징계 목록 조회 -->
+    <select id="findByEmployeeId" parameterType="long" resultType="com.ddis.ddis_hr.employee.query.dto.MyDisciplinaryDTO">
+        SELECT
+            d.disciplinary_id           AS disciplinaryId,
+            d.disciplinary_descrip      AS disciplinaryDescription,
+            d.disciplinary_date         AS disciplinaryDate,
+            d.disciplinary_file_name    AS disciplinaryFileName,
+            d.disciplinary_file         AS disciplinaryFilePath,
+            d.disciplinary_file_size    AS disciplinaryFileSize,
+            d.employee_id               AS employeeId
+        FROM disciplinary d
+                 JOIN employee e ON b.employee_id = e.employee_id
+        ORDER BY b.board_created_at DESC
+    </select>
+
+    <!-- 인사팀 전체 징계 목록 조회 -->
+    <select id="findAll" resultType="com.ddis.ddis_hr.employee.query.dto.DisciplinaryListDTO">
+        SELECT
+            d.disciplinary_id           AS disciplinaryId,
+            e.employee_name             AS employeeName,
+            d.disciplinary_descrip      AS disciplinaryDescription,
+            d.disciplinary_date         AS disciplinaryDate,
+            d.disciplinary_file_name    AS disciplinaryFileName,
+            d.employee_id               AS employeeId
+        FROM disciplinary d
+                 LEFT JOIN employee e ON d.employee_id = e.employee_id
+        ORDER BY d.disciplinary_date DESC
+    </select>
+
+    <!-- 단일 징계 조회 (메타·소유권 검사용) -->
+    <select id="findById" parameterType="int" resultType="com.ddis.ddis_hr.employee.query.dto.MyDisciplinaryDTO">
+        SELECT
+            d.disciplinary_id           AS disciplinaryId,
+            d.disciplinary_descrip      AS disciplinaryDescription,
+            d.disciplinary_date         AS disciplinaryDate,
+            d.disciplinary_file_name    AS disciplinaryFileName,
+            d.disciplianry_file         AS disciplinaryFilePath,
+            d.disciplianry_file_size    AS disciplinaryFileSize,
+            d.employee_id               AS employeeId
+        FROM disciplinary d
+        WHERE d.disciplinary_id = #{disciplinaryId}
+    </select>
+
+</mapper>

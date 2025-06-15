@@ -7,10 +7,7 @@ import com.ddis.ddis_hr.member.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,15 +25,17 @@ public class DraftQueryController {
         return ResponseEntity.ok(dto);
     }
 
-//    // 기안함 ( 추후 ApprovalDcoumentQueryController랑 병합)
-//    @GetMapping()
-//    public ResponseEntity<List<DraftDTO>> getMyDrafts(
-//            @AuthenticationPrincipal CustomUserDetails user) {
-//
-//        Long employeeId = user.getEmployeeId();
-//        List<DraftDTO> drafts = draftQueryService.getMyDrafts(employeeId);
-//        return ResponseEntity.ok(drafts);
-//    }
+    /**
+     * 문서 회수 API
+     *
+     * @param docId 회수할 문서 ID
+     * @return 200 OK (회수 완료)
+     */
+    @PostMapping("/{docId}/recall")
+    public ResponseEntity<Void> recall(@PathVariable Long docId) {
+        draftQueryService.recallDocument(docId);
+        return ResponseEntity.ok().build();
+    }
 
 
 

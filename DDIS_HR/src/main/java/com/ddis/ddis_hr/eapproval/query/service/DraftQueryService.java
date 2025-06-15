@@ -11,7 +11,8 @@ public interface DraftQueryService {
 
     Long createDraft(DraftCreateCommandDTO requestDto);
 
-    List<DraftDTO> getMyDrafts(Long employeeId);
+    // 기안함
+//    List<DraftDTO> getMyDrafts(Long employeeId);
 
 
 //    FindDrafterQueryDTO getfindDrafterInfo(Long employeeId);

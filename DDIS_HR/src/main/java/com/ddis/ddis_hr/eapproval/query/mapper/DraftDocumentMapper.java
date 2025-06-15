@@ -9,4 +9,6 @@ import java.util.List;
 @Mapper
 public interface DraftDocumentMapper {
     List<DraftDTO> selectDraftsByDrafter(@Param("employeeId") Long employeeId);
+
+    List<DraftDTO> selectDocumentsByDrafter(@Param("employeeId") Long employeeId);
 }

@@ -4,17 +4,20 @@
 
 <mapper namespace="com.ddis.ddis_hr.eapproval.query.mapper.DraftMapper">
 
-    <!-- ✅ 전체 기안 상세 정보 + 결재라인 + 파일 조회 (1:N 구조 포함) -->
+    <!-- ✅ 전체 기안 상세 정보 + 결재라인 + 파일 조회 + rank, document_box.role 추가 -->
     <select id="selectDraftDetail" resultMap="DraftDetailResultMap">
         SELECT
             dd.doc_id,
             dd.doc_title,                  -- 📝 본문 제목
             dd.doc_content AS doc_content,                -- 📝 본문 내용
-            dd.preserve_period AS keep_year,              -- 🗂️  보존연한
-            dd.created_at AS date,                         -- 🕒 기안일
-            e.employee_name AS drafter,                             -- 🧑‍💼 기안자 이름
-            t.team_name AS team,                           -- 🧑‍🤝‍🧑 기안자 팀
-            p.position_name AS position,                   -- 🧑‍💼 기안자 직책
+            dd.preserve_period AS keep_year,              -- 🗂️ 보존연한
+            dd.created_at AS date,                        -- 🕒 기안일
+            e.employee_name AS drafter,                   -- 🧑‍💼 기안자 이름
+            t.team_name AS team,                          -- 🧑‍🤝‍🧑 기안자 팀
+            p.position_name AS position,                  -- 🧑‍💼 기안자 직책
+            r.rank_id AS drafterRankId,                   -- 🎖️ 기안자 직급 ID
+            r.rank_name AS drafterRankName,               -- 🎖️ 기안자 직급명
+            db.role AS documentBoxRole,                   -- 📦 문서함 역할
 
             -- 🗂️ 결재라인 정보 (여러 명 가능)
             al.approval_line_id AS approvalLine_id,
@@ -38,6 +41,8 @@
                  LEFT JOIN employee e ON dd.employee_id = e.employee_id
                  LEFT JOIN team t ON e.team_id = t.team_id
                  LEFT JOIN position p ON e.position_id = p.position_id
+                 LEFT JOIN rank r ON e.rank_id = r.rank_id
+                 LEFT JOIN document_box db ON dd.employee_id = db.employee_id AND dd.doc_id = db.doc_id
 
                  LEFT JOIN approval_line al ON dd.doc_id = al.doc_id AND al.line_type = 'ACTUAL'
                  LEFT JOIN employee ae ON al.employee_id = ae.employee_id
@@ -58,8 +63,11 @@
         <result property="position" column="position" />
         <result property="drafter" column="drafter" />
         <result property="date" column="date" />
-        <result property="docContent" column="doc_content" /> <!-- ✅ 이거 하나만! -->
+        <result property="docContent" column="doc_content" />
         <result property="keepYear" column="keep_year" />
+        <result property="rankId" column="drafterRankId" />
+        <result property="rankName" column="drafterRankName" />
+        <result property="role" column="documentBoxRole" />
 
         <!-- 🗂️ 결재라인 리스트 매핑 (1:N) -->
         <collection property="approvalLine" ofType="com.ddis.ddis_hr.eapproval.query.dto.ApprovalLineQueryDTO">

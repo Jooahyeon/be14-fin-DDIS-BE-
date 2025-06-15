@@ -4,47 +4,48 @@
 
 <mapper namespace="com.ddis.ddis_hr.eapproval.query.mapper.FindDrafterMapper">
 
-    <!-- 1) 결과 매핑 정의: DTO의 프로퍼티 ↔ SQL 컬럼 -->
+<!--    기안자 정보 조회 -->
     <resultMap id="DrafterMap"
                type="com.ddis.ddis_hr.eapproval.query.dto.FindDrafterQueryDTO">
-        <result property="empId"        column="empId"/>
-        <result property="name"         column="name"/>
-        <result property="position"     column="position"/>    <!-- 직급명 -->
-        <result property="positionId"   column="positionId"/>  <!-- 직급 ID -->
-        <result property="team"         column="team"/>
-        <result property="teamId"       column="teamId"/>
-        <result property="department"   column="department"/>
-        <result property="departmentId" column="departmentId"/>
-        <result property="head"         column="head"/>
-        <result property="headId"       column="headId"/>
+        <result property="empId"        column="emp_id"/>
+        <result property="name"         column="employee_name"/>
+        <result property="rankName"     column="rank_name"/>     <!-- 직급명 -->
+        <result property="rankId"       column="rank_id"/>       <!-- 직급 ID -->
+        <result property="rankOrder"    column="rank_order"/>    <!-- 직급 정렬값 -->
+
+        <result property="teamId"         column="team_id"/>
+        <result property="teamName"       column="team_name"/>
+        <result property="departmentId"   column="department_id"/>
+        <result property="departmentName" column="department_name"/>
+        <result property="headId"         column="head_id"/>
+        <result property="headName"       column="head_name"/>
     </resultMap>
 
-    <!-- 2) 실제 SELECT: 컬럼에 alias를 DTO 프로퍼티명과 맞추고, resultMap 사용 -->
     <select id="findDrafterInfo"
             parameterType="Long"
             resultMap="DrafterMap">
         SELECT
-            e.employee_id     AS empId,
-            e.employee_name   AS name,
+            e.employee_id     AS emp_id,
+            e.employee_name   AS employee_name,
 
-            p.position_name   AS position,
-            e.position_id     AS positionId,      -- ★ 추가!
+            r.rank_name       AS rank_name,       -- 🔹 직급명
+            e.rank_id         AS rank_id,         -- 🔹 직급 ID
+            r.rank_order      AS rank_order,      -- 🔹 직급 정렬값
 
-            t.team_name       AS team,
-            e.team_id         AS teamId,          -- 조직 ID
+            t.team_id         AS team_id,
+            t.team_name       AS team_name,
 
-            d.department_name AS department,
-            e.department_id   AS departmentId,
+            d.department_id   AS department_id,
+            d.department_name AS department_name,
 
-            h.head_name       AS head,
-            e.head_id         AS headId
+            h.head_id         AS head_id,
+            h.head_name       AS head_name
+
         FROM employee e
-                 LEFT JOIN position    p ON e.position_id   = p.position_id
-                 LEFT JOIN team        t ON e.team_id       = t.team_id
-                 LEFT JOIN department  d ON e.department_id = d.department_id
-                 LEFT JOIN headquarters h ON e.head_id      = h.head_id
+                 LEFT JOIN rank         r ON e.rank_id       = r.rank_id
+                 LEFT JOIN team         t ON e.team_id       = t.team_id
+                 LEFT JOIN department   d ON e.department_id = d.department_id
+                 LEFT JOIN headquarters h ON e.head_id       = h.head_id
         WHERE e.employee_id = #{empId}
     </select>
-
-
 </mapper>

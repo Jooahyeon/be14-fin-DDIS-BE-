@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface FindDrafterMapper {
-        FindDrafterQueryDTO findDrafterInfo(Long empId);
+        FindDrafterQueryDTO findDrafterInfo(@Param("empId")Long empId);
 
         ApproverInfoQueryDTO findApproverByTeamAndPosition(@Param("teamId") Long teamId,
                                                            @Param("positionName") String positionName);

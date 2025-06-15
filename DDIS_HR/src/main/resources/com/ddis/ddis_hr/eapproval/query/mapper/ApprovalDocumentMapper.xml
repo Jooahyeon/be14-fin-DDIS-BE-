@@ -5,30 +5,51 @@
 <mapper namespace="com.ddis.ddis_hr.eapproval.query.mapper.ApprovalDocumentMapper">
 
     <!-- 특정 상태 문서 조회 (결재 / 진행 / 완료 탭 전용) -->
-    <select id="selectDocumentsByStatus" resultType="com.ddis.ddis_hr.eapproval.query.dto.DocumentDTO">
+    <select id="selectDocumentsByDrafter" resultType="com.ddis.ddis_hr.eapproval.query.dto.DocumentDTO">
         SELECT
-            d.doc_id         AS docId,
-            d.doc_title      AS title,
-            d.created_at     AS createdAt,
-            d.submitted_at   AS submittedAt,
-            al.approved_at   AS approvedAt,
-            d.doc_status     AS docStatus,
-            al.status        AS lineStatus,
-            e.employee_name  AS writer,
-            f.form_name      AS type
-        FROM
-            draft_documents d
-                INNER JOIN approval_line al ON d.doc_id = al.doc_id
-                LEFT JOIN employee e ON d.employee_id = e.employee_id
-                LEFT JOIN document_form f ON d.form_id = f.form_id
-        WHERE
-            al.employee_id = #{employeeId}
-          AND d.doc_status = #{docStatus}
-          AND al.status = #{lineStatus}
-        ORDER BY d.submitted_at DESC
+            d.doc_id             AS docId,
+            d.doc_title          AS title,
+            d.created_at         AS createdAt,
+            d.submitted_at       AS submittedAt,
+            d.final_approval_at  AS approvedAt,
+            d.doc_status         AS docStatus,
+            f.form_name          AS type,
+            e.employee_name      AS writer,
+
+            -- ✅ 현 결재자 이름
+            (
+                SELECT emp.employee_name
+                FROM approval_line al
+                         JOIN employee emp ON al.employee_id = emp.employee_id
+                WHERE al.doc_id = d.doc_id
+                  AND al.status = '미결'
+                ORDER BY al.step ASC
+                LIMIT 1
+            ) AS approverName,
+
+            -- ✅ 현 결재자 직급
+            (
+                SELECT r.rank_name
+                FROM approval_line al
+                         JOIN employee emp ON al.employee_id = emp.employee_id
+                         JOIN rank r ON emp.rank_id = r.rank_id
+                WHERE al.doc_id = d.doc_id
+                  AND al.status = '미결'
+                ORDER BY al.step ASC
+                LIMIT 1
+            ) AS approverRank
+
+        FROM draft_documents d
+                 JOIN employee e ON d.employee_id = e.employee_id
+                 JOIN document_form f ON d.form_id = f.form_id
+        WHERE d.employee_id = #{employeeId}
+          AND d.deleted_at IS NULL
+        ORDER BY d.created_at DESC
     </select>
 
-<!--   결재함 > 전체 탭 -->
+
+
+    <!--   결재함 > 전체 탭 -->
     <select id="selectAllDocuments" resultType="com.ddis.ddis_hr.eapproval.query.dto.DocumentDTO">
         SELECT
             d.doc_id         AS docId,
@@ -50,35 +71,35 @@
         ORDER BY d.submitted_at DESC
     </select>
 
-<!--    기안함 -->
-    <select id="selectDocumentsByDrafter" resultType="com.ddis.ddis_hr.eapproval.query.dto.DocumentDTO">
-        SELECT
-            d.doc_id           AS docId,
-            d.doc_title        AS title,
-            d.created_at       AS createdAt,
-            d.submitted_at     AS submittedAt,
-            d.final_approval_at AS approvedAt,
-            d.doc_status       AS docStatus,
-            f.form_name        AS type,
-            e.employee_name             AS writer,
+<!--    결재함 -->
+<!--    <select id="selectDocumentsByDrafter" resultType="com.ddis.ddis_hr.eapproval.query.dto.DocumentDTO">-->
+<!--        SELECT-->
+<!--            d.doc_id           AS docId,-->
+<!--            d.doc_title        AS title,-->
+<!--            d.created_at       AS createdAt,-->
+<!--            d.submitted_at     AS submittedAt,-->
+<!--            d.final_approval_at AS approvedAt,-->
+<!--            d.doc_status       AS docStatus,-->
+<!--            f.form_name        AS type,-->
+<!--            e.employee_name             AS writer,-->
 
-            -- 현재 로그인 사용자의 결재 상태 (lineStatus)
-            (
-            SELECT al.status
-            FROM approval_line al
-            WHERE al.doc_id = d.doc_id
-                AND al.employee_id = #{employeeId}
-            ORDER BY al.step ASC
-             LIMIT 1
-            ) AS lineStatus
+<!--            &#45;&#45; 현재 로그인 사용자의 결재 상태 (lineStatus)-->
+<!--            (-->
+<!--            SELECT al.status-->
+<!--            FROM approval_line al-->
+<!--            WHERE al.doc_id = d.doc_id-->
+<!--                AND al.employee_id = #{employeeId}-->
+<!--            ORDER BY al.step ASC-->
+<!--             LIMIT 1-->
+<!--            ) AS lineStatus-->
 
-        FROM draft_documents d
-                 JOIN employee e ON d.employee_id = e.employee_id
-                 JOIN document_form f ON d.form_id = f.form_id
-        WHERE d.employee_id = #{employeeId}
-          AND d.deleted_at IS NULL
-        ORDER BY d.created_at DESC
-    </select>
+<!--        FROM draft_documents d-->
+<!--                 JOIN employee e ON d.employee_id = e.employee_id-->
+<!--                 JOIN document_form f ON d.form_id = f.form_id-->
+<!--        WHERE d.employee_id = #{employeeId}-->
+<!--          AND d.deleted_at IS NULL-->
+<!--        ORDER BY d.created_at DESC-->
+<!--    </select>-->
 
 
 </mapper>

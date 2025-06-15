@@ -30,14 +30,14 @@ public class EmployeeQueryController {
      }
 
      // 타 사원 정보 상세 조회
-//     @GetMapping("/{id}")
-//     public ResponseEntity<?> getEmployeeById(
-//             @PathVariable Long id,
-//             @AuthenticationPrincipal CustomUserDetails user
-//     ) {
-//         Object result = employeeQueryService.findByIdWithRole(id, user.getAuthorities());
-//         return ResponseEntity.ok(result);
-//     }
+     @GetMapping("/{id}")
+     public ResponseEntity<?> getEmployeeById(
+             @PathVariable Long id,
+             @AuthenticationPrincipal CustomUserDetails user
+     ) {
+         Object result = employeeQueryService.findByIdWithRole(id, user.getAuthorities());
+         return ResponseEntity.ok(result);
+     }
 
     // 사원 목록 조회
     @GetMapping("/list")

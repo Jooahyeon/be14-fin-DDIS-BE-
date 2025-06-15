@@ -6,6 +6,7 @@ import com.ddis.ddis_hr.employee.command.application.dto.EmployeeHrUpdateDTO;
 import com.ddis.ddis_hr.employee.command.application.dto.EmployeeUpdateDTO;
 import com.ddis.ddis_hr.employee.command.application.service.EmployeeService;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * 사원 등록 REST API 컨트롤러
  */
+@Slf4j
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
@@ -30,20 +32,13 @@ public class EmployeeController {
 
     // 사원 등록 API
     @PostMapping("/enroll")
-    @PreAuthorize("hasRole('HR')")
+// @PreAuthorize("hasRole('HR')")
     public ResponseEntity<Long> enroll(
             @RequestBody EmployeeEnrollDTO dto,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
-        // 프론트가 보낸 employeePhotoUrl 필드에 S3 key가 담겨 있음
-        if (dto.getEmployeePhotoUrl() != null) {
-            // key → 실제 접근 가능한 presigned GET URL 로 변환
-            String presignedGetUrl = s3Service.generateDownloadUrl(
-                    dto.getEmployeePhotoUrl(),
-                    ""
-            );
-            dto.setEmployeePhotoUrl(presignedGetUrl);
-        }
+        log.debug("▶ EnrollDTO.photoKey = '{}'", dto.getEmployeePhotoUrl());
+
         Long id = employeeService.enrollEmployee(dto);
         return ResponseEntity.ok(id);
     }

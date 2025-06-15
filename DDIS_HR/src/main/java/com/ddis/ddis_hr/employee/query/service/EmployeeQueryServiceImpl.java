@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,26 +31,28 @@ public class EmployeeQueryServiceImpl implements EmployeeQueryService {
                             new EntityNotFoundException("해당 사번의 사원 정보를 찾을 수 없습니다. id=" + employeeId));
     }
 
-//    @Override
-//    public EmployeePublicDTO getPublicById(Long id) {
-//        EmployeePublicDTO dto = employeeMapper.findPublicById(id);
-//        if (dto == null) throw new EntityNotFoundException("사원이 없습니다. id=" + id);
-//        return dto;
-//    }
-//
-//    @Override
-//    public EmployeeHrDTO getHrById(Long id) {
-//        EmployeeHrDTO dto = employeeMapper.findHrById(id);
-//        if (dto == null) throw new EntityNotFoundException("사원이 없습니다. id=" + id);
-//        return dto;
-//    }
-//
-//    @Override
-//    public Object findByIdWithRole(Long id, List<GrantedAuthority> authorities) {
-//        boolean isHr = auths.stream()
-//                .anyMatch(a -> a.getAuthority().equals("ROLE_HR"));
-//        return isHr ? getHrById(id) : getPublicById(id);
-//    }
+    @Override
+    public EmployeePublicDTO getPublicById(Long id) {
+        EmployeePublicDTO dto = employeeMapper.findPublicById(id);
+        if (dto == null) throw new EntityNotFoundException("사원이 없습니다. id=" + id);
+        return dto;
+    }
+
+    @Override
+    public EmployeeHrDTO getHrById(Long id) {
+        EmployeeHrDTO dto = employeeMapper.findHrById(id);
+        if (dto == null) throw new EntityNotFoundException("사원이 없습니다. id=" + id);
+        return dto;
+    }
+
+    @Override
+    public Object findByIdWithRole(Long id, Collection<? extends GrantedAuthority> authorities) {
+        boolean isHr = authorities.stream()
+                .anyMatch(a -> "ROLE_HR".equals(a.getAuthority()));
+        return isHr
+                ? getHrById(id)
+                : getPublicById(id);
+    }
 
 
     @Override

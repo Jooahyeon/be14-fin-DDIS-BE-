@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+// 기안문 상세조회 DTO 이거로 쓰임!!!!!!!!!!!!!!!!
 
 @Getter
 @Setter
@@ -13,6 +14,7 @@ import java.util.List;
 @Builder
 public class DraftDetailResponseQueryDTO {
     private int docId;                              // 문서번호
+    private String docTitle;
     private String team;                            // 팀이름
     private String position;                        // 직책명
     private String drafter;                         // 기안자 이름

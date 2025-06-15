@@ -18,7 +18,7 @@ public class EmployeePublicDTO {
     private String employeePhotoUrl;
     private String employeeContact;
     private String employeeEmail;
-    private Boolean workType;
+    private String workType;
     private LocalDate employmentDate;
     private LocalDate retirementDate;
 

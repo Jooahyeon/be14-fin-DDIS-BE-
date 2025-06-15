@@ -8,7 +8,7 @@
     <select id="selectDraftDetail" resultMap="DraftDetailResultMap">
         SELECT
             dd.doc_id,
-            dd.doc_title AS content_title,                  -- 📝 본문 제목
+            dd.doc_title,                  -- 📝 본문 제목
             dd.doc_content AS doc_content,                -- 📝 본문 내용
             dd.preserve_period AS keep_year,              -- 🗂️  보존연한
             dd.created_at AS date,                         -- 🕒 기안일
@@ -18,6 +18,8 @@
 
             -- 🗂️ 결재라인 정보 (여러 명 가능)
             al.approval_line_id AS approvalLine_id,
+            al.step,
+            al.employee_id,
             ae.employee_name AS approvalLine_name,
             at.team_name AS approvalLine_team,
             ap.position_name AS approvalLine_position,
@@ -47,13 +49,11 @@
         WHERE dd.doc_id = #{docId}
     </select>
 
-    <select id="test" resultType="String">
-        SELECT 'Hello Mapper!'
-    </select>
     <!-- ✅ DTO 맵핑 설정 -->
     <resultMap id="DraftDetailResultMap" type="com.ddis.ddis_hr.eapproval.query.dto.DraftDetailResponseQueryDTO">
         <!-- 기본 정보 매핑 -->
         <id property="docId" column="doc_id" />
+        <result property="docTitle" column="doc_title" />
         <result property="team" column="team" />
         <result property="position" column="position" />
         <result property="drafter" column="drafter" />
@@ -64,6 +64,8 @@
         <!-- 🗂️ 결재라인 리스트 매핑 (1:N) -->
         <collection property="approvalLine" ofType="com.ddis.ddis_hr.eapproval.query.dto.ApprovalLineQueryDTO">
             <result property="id" column="approvalLine_id" />
+            <result property="step" column="step"/>
+            <result property="employeeId" column="employee_id"/>
             <result property="name" column="approvalLine_name" />
             <result property="team" column="approvalLine_team" />
             <result property="position" column="approvalLine_position" />

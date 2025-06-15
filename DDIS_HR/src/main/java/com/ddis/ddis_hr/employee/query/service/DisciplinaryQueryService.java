@@ -1,6 +1,6 @@
 package com.ddis.ddis_hr.employee.query.service;
 
-import com.ddis.ddis_hr.employee.query.dto.DisciplinaryListDTO;
+// import com.ddis.ddis_hr.employee.query.dto.DisciplinaryListDTO;
 import com.ddis.ddis_hr.employee.query.dto.MyDisciplinaryDTO;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
 
@@ -11,7 +11,7 @@ public interface DisciplinaryQueryService {
     List<MyDisciplinaryDTO> findByEmployeeId(Long employeeId);
 
     /** 인사팀 전체 징계 목록 조회 */
-    List<DisciplinaryListDTO> findAll();
+    // List<DisciplinaryListDTO> findAll();
 
     /**
      * 단일 징계 메타 조회

@@ -1,6 +1,6 @@
 package com.ddis.ddis_hr.employee.query.controller;
 
-import com.ddis.ddis_hr.employee.query.dto.DisciplinaryListDTO;
+// import com.ddis.ddis_hr.employee.query.dto.DisciplinaryListDTO;
 import com.ddis.ddis_hr.employee.query.dto.MyDisciplinaryDTO;
 import com.ddis.ddis_hr.employee.query.service.DisciplinaryQueryService;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
@@ -46,12 +46,12 @@ public class DisciplinaryQueryController {
      *    - GET /disciplinary
      */
 //    @PreAuthorize("hasRole('HR')")
-    @GetMapping
-    public ResponseEntity<List<DisciplinaryListDTO>> getAllDisciplinary() {
-        return ResponseEntity.ok(
-                service.findAll()
-        );
-    }
+//    @GetMapping
+//    public ResponseEntity<List<DisciplinaryListDTO>> getAllDisciplinary() {
+//        return ResponseEntity.ok(
+//                service.findAll()
+//        );
+//    }
 
     /**
      * 3) 징계 다운로드 URL 발급

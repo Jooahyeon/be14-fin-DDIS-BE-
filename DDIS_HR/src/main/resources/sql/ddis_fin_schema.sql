@@ -41,6 +41,7 @@ DROP TABLE IF EXISTS `holiday`;
 DROP TABLE IF EXISTS `dictionary`;
 DROP TABLE IF EXISTS `menu`;
 DROP TABLE IF EXISTS `favorite_menu`;
+DROP TABLE IF EXISTS `board_file`;
 
 
 SET FOREIGN_KEY_CHECKS = 1;

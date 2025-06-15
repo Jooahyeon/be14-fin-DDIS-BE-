@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+// 결재함
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,9 +19,12 @@ public class DocumentDTO {
     private LocalDateTime createdAt;
     private LocalDateTime submittedAt;
     private LocalDateTime approvedAt;
-    private String docStatus;   // 문서 상태 ('심사중', '반려', '결재완료' 등)
-    private String lineStatus;  // 사용자의 결재 상태 ('미결', '승인', '반려' 등)
-    private String writer;      // 기안자 이름
-    private String type;        // 양식 이름
+    private String docStatus;     // 문서 상태 ('심사중', '반려', '결재완료' 등)
+    private String lineStatus;    // 사용자의 결재 상태 ('미결', '승인', '반려' 등)
+    private String drafter;       // 기안자 이름
+    private String type;          // 양식 이름
+    // 현재 결재자 정보 추가
+    private String approverName;
+    private String approverRank;
 
 }

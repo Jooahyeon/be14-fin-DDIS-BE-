@@ -4,56 +4,6 @@
 
 <mapper namespace="com.ddis.ddis_hr.eapproval.query.mapper.DraftMapper">
 
-    <!-- ✅ 전체 기안 상세 정보 + 결재라인 + 파일 조회 + rank, document_box.role 추가 -->
-    <select id="selectDraftDetail" resultMap="DraftDetailResultMap">
-        SELECT
-            dd.doc_id,
-            dd.doc_title,                  -- 📝 본문 제목
-            dd.doc_content AS doc_content,                -- 📝 본문 내용
-            dd.preserve_period AS keep_year,              -- 🗂️ 보존연한
-            dd.created_at AS date,                        -- 🕒 기안일
-            e.employee_name AS drafter,                   -- 🧑‍💼 기안자 이름
-            t.team_name AS team,                          -- 🧑‍🤝‍🧑 기안자 팀
-            p.position_name AS position,                  -- 🧑‍💼 기안자 직책
-            r.rank_id AS drafterRankId,                   -- 🎖️ 기안자 직급 ID
-            r.rank_name AS drafterRankName,               -- 🎖️ 기안자 직급명
-            db.role AS documentBoxRole,                   -- 📦 문서함 역할
-
-            -- 🗂️ 결재라인 정보 (여러 명 가능)
-            al.approval_line_id AS approvalLine_id,
-            al.step,
-            al.employee_id,
-            ae.employee_name AS approvalLine_name,
-            at.team_name AS approvalLine_team,
-            ap.position_name AS approvalLine_position,
-            al.status AS approvalLine_status,
-            al.type AS approvalLine_type,
-            al.approved_at AS approvalLine_approveDate,
-            al.opinion AS approvalLine_comment,
-            dd.submitted_at AS approvalLine_submitDate,
-
-            -- 📎 첨부파일 (다중 파일을 위해 별도 쿼리로 분리 권장)
-            df.file_name AS file_name,
-            df.file_size AS file_size,
-            df.file_type AS file_type
-
-        FROM draft_documents dd
-                 LEFT JOIN employee e ON dd.employee_id = e.employee_id
-                 LEFT JOIN team t ON e.team_id = t.team_id
-                 LEFT JOIN position p ON e.position_id = p.position_id
-                 LEFT JOIN rank r ON e.rank_id = r.rank_id
-                 LEFT JOIN document_box db ON dd.employee_id = db.employee_id AND dd.doc_id = db.doc_id
-
-                 LEFT JOIN approval_line al ON dd.doc_id = al.doc_id AND al.line_type = 'ACTUAL'
-                 LEFT JOIN employee ae ON al.employee_id = ae.employee_id
-                 LEFT JOIN team at ON ae.team_id = at.team_id
-                 LEFT JOIN position ap ON ae.position_id = ap.position_id
-
-                 LEFT JOIN document_attachment df ON dd.doc_id = df.doc_id
-
-        WHERE dd.doc_id = #{docId}
-    </select>
-
     <!-- ✅ DTO 맵핑 설정 -->
     <resultMap id="DraftDetailResultMap" type="com.ddis.ddis_hr.eapproval.query.dto.DraftDetailResponseQueryDTO">
         <!-- 기본 정보 매핑 -->
@@ -84,4 +34,71 @@
             <result property="comment" column="approvalLine_comment" />
         </collection>
     </resultMap>
+
+    <!--  전체 기안 상세 정보 + 결재라인 + 파일 조회 + rank, document_box.role 추가 -->
+    <select id="selectDraftDetail" resultMap="DraftDetailResultMap">
+        SELECT
+            dd.doc_id,
+            dd.doc_title,                                 --  본문 제목
+            dd.doc_content AS doc_content,                --  본문 내용
+            dd.preserve_period AS keep_year,              --  보존연한
+            dd.created_at AS date,                        --  기안일
+            e.employee_name AS drafter,                   --  기안자 이름
+            t.team_name AS team,                          --  기안자 팀
+            p.position_name AS position,                  --  기안자 직책
+            r.rank_id AS drafterRankId,                   --  기안자 직급 ID
+            r.rank_name AS drafterRankName,               --  기안자 직급명
+            db.role AS documentBoxRole,                   --  문서함 역할
+
+            --  결재라인 정보 (여러 명 가능)
+            al.approval_line_id AS approvalLine_id,
+            al.step,
+            al.employee_id,
+            ae.employee_name AS approvalLine_name,
+            at.team_name AS approvalLine_team,
+            ap.position_name AS approvalLine_position,
+            al.status AS approvalLine_status,
+            al.type AS approvalLine_type,
+            al.approved_at AS approvalLine_approveDate,
+            al.opinion AS approvalLine_comment,
+            dd.submitted_at AS approvalLine_submitDate,
+
+            -- 첨부파일 (다중 파일을 위해 별도 쿼리로 분리 권장)
+            df.file_name AS file_name,
+            df.file_size AS file_size,
+            df.file_type AS file_type
+
+        FROM draft_documents dd
+                 LEFT JOIN employee e ON dd.employee_id = e.employee_id
+                 LEFT JOIN team t ON e.team_id = t.team_id
+                 LEFT JOIN position p ON e.position_id = p.position_id
+                 LEFT JOIN rank r ON e.rank_id = r.rank_id
+                 LEFT JOIN document_box db ON dd.employee_id = db.employee_id AND dd.doc_id = db.doc_id
+
+                 LEFT JOIN approval_line al ON dd.doc_id = al.doc_id AND al.line_type = 'ACTUAL'
+                 LEFT JOIN employee ae ON al.employee_id = ae.employee_id
+                 LEFT JOIN team at ON ae.team_id = at.team_id
+                 LEFT JOIN position ap ON ae.position_id = ap.position_id
+
+                 LEFT JOIN document_attachment df ON dd.doc_id = df.doc_id
+
+        WHERE dd.doc_id = #{docId}
+    </select>
+
+    <!-- 결재 이력 삭제 후 회수 처리 -->
+    <select id="countFirstApproverAction" parameterType="long" resultType="int">
+        <!-- 1차 결재자(step=2)가 이미 결재(status IS NOT NULL)했는지 확인 -->
+        SELECT COUNT(*)
+        FROM approval_line
+        WHERE doc_id = #{docId}
+        AND step   = 2
+        AND status IS NOT NULL
+    </select>
+
+    <!-- document_box에서 기안자 제외한 결재자·협조자 엔트리 삭제 및 draft_documents 상태 변경 -->
+        <update id="updateDocumentStatusToRecalled" parameterType="long">
+            UPDATE draft_documents
+            SET doc_status = '회수'
+            WHERE doc_id = #{docId}
+        </update>
 </mapper>

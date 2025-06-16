@@ -1,5 +1,5 @@
 package com.ddis.ddis_hr.eapproval.query.controller;
-// 결재함 (결재 - 진행 - 완료 분기처리)
+// 문서함 (결재 - 진행 - 완료 분기처리)
 
 import com.ddis.ddis_hr.eapproval.query.dto.DocumentDTO;
 import com.ddis.ddis_hr.eapproval.query.dto.DraftDTO;
@@ -32,7 +32,7 @@ public class ApprovalDocumentQueryController {
 //    }
 
     // 결재함
-    @GetMapping
+    @GetMapping("/ApprovalBox")
     public ResponseEntity<List<DocumentDTO>> getApprovals(
             @AuthenticationPrincipal CustomUserDetails user,
             @RequestParam(name = "tab", defaultValue = "결재") String tab

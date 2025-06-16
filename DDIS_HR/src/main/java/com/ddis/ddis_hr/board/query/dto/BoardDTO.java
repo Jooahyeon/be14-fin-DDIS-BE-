@@ -16,6 +16,7 @@ public class BoardDTO {
     private LocalDateTime boardCreateAt;
     private String            employeeName;
 
-
+    // 아래 필드 제거: boardFileName, boardFile, boardFileSize
+    // 대신 복수 파일 담을 리스트
     private List<BoardFileDTO> fileList;
 }

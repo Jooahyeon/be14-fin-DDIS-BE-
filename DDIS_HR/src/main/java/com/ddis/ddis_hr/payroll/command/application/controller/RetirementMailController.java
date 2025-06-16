@@ -4,6 +4,7 @@ import com.ddis.ddis_hr.payroll.command.application.dto.RetirementMailRequestDTO
 import com.ddis.ddis_hr.payroll.command.application.service.RetirementMailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,6 +14,7 @@ public class RetirementMailController {
 
     private final RetirementMailService retirementMailService;
 
+    @PreAuthorize("hasAnyRole('HR')")
     @PostMapping("/mail")
     public ResponseEntity<String> sendMail(@RequestBody RetirementMailRequestDTO dto) {
         retirementMailService.sendRetirementByEmail(dto);

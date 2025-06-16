@@ -21,4 +21,12 @@ public class DisciplinaryQueryController {
     public ResponseEntity<List<DisciplinaryListDTO>> list() {
         return ResponseEntity.ok(service.findAll());
     }
+
+    /** 사원별 징계 목록 조회 */
+    @GetMapping("/employee/{employeeId}")
+    public ResponseEntity<List<DisciplinaryListDTO>> listByEmployee(
+            @PathVariable Long employeeId
+    ) {
+        return ResponseEntity.ok(service.findByEmployeeId(employeeId));
+    }
 }

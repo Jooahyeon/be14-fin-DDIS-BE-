@@ -5,5 +5,9 @@ import java.util.List;
 
 public interface ContractQueryService {
 
+    /** 전체 계약서 목록 */
     List<ContractListDTO> findAll();
+
+    /** 사원별 계약서 목록 */
+    List<ContractListDTO> findByEmployeeId(Long employeeId);
 }

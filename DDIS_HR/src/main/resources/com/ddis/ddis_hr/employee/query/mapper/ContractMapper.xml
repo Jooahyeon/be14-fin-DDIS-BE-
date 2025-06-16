@@ -18,6 +18,7 @@
                     column="contract_id"/>
     </resultMap>
 
+    <!-- 전체 목록 -->
     <select id="selectAll" resultMap="ListResult">
         SELECT
             c.contract_id,
@@ -29,6 +30,22 @@
             e.employee_name
         FROM contract c
                  JOIN employee e ON c.employee_id = e.employee_id
+        ORDER BY c.contract_date DESC
+    </select>
+
+    <!-- 사원별 목록 -->
+    <select id="selectByEmployeeId" parameterType="long" resultMap="ListResult">
+        SELECT
+            c.contract_id,
+            c.contract_descrip,
+            c.request_date,
+            c.contract_date,
+            c.end_date,
+            c.employee_id,
+            e.employee_name
+        FROM contract c
+                 JOIN employee e ON c.employee_id = e.employee_id
+        WHERE c.employee_id = #{employeeId}
         ORDER BY c.contract_date DESC
     </select>
 

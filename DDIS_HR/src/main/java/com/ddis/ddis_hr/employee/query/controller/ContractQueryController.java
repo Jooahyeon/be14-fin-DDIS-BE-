@@ -24,4 +24,13 @@ public class ContractQueryController {
     public ResponseEntity<List<ContractListDTO>> list() {
         return ResponseEntity.ok(contractQueryService.findAll());
     }
+
+    /** 특정 사원별 계약서 목록 조회 */
+    @GetMapping("/employee/{employeeId}")
+    public ResponseEntity<List<ContractListDTO>> listByEmployee(
+            @PathVariable Long employeeId
+    ) {
+        return ResponseEntity.ok(contractQueryService.findByEmployeeId(employeeId));
+    }
+
 }

@@ -28,4 +28,20 @@
         ORDER BY d.disciplinary_date DESC
     </select>
 
+    <!-- 사원별 목록 -->
+    <select id="selectByEmployeeId"
+            parameterType="long"
+            resultMap="ListResult">
+        SELECT
+            d.disciplinary_id,
+            d.disciplinary_descrip,
+            d.disciplinary_date,
+            d.employee_id,
+            e.employee_name
+        FROM disciplinary d
+                 JOIN employee e ON d.employee_id = e.employee_id
+        WHERE d.employee_id = #{employeeId}
+        ORDER BY d.disciplinary_date DESC
+    </select>
+
 </mapper>

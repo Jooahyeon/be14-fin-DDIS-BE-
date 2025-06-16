@@ -19,4 +19,9 @@ public class ContractQueryServiceImpl implements ContractQueryService {
     public List<ContractListDTO> findAll() {
         return mapper.selectAll();
     }
+
+    @Override
+    public List<ContractListDTO> findByEmployeeId(Long employeeId) {
+        return mapper.selectByEmployeeId(employeeId);
+    }
 }

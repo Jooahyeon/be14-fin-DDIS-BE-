@@ -3,6 +3,9 @@ package com.ddis.ddis_hr.eapproval.query.mapper;
 import com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.Map;
+
 /**
  * ApproverMapper
  *
@@ -12,13 +15,18 @@ import org.apache.ibatis.annotations.Param;
 public interface ApproverMapper {
 
     /**
-     * 포지션명 + 조직 구분(팀/부서/본부) + 조직 ID 로 결재자 1명을 찾는다.
+     * 직급 정렬값(rankOrder) + 조직 타입 + 조직 ID를 기준으로 결재자 1명을 조회한다.
      *
-     * @param positionName     직책(예: "팀장")
-     * @param organizationType 조직 구분 (team|department|head)
-     * @param organizationId   해당 조직 PK
+     * @param rankOrder 결재자 직급 정렬값
+     * @param orgType 조직 구분 (team, department, head)
+     * @param orgId 조직 ID
      */
-    ApproverInfoQueryDTO findApproverByPositionAndOrg(@Param("positionName") String positionName,
-                                                      @Param("organizationType") String organizationType,
-                                                      @Param("organizationId") Long organizationId);
+    ApproverInfoQueryDTO findApproverByRankOrderAndOrg(
+            @Param("rankOrder") int rankOrder,
+            @Param("orgType")   String orgType,
+            @Param("orgId")     Long orgId,
+            @Param("step")      int step,        // 추가!
+            @Param("type")      String type,     // "DRAFT" or "APPROVAL"
+            @Param("lineType")  String lineType  // "AUTO" or "MANUAL"
+    );
 }

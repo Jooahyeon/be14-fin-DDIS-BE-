@@ -1,6 +1,7 @@
 package com.ddis.ddis_hr.eapproval.query.service;
 
 import com.ddis.ddis_hr.eapproval.query.dto.DocumentDTO;
+import com.ddis.ddis_hr.eapproval.query.dto.DraftDTO;
 import com.ddis.ddis_hr.eapproval.query.mapper.ApprovalDocumentMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,5 +32,11 @@ public class ApprovalDocumentQueryServiceImpl implements ApprovalDocumentQuerySe
     @Override
     public List<DocumentDTO> getAllApprovals(Long employeeId) {
         return documentMapper.selectAllDocuments(employeeId); // 반려 포함 전체
+    }
+
+    // 기안함
+    @Override
+    public List<DraftDTO> getMyDrafts(Long employeeId) {
+        return documentMapper.selectDocumentsByDrafter(employeeId);
     }
 }

@@ -1,6 +1,8 @@
 package com.ddis.ddis_hr.employee.query.service;
 
 import com.ddis.ddis_hr.employee.query.dao.DisciplinaryMapper;
+// import com.ddis.ddis_hr.employee.query.dto.DisciplinaryListDTO;
+import com.ddis.ddis_hr.employee.query.dto.DisciplinaryListDTO;
 import com.ddis.ddis_hr.employee.query.dto.MyDisciplinaryDTO;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
 import com.ddis.ddis_hr.S3Config.service.S3Service;
@@ -29,7 +31,7 @@ public class DisciplinaryQueryServiceImpl implements DisciplinaryQueryService {
     }
 
     @Override
-    public List<MyDisciplinaryDTO> findAll() {
+    public List<DisciplinaryListDTO> findAll() {
         return mapper.findAll();
     }
 

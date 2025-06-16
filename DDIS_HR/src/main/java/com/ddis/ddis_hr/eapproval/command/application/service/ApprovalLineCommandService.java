@@ -13,5 +13,7 @@ public interface ApprovalLineCommandService {
     Long createAutoLine(Long docId, Long employeeId);
 
 
-    List<Long> saveManualLine(Long docId, List<ApprovalLineDTO> lines,Long formId, Long drafterId);
+//    List<Long> saveManualLine(Long docId, List<ApprovalLineDTO> lines,Long formId, Long drafterId);
+
+    List<Long> saveManualLine(Long docId, List<ApprovalLineDTO> lines, Long drafterId);
 }

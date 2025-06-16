@@ -50,7 +50,7 @@ public class DraftCommandServiceImpl implements DraftCommandService {
         List<ApprovalLineDTO> lines = dto.getApprovalLines();
         if (lines != null && !lines.isEmpty()) {
             // 3-1) 수동 결재라인 저장
-            approvalLineIds = approvalLineCommandService.saveManualLine(docId, lines, dto.getFormId(), dto.getEmployeeId());
+            approvalLineIds = approvalLineCommandService.saveManualLine(docId, lines, dto.getEmployeeId());
             lines.forEach(line -> saveDocumentBoxEntry(line.getEmployeeId(), docId, "결재자"));
         } else {
             // 3-2) 자동 결재라인 생성 및 저장
@@ -143,7 +143,7 @@ public class DraftCommandServiceImpl implements DraftCommandService {
 
         List<ApprovalLineDTO> lines = dto.getApprovalLines();
         if (lines != null && !lines.isEmpty()) {
-            approvalLineCommandService.saveManualLine(docId, lines, dto.getFormId(), dto.getEmployeeId());
+            approvalLineCommandService.saveManualLine(docId, lines, dto.getEmployeeId());
             lines.forEach(line -> saveDocumentBoxEntry(line.getEmployeeId(), docId, "결재자"));
         } else {
             approvalLineCommandService.createAutoLine(docId, dto.getEmployeeId());

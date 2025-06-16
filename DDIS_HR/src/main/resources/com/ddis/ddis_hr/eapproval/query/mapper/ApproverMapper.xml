@@ -4,38 +4,76 @@
 
 <mapper namespace="com.ddis.ddis_hr.eapproval.query.mapper.ApproverMapper">
 
-    <select id="findApproverByPositionAndOrg"
-            resultType="com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO"
-            parameterType="map">
+    <!-- 1) 기존: rankOrder + org 기준 조회 -->
+    <select id="findApproverByRankOrderAndOrg"
+            parameterType="map"
+            resultType="com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO">
         SELECT
         e.employee_id     AS employeeId,
         e.position_id     AS positionId,
         e.employee_name   AS employeeName,
-        p.position_name   AS positionName,
         t.team_name       AS teamName,
+        p.position_name   AS positionName,
         d.department_name AS departmentName,
-        'INTERNAL'        AS type,
-        'ACTUAL'          AS lineType,
-        '내부결재'        AS typeLabel,
-        '실제 결재선'     AS lineTypeLabel
+        r.rank_id         AS rankId,
+        r.rank_name       AS rankName,
+        r.rank_order      AS rankOrder,
+        #{type}           AS type,
+        #{lineType}       AS lineType,
+        CASE WHEN #{step} = 1 THEN '기안' ELSE '결재' END AS typeLabel
         FROM employee e
-        JOIN position p ON e.position_id = p.position_id
-        LEFT JOIN team t       ON e.team_id = t.team_id
-        LEFT JOIN department d ON e.department_id = d.department_id
-        LEFT JOIN headquarters h ON e.head_id = h.head_id
-        WHERE p.position_name = #{positionName}
+        LEFT JOIN position    p ON e.position_id   = p.position_id
+        LEFT JOIN team        t ON e.team_id       = t.team_id
+        LEFT JOIN department  d ON e.department_id = d.department_id
+        LEFT JOIN headquarters h ON d.head_id      = h.head_id
+        JOIN rank             r ON e.rank_id       = r.rank_id
+        WHERE r.rank_order = #{rankOrder}
         <choose>
-            <when test="organizationType == 'team'">
-                AND e.team_id = #{organizationId}
+            <when test="orgType == 'team'">
+                AND e.team_id = #{orgId}
             </when>
-            <when test="organizationType == 'department'">
-                AND e.department_id = #{organizationId}
+            <when test="orgType == 'department'">
+                AND e.department_id = #{orgId}
             </when>
-            <otherwise>
-                AND e.head_id = #{organizationId}
-            </otherwise>
+            <when test="orgType == 'head'">
+                AND d.head_id = #{orgId}
+            </when>
         </choose>
         LIMIT 1
     </select>
 
+    <!-- 2) 신규: 같은 팀에서 나보다 한 단계 위 직급자 조회 -->
+    <select id="findApproverByNextHigherRank"
+            parameterType="map"
+            resultType="com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO">
+        SELECT
+            e.employee_id     AS employeeId,
+            e.position_id     AS positionId,
+            e.employee_name   AS employeeName,
+            t.team_name       AS teamName,
+            p.position_name   AS positionName,
+            d.department_name AS departmentName,
+            r.rank_id         AS rankId,
+            r.rank_name       AS rankName,
+            r.rank_order      AS rankOrder,
+            #{type}           AS type,
+            #{lineType}       AS lineType,
+            CASE WHEN #{step} = 1 THEN '기안' ELSE '결재' END AS typeLabel
+        FROM employee e
+                 LEFT JOIN position    p ON e.position_id   = p.position_id
+                 LEFT JOIN team        t ON e.team_id       = t.team_id
+                 LEFT JOIN department  d ON e.department_id = d.department_id
+                 LEFT JOIN headquarters h ON d.head_id      = h.head_id
+                 JOIN rank             r ON e.rank_id       = r.rank_id
+        WHERE e.team_id      = #{orgId}
+          AND r.rank_order &lt; #{baseOrder}
+        ORDER BY r.rank_order DESC
+        LIMIT 1
+    </select>
+
+    <!-- 3) approval_line 생성 후 document_box에도 role 저장 -->
+    <insert id="insertDocumentBoxRole" parameterType="map">
+        INSERT INTO document_box (employee_id, doc_id, role, is_read, is_deleted)
+        VALUES (#{employeeId}, #{docId}, #{role}, FALSE, FALSE)
+    </insert>
 </mapper>

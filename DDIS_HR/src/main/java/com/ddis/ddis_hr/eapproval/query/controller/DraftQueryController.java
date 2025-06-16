@@ -23,8 +23,9 @@ public class DraftQueryController {
     private final ReferenceDocService referenceDocService;
     private final ReceiverDocService receiverDocService;
 
-    @GetMapping("/{docId}")
-    public ResponseEntity<DraftDetailResponseQueryDTO> getDraftDetail(@PathVariable Long docId) {
+    // 상세조회
+    @GetMapping("/{id}")
+    public ResponseEntity<DraftDetailResponseQueryDTO> getDraftDetail(@PathVariable("id") Long docId) {
         DraftDetailResponseQueryDTO dto = draftQueryService.getDraftDetail(docId);
         return ResponseEntity.ok(dto);
     }
@@ -35,6 +36,11 @@ public class DraftQueryController {
         Long employeeId = user.getEmployeeId();
         List<DraftDTO> dtos = draftQueryService.getMyDrafts(employeeId);
         return ResponseEntity.ok(dtos);
+    }
+    @PostMapping("/{docId}/recall")
+    public ResponseEntity<Void> recall(@PathVariable Long docId) {
+        draftQueryService.recallDocument(docId);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/reference")

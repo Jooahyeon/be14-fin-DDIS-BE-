@@ -63,4 +63,12 @@ public class AttendanceCommandController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/overtime-request")
+    public ResponseEntity<Void> requestOvertime(@RequestBody OvertimeRequestDTO dto,
+                                                @AuthenticationPrincipal CustomUserDetails user) {
+        attendanceCommandService.handleOvertimeRequest(dto, user.getEmployeeId());
+        return ResponseEntity.ok().build();
+    }
+
+
 }

@@ -17,5 +17,6 @@ public interface DraftQueryService {
 
 
 //    FindDrafterQueryDTO getfindDrafterInfo(Long employeeId);
+    void recallDocument(Long docId);
 }
 

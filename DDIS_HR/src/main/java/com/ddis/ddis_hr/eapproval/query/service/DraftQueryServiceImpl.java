@@ -8,19 +8,21 @@ import com.ddis.ddis_hr.eapproval.query.dto.DraftDetailResponseQueryDTO;
 import com.ddis.ddis_hr.eapproval.query.dto.FileQueryDTO;
 import com.ddis.ddis_hr.eapproval.query.mapper.DraftDocumentMapper;
 import com.ddis.ddis_hr.eapproval.query.mapper.DraftMapper;
-import com.ddis.ddis_hr.eapproval.query.mapper.FindDrafterMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-@Slf4j
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DraftQueryServiceImpl implements DraftQueryService {
 
-    private final FindDrafterMapper findDrafterMapper;
 
 
     private final DraftMapper draftMapper;
@@ -28,43 +30,7 @@ public class DraftQueryServiceImpl implements DraftQueryService {
     private final S3Service s3Service;
     private final DraftDocumentMapper draftDocumentMapper;
 
-//    @Override
-//    public DraftDetailResponseQueryDTO getDraftDetail(Long docId) {
-//        // ✅ 1. MyBatis를 통해 기본 문서 정보 + doc_content(JSON 문자열) 조회
-//        DraftDetailResponseQueryDTO dto = draftMapper.selectDraftDetail(docId);
-//
-//        // 🔍 doc_content 확인 (콘솔 출력)
-//        System.out.println("✔ docContent from DB: " + dto.getDocContent());
-//
-//        try {
-//            // ✅ 2. doc_content가 존재하면 JSON → 객체로 파싱
-//            if (dto.getDocContent() != null) {
-//                ContentQueryDTO parsedContent = objectMapper.readValue(dto.getDocContent(), ContentQueryDTO.class);
-//
-//                // ✅ 3. contentDto 객체 설정 (본문, 파일, 제목 등 포함)
-//                dto.setContentDto(parsedContent);
-//
-//                // ✅ 4. 수신자/참조자 필드는 문자열로 합쳐서 저장
-//                if (parsedContent.getReceiver() != null) {
-//                    dto.setReceiver(String.join(", ", parsedContent.getReceiver()));
-//                }
-//                if (parsedContent.getReference() != null) {
-//                    dto.setReferer(String.join(", ", parsedContent.getReference()));
-//                }
-//
-//            } else {
-//                // ⚠️ null이면 경고 로그
-//                System.out.println("⚠️ doc_content가 null입니다.");
-//            }
-//        } catch (Exception e) {
-//            // ❌ 파싱 실패 시 예외 로그 출력
-//            System.err.println("❌ doc_content 파싱 오류: " + e.getMessage());
-//        }
-//
-//        // ✅ 5. 최종 결과 반환
-//        return dto;
-//    }
-
+    // 기안 상세조회
     @Override
     public DraftDetailResponseQueryDTO getDraftDetail(Long docId) {
         // 1) MyBatis 로 DTO + contentDto.refFile (SQL 매핑) 까지 한 번에 가져옴
@@ -109,7 +75,40 @@ public class DraftQueryServiceImpl implements DraftQueryService {
         return dto;
     }
 
-
+    // 회수
+    @Override
+    @Transactional
+    public void recallDocument(Long docId) {
+        log.info("▶▶ recallDocument() 시작: docId={}", docId);
+        try {
+            // 1) 첫 번째 결재 진행 여부 확인
+            int count = draftMapper.countFirstApproverAction(docId);
+            if (count > 0) {
+                log.warn("회수 불가: 이미 첫 번째 결재가 완료됨, docId={}", docId);
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "첫 번째 결재가 완료되어 회수할 수 없습니다."
+                );
+            }
+            // 2) document_box에서 기안자 제외한 결재자/협조자 삭제
+            draftMapper.deleteDocumentBoxExceptDrafter(docId);
+            log.debug("결재자 문서함 삭제 완료: docId={}", docId);
+            // 3) draft_documents 상태를 '회수'로 변경
+            draftMapper.updateDocumentStatusToRecalled(docId);
+            log.info("문서 상태 회수로 업데이트 완료: docId={}", docId);
+        } catch (ResponseStatusException e) {
+            // 이미 지정된 HTTP 상태 예외 재throw
+            throw e;
+        } catch (Exception e) {
+            // 예기치 못한 예외는 로그 후 HTTP 500으로 변환
+            log.error("recallDocument 처리 중 예외 발생: docId={}", docId, e);
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "문서 회수 중 오류가 발생했습니다. 다시 시도해주세요.",
+                    e
+            );
+        }
+    }
     @Override
     public Long createDraft(DraftCreateCommandDTO requestDto) {
         return 0L;
@@ -120,6 +119,7 @@ public class DraftQueryServiceImpl implements DraftQueryService {
 
         return draftDocumentMapper.selectDraftsByDrafter(employeeId);
     }
+
 
     @Override
     public List<DraftDTO> getMyReference(Long employeeId) {

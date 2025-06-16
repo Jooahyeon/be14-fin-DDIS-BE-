@@ -9,7 +9,14 @@ import java.util.List;
 public interface DraftQueryService {
     DraftDetailResponseQueryDTO getDraftDetail(Long docId);
 
+    Long createDraft(DraftCreateCommandDTO requestDto);
 
+    List<DraftDTO> getMyDrafts(Long employeeId);
+
+    List<DraftDTO> getMyReference(Long employeeId);
+
+
+//    FindDrafterQueryDTO getfindDrafterInfo(Long employeeId);
     void recallDocument(Long docId);
 }
 

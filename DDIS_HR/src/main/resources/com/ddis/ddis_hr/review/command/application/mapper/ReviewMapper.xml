@@ -34,28 +34,33 @@
         WHERE selfreview_id = #{performanceId}
     </select>
 
-    <resultMap id="PerfHistoryResult" type="com.ddis.ddis_hr.review.command.application.dto.ReviewHistoryDTO">
-        <result column="year_month"              property="yearMonth"/>
-        <result column="performance_description" property="performanceDescription"/>
-        <result column="performance_value"       property="performanceValue"/>
-        <result column="review_score"            property="reviewScore"/>
+    <resultMap id="PerfHistoryResult"
+               type="com.ddis.ddis_hr.review.command.application.dto.ReviewHistoryDTO">
+        <result column="year_month"               property="yearMonth"/>
+        <result column="performance_description"  property="performanceDescription"/>
+        <result column="goal_value"               property="goalValue"/>
+        <result column="performance_value"        property="performanceValue"/>
+        <result column="selfreview_content"       property="selfReviewContent"/>
+        <result column="reviewer_score"            property="reviewScore"/>
     </resultMap>
 
-    <!-- 2) selectHistoryByEmployeeId 쿼리 -->
     <select id="selectHistoryByEmployeeId"
             parameterType="long"
-            resultMap="PerfHistoryResult">
-        SELECT
-        p.reviewer_created_at,
-        g.goal_content,
-        p.performance_value,
-        r.review_score
-        FROM selfreview p
-        JOIN goal    g ON g.goal_id = p.goal_id
-        LEFT JOIN review r ON r.selfreview_id = p.selfreview_id
-        WHERE g.employee_id = #{employeeId}
-        AND p.reviewer_created_at IS NOT NULL
-        ORDER BY p.reviewer_created_at DESC
+            resultMap="PerfHistoryResult"><![CDATA[
+    SELECT
+      DATE_FORMAT(p.reviewer_created_at, '%Y-%m') AS `year_month`,
+      g.goal_content                   AS `performance_description`,
+      g.goal_value                     AS `goal_value`,
+      p.performance_value              AS `performance_value`,
+      p.selfreview_content             AS `selfreview_content`,
+      p.reviewer_score                   AS `review_score`
+    FROM selfreview p
+    JOIN goal g ON g.goal_id = p.goal_id
+    LEFT JOIN review r ON r.selfreview_id = p.selfreview_id
+    WHERE p.employee_id_reviewer = #{employeeId}
+      AND YEAR(p.reviewer_created_at) < YEAR(CURDATE())
+    ORDER BY p.reviewer_created_at DESC
+  ]]>
     </select>
 
 

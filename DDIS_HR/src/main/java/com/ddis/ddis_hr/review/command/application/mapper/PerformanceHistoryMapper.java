@@ -8,4 +8,6 @@ import java.util.List;
 @Mapper
 public interface PerformanceHistoryMapper {
     List<PerformanceHistoryDTO> findAllPerformanceHistories();
+
+    List<PerformanceHistoryDTO> findPerformanceHistoriesByEmployee(Long employeeId);
 }

@@ -34,6 +34,8 @@ public class DraftCommandController {
     public ResponseEntity<DraftCreateResponseCommandDTO> createDraft(
             @RequestBody DraftCreateCommandDTO dto,
             @AuthenticationPrincipal CustomUserDetails user) {
+        log.debug("⏺️ createDraft 호출, DTO = {}", dto);
+
 
         // 1. 기안자 정보 주입
         dto.setEmployeeId(user.getEmployeeId());

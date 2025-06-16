@@ -12,5 +12,6 @@ public class TeamWorkStatusQueryDTO {
     private String employeePhotoUrl;
     private String workStatusName;
     private Integer positionId;
+    private String checkOutTime;
 
 }

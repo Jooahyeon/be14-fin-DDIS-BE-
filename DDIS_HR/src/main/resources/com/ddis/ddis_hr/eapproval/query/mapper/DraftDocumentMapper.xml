@@ -7,7 +7,7 @@
 
     <resultMap id="DraftMap" type="com.ddis.ddis_hr.eapproval.query.dto.DraftDTO">
         <id     column="doc_id"           property="docId"/>
-        <result column="doc_title"        property="title"/>
+        <result column="doc_title"        property="docTitle"/>
         <result column="created_at"       property="createdAt"/>
         <result column="submitted_at"     property="submittedAt"/>
         <result column="doc_status"       property="status"/>
@@ -42,4 +42,5 @@
         WHERE d.employee_id = #{employeeId}
         ORDER BY d.submitted_at DESC
     </select>
+
 </mapper>

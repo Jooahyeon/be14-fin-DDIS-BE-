@@ -271,6 +271,18 @@
         ORDER BY e.employee_id
     </select>
 
+    <select id="findByNameContaining"
+            resultType="com.ddis.ddis_hr.employee.query.dto.EmployeeDTO"
+            parameterType="string">
+        SELECT
+        employee_id   AS employeeId,
+        employee_name AS employeeName
+        FROM employee
+        WHERE employee_name LIKE CONCAT('%', #{name}, '%')
+        ORDER BY employee_name
+        LIMIT 20               <!-- optional: 최대 20건으로 제한 -->
+    </select>
+
 
 
 </mapper>

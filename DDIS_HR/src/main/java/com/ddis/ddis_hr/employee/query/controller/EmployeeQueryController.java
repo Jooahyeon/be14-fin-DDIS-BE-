@@ -54,5 +54,13 @@ public class EmployeeQueryController {
         // 3) 200 OK 로 응답
         return ResponseEntity.ok(list);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<EmployeeDTO>> searchByName(
+            @RequestParam("name") String name
+    ) {
+        List<EmployeeDTO> results = employeeQueryService.searchByName(name);
+        return ResponseEntity.ok(results);
+    }
 }
 

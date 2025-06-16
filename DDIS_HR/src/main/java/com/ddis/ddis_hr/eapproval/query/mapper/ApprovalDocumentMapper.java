@@ -9,17 +9,16 @@ import java.util.List;
 
 @Mapper
 public interface ApprovalDocumentMapper {
-    // 결재함
-    List<DocumentDTO> selectDocumentsByStatus(
-            @Param("employeeId") Long employeeId,
-            @Param("docStatus") String docStatus,
-            @Param("lineStatus") String lineStatus
-    );
 
-    List<DocumentDTO> selectAllDocuments(@Param("employeeId") Long employeeId);
+        List<DocumentDTO> selectPendingDocuments(@Param("employeeId") Long employeeId);   // 결재
+        List<DocumentDTO> selectInProgressDocuments(@Param("employeeId") Long employeeId); // 진행
+        List<DocumentDTO> selectCompletedDocuments(@Param("employeeId") Long employeeId);  // 완료
+        List<DocumentDTO> selectAllDocuments(@Param("employeeId") Long employeeId);        // 전체
 
 
-    // 기안함
-    List<DraftDTO> selectDocumentsByDrafter(@Param("employeeId") Long employeeId);
+        // 기안함
+        List<DraftDTO> selectDocumentsByDrafter(@Param("employeeId") Long employeeId);
 
+
+        List<DraftDTO> selectAllDrafts(Long employeeId);
 }

@@ -1767,53 +1767,72 @@ INSERT INTO contract (
        102400);
 -- 징계
 INSERT INTO disciplinary (
-    employee_id,
+    disciplinary_id,
     disciplinary_descrip,
     disciplinary_date,
-    disciplinary_file_name,
-    disciplinary_file,
-    disciplinary_file_size
+    employee_id
 ) VALUES
-      (19960314030001, '지각 5회 이상으로 인한 경고 조치', '2023-05-10',
-       'warning_19960314030001.pdf',
-       'https://your-s3-bucket.s3.ap-northeast-2.amazonaws.com/disciplinary/warning_19960314030001.pdf',
-       102400),
-      (20031214015001, '업무 중 사적 통화 빈번', '2023-06-20',
-       'warning_20031214015001.pdf',
-       'https://your-s3-bucket.s3.ap-northeast-2.amazonaws.com/disciplinary/warning_20031214015001.pdf',
-       204800),
-      (20151123010001, '사내 규정 미준수', '2023-07-15',
-       'warning_20121215029001.pdf',
-       'https://your-s3-bucket.s3.ap-northeast-2.amazonaws.com/disciplinary/warning_20121215029001.pdf',
-       153600),
-      (20160208028001, '보안 시스템 무단 접근 시도', '2023-08-05',
-       'warning_20160208028001.pdf',
-       'https://your-s3-bucket.s3.ap-northeast-2.amazonaws.com/disciplinary/warning_20160208028001.pdf',
-       307200),
-      (20160324035001, '지시 불이행 및 업무 누락', '2023-09-10',
-       'warning_20160324035001.pdf',
-       'https://your-s3-bucket.s3.ap-northeast-2.amazonaws.com/disciplinary/warning_20160324035001.pdf',
-       256000),
-      (20181023009001, '반복적인 태도 불량', '2023-10-20',
-       'warning_20181023009001.pdf',
-       'https://your-s3-bucket.s3.ap-northeast-2.amazonaws.com/disciplinary/warning_20181023009001.pdf',
-       128000),
-      (20180912024001, '허위 보고서 작성', '2023-11-15',
-       'warning_20180912024001.pdf',
-       'https://your-s3-bucket.s3.ap-northeast-2.amazonaws.com/disciplinary/warning_20180912024001.pdf',
-       51200),
-      (20200618019001, '무단 외출 및 이탈', '2024-01-10',
-       'warning_20200618019001.pdf',
-       'https://your-s3-bucket.s3.ap-northeast-2.amazonaws.com/disciplinary/warning_20200618019001.pdf',
-       204800),
-      (20210726006001, '협업 중 욕설 사용', '2024-02-05',
-       'warning_20210726006001.pdf',
-       'https://your-s3-bucket.s3.ap-northeast-2.amazonaws.com/disciplinary/warning_20210726006001.pdf',
-       102400),
-      (20220626005001, '출근 기록 조작 시도', '2024-03-12',
-       'warning_20220626005001.pdf',
-       'https://your-s3-bucket.s3.ap-northeast-2.amazonaws.com/disciplinary/warning_20220626005001.pdf',
-       256000);
+      ( 1, '지각 5회 이상으로 인한 경고 조치',       '2023-05-10', 19960314030001),
+      ( 2, '업무 중 사적 통화 빈번',                 '2023-06-20', 20031214015001),
+      ( 3, '사내 규정 미준수',                      '2023-07-15', 20151123010001),
+      ( 4, '보안 시스템 무단 접근 시도',            '2023-08-05', 20160208028001),
+      ( 5, '지시 불이행 및 업무 누락',               '2023-09-10', 20160324035001),
+      ( 6, '반복적인 태도 불량',                    '2023-10-20', 20181023009001),
+      ( 7, '허위 보고서 작성',                     '2023-11-15', 20180912024001),
+      ( 8, '무단 외출 및 이탈',                     '2024-01-10', 20200618019001),
+      ( 9, '협업 중 욕설 사용',                     '2024-02-05', 20210726006001),
+      (10, '출근 기록 조작 시도',                   '2024-03-12', 20220626005001);
+
+-- 징계 파일
+INSERT INTO disciplinary_file (
+    disciplinary_file_id,
+    disciplinary_id,
+    file_name,
+    file_url,
+    file_size,
+    uploaded_at
+) VALUES
+-- 1) 지각 5회 이상으로 인한 경고 조치
+( 1,  1, '징계문서_1.pdf',
+  'disciplinary/20230510-19960314030001-징계문서_1.pdf',
+  123456, '2023-05-10 09:00:00'),
+-- 2) 업무 중 사적 통화 빈번
+( 2,  2, '징계문서_2.pdf',
+  'disciplinary/20230620-20031214015001-징계문서_2.pdf',
+  234567, '2023-06-20 09:00:00'),
+-- 3) 사내 규정 미준수
+( 3,  3, '징계문서_3.pdf',
+  'disciplinary/20230715-20151123010001-징계문서_3.pdf',
+  345678, '2023-07-15 09:00:00'),
+-- 4) 보안 시스템 무단 접근 시도
+( 4,  4, '징계문서_4.pdf',
+  'disciplinary/20230805-20160208028001-징계문서_4.pdf',
+  456789, '2023-08-05 09:00:00'),
+-- 5) 지시 불이행 및 업무 누락
+( 5,  5, '징계문서_5.pdf',
+  'disciplinary/20230910-20160324035001-징계문서_5.pdf',
+  567890, '2023-09-10 09:00:00'),
+-- 6) 반복적인 태도 불량
+( 6,  6, '징계문서_6.pdf',
+  'disciplinary/20231020-20181023009001-징계문서_6.pdf',
+  678901, '2023-10-20 09:00:00'),
+-- 7) 허위 보고서 작성
+( 7,  7, '징계문서_7.pdf',
+  'disciplinary/20231115-20180912024001-징계문서_7.pdf',
+  789012, '2023-11-15 09:00:00'),
+-- 8) 무단 외출 및 이탈
+( 8,  8, '징계문서_8.pdf',
+  'disciplinary/20240110-20200618019001-징계문서_8.pdf',
+  890123, '2024-01-10 09:00:00'),
+-- 9) 협업 중 욕설 사용
+( 9,  9, '징계문서_9.pdf',
+  'disciplinary/20240205-20210726006001-징계문서_9.pdf',
+  901234, '2024-02-05 09:00:00'),
+-- 10) 출근 기록 조작 시도
+(10, 10, '징계문서_10.pdf',
+ 'disciplinary/20240312-20220626005001-징계문서_10.pdf',
+ 1012345,'2024-03-12 09:00:00');
+
 
 -- 목표
 -- 1. Insert into goal with 실제 사원번호 적용

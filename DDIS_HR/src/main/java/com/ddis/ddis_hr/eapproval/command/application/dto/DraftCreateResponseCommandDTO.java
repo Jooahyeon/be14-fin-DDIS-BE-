@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 //서버에서 처리 결과를 전달 (응답 dto)
 
 @Builder
@@ -23,6 +25,7 @@ public class DraftCreateResponseCommandDTO {
                 return DraftCreateResponseCommandDTO.builder()
                         .docId(draft.getDocId())
                         .approvalLineId(approvalLine.getApprovalLineId())  // 또는 getApprovalLineId() 등 실제 필드명에 맞게
+
                         .build();
         }
 }

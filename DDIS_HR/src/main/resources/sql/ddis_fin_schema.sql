@@ -470,16 +470,24 @@ CREATE TABLE `contract` (
 )   ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 징계
-CREATE TABLE `disciplinary` (
-    `disciplinary_id`	BIGINT	NOT NULL AUTO_INCREMENT,
-    `disciplinary_descrip`	VARCHAR(255)	NOT NULL,
-    `disciplinary_date`	DATE	NOT NULL,
-    `disciplinary_file_name`	VARCHAR(255)	NOT NULL,
-    `disciplinary_file`	VARCHAR(255)	NOT NULL,
-    `disciplinary_file_size`	BIGINT	NULL,
-    `employee_id`	BIGINT	NOT NULL,
-    PRIMARY KEY (`disciplinary_id`),
-    FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`)
+CREATE TABLE disciplinary (
+    disciplinary_id         BIGINT       NOT NULL AUTO_INCREMENT,
+    disciplinary_descrip     VARCHAR(255) NOT NULL,
+    disciplinary_date        DATE         NOT NULL,
+    employee_id              BIGINT       NOT NULL,
+    PRIMARY KEY (disciplinary_id),
+    FOREIGN KEY (employee_id) REFERENCES employee(employee_id)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE disciplinary_file (
+    disciplinary_file_id     BIGINT       NOT NULL AUTO_INCREMENT,
+    disciplinary_id          BIGINT       NOT NULL,
+    file_name                VARCHAR(255) NOT NULL,
+    file_url                 VARCHAR(1024) NOT NULL,   -- S3 키 저장
+    file_size                BIGINT       NOT NULL,
+    uploaded_at              DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (disciplinary_file_id),
+    FOREIGN KEY (disciplinary_id) REFERENCES disciplinary(disciplinary_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 평가 및 성과 부분

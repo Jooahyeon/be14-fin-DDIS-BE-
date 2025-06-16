@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('HR')")
+@PreAuthorize("hasRole('ROLE_HR')")
 @RequestMapping("/payroll")
 public class RetirementQueryController {
 

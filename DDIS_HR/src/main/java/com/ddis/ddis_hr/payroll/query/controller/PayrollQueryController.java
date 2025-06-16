@@ -25,7 +25,7 @@ public class PayrollQueryController {
     private final SalaryQueryService salaryQueryService;
 
     // 사원 전체 조회
-    @PreAuthorize("hasAnyRole('HR')")
+    @PreAuthorize("hasRole('ROLE_HR')")
     @GetMapping("/employees")
     public ResponseEntity<List<EmployeeSummaryDTO>> getFilteredEmployees(@ModelAttribute EmployeeSearchCondition condition) {
         List<EmployeeSummaryDTO> result = employeeSearchService.searchEmployees(condition);
@@ -33,7 +33,7 @@ public class PayrollQueryController {
     }
 
     // 특정 사원의 인사정보 (급여에서 필요한 것만)
-    @PreAuthorize("hasAnyRole('HR')")
+    @PreAuthorize("hasRole('ROLE_HR')")
     @GetMapping("/employees/{employeeId}")
     public ResponseEntity<EmployeeSummaryDTO> getEmployeeById(@PathVariable Long employeeId) {
         EmployeeSummaryDTO dto = employeeSearchService.findById(employeeId);
@@ -51,7 +51,7 @@ public class PayrollQueryController {
     }
 
     // 사원별 급여상세
-    @PreAuthorize("hasAnyRole('HR')")
+    @PreAuthorize("hasRole('ROLE_HR')")
     @GetMapping("/salaries/{employeeId}")
     public ResponseEntity<SalaryDetailDTO> getSalaryDetail(@PathVariable Long employeeId,
                                                            @RequestParam YearMonth month) {

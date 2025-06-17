@@ -6,8 +6,9 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-
+// 기안문 상세조회
 // 기안문 회수
+
 @Mapper
 public interface DraftMapper {
 

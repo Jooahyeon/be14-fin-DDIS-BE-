@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class PwTokenPurger {
     private final PwResetTokenRepository repo;
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 0 */6 * * *")
     @Transactional
     public void purge() {
         repo.purge(LocalDateTime.now().minusHours(0));

@@ -7,7 +7,7 @@ import com.ddis.ddis_hr.eapproval.command.application.dto.DraftCreateResponseCom
 import com.ddis.ddis_hr.eapproval.command.domain.entity.DocumentAttachment;
 import com.ddis.ddis_hr.eapproval.command.domain.entity.DocumentBox;
 import com.ddis.ddis_hr.eapproval.command.domain.entity.DocumentBoxId;
-import com.ddis.ddis_hr.eapproval.command.domain.entity.Draft;
+import com.ddis.ddis_hr.eapproval.command.domain.entity.DraftDocument;
 import com.ddis.ddis_hr.eapproval.command.domain.repository.DocumentAttachmentRepository;
 import com.ddis.ddis_hr.eapproval.command.domain.repository.DocumentBoxRepository;
 import com.ddis.ddis_hr.eapproval.command.domain.repository.DraftRepository;
@@ -28,7 +28,6 @@ public class DraftCommandServiceImpl implements DraftCommandService {
     private final DraftRepository draftRepository;
     private final ApprovalLineCommandService approvalLineCommandService;
     private final DocumentBoxRepository documentBoxRepository;
-    private final ObjectMapper objectMapper;  // Spring Bean 으로 등록되어 있어야 합니다.
     private final S3Service s3Service;
     private final ApprovalWorkflowService workflow;
     private final DocumentAttachmentRepository documentAttachmentRepository;
@@ -37,8 +36,8 @@ public class DraftCommandServiceImpl implements DraftCommandService {
     @Override
     public DraftCreateResponseCommandDTO createDraft(DraftCreateCommandDTO dto) {
         // 1) Draft 저장 → docId 획득
-        Draft savedDraft = draftRepository.save(dto.toEntity());
-        Long docId = savedDraft.getDocId();
+        DraftDocument savedDraftDocument = draftRepository.save(dto.toEntity());
+        Long docId = savedDraftDocument.getDocId();
         log.debug("⏺️ createDraft 호출, DTO = {}", dto);
 
 
@@ -81,7 +80,7 @@ public class DraftCommandServiceImpl implements DraftCommandService {
             List<DocumentAttachment> atts = new ArrayList<>();
             for (int i = 0; i < keys.size(); i++) {
                 atts.add(DocumentAttachment.builder()
-                        .draft(savedDraft)
+                        .draftDocument(savedDraftDocument)
                         .fileUrl(keys.get(i))
                         .fileName(names.get(i))
                         .fileType(types.get(i))
@@ -131,13 +130,11 @@ public class DraftCommandServiceImpl implements DraftCommandService {
     }
 
 
-
-
     @Transactional
     @Override
-    public Draft saveDraftAndLines(DraftCreateCommandDTO dto) {
-        Draft savedDraft = draftRepository.save(dto.toEntity());
-        Long docId = savedDraft.getDocId();
+    public DraftDocument saveDraftAndLines(DraftCreateCommandDTO dto) {
+        DraftDocument savedDraftDocument = draftRepository.save(dto.toEntity());
+        Long docId = savedDraftDocument.getDocId();
 
         saveDocumentBoxEntry(dto.getEmployeeId(), docId, "기안자");
 
@@ -168,7 +165,7 @@ public class DraftCommandServiceImpl implements DraftCommandService {
             List<DocumentAttachment> atts = new ArrayList<>();
             for (int i = 0; i < keys.size(); i++) {
                 atts.add(DocumentAttachment.builder()
-                        .draft(savedDraft)
+                        .draftDocument(savedDraftDocument)
                         .fileUrl(keys.get(i))
                         .fileName(names.get(i))
                         .fileType(types.get(i))
@@ -177,11 +174,8 @@ public class DraftCommandServiceImpl implements DraftCommandService {
                         .build());
                 documentAttachmentRepository.saveAll(atts);
             }
-
-
         }
-        return savedDraft; // ✅ Draft 반환
-
+        return savedDraftDocument; // ✅ Draft 반환
 }
 }
 

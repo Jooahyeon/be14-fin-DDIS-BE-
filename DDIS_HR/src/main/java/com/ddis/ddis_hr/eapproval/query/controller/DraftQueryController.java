@@ -3,7 +3,7 @@ package com.ddis.ddis_hr.eapproval.query.controller;
 import com.ddis.ddis_hr.eapproval.query.dto.DraftDTO;
 import com.ddis.ddis_hr.eapproval.query.dto.DraftDetailResponseQueryDTO;
 import com.ddis.ddis_hr.eapproval.query.dto.ReferenceDocDTO;
-import com.ddis.ddis_hr.eapproval.query.service.DraftQueryService;
+import com.ddis.ddis_hr.eapproval.query.service.RetrieveDocService;
 import com.ddis.ddis_hr.eapproval.query.service.ReceiverDocService;
 import com.ddis.ddis_hr.eapproval.query.service.ReferenceDocService;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
@@ -19,27 +19,30 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DraftQueryController {
 
-    private final DraftQueryService draftQueryService;
+    private final RetrieveDocService retrieveDocService;
     private final ReferenceDocService referenceDocService;
     private final ReceiverDocService receiverDocService;
 
     // 상세조회
     @GetMapping("/{id}")
     public ResponseEntity<DraftDetailResponseQueryDTO> getDraftDetail(@PathVariable("id") Long docId) {
-        DraftDetailResponseQueryDTO dto = draftQueryService.getDraftDetail(docId);
+        DraftDetailResponseQueryDTO dto = retrieveDocService.getDraftDetail(docId);
         return ResponseEntity.ok(dto);
     }
 
+    // 기안함
     @GetMapping
     public ResponseEntity<List<DraftDTO>> getMyDrafts(
             @AuthenticationPrincipal CustomUserDetails user) {
         Long employeeId = user.getEmployeeId();
-        List<DraftDTO> dtos = draftQueryService.getMyDrafts(employeeId);
+        List<DraftDTO> dtos = retrieveDocService.getMyDrafts(employeeId);
         return ResponseEntity.ok(dtos);
     }
+
+    // 회수
     @PostMapping("/{docId}/recall")
     public ResponseEntity<Void> recall(@PathVariable Long docId) {
-        draftQueryService.recallDocument(docId);
+        retrieveDocService.recallDocument(docId);
         return ResponseEntity.ok().build();
     }
 

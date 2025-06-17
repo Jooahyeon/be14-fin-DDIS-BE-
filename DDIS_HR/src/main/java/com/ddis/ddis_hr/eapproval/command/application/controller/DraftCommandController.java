@@ -2,6 +2,7 @@ package com.ddis.ddis_hr.eapproval.command.application.controller;
 
 import com.ddis.ddis_hr.eapproval.command.application.dto.DraftCreateCommandDTO;
 import com.ddis.ddis_hr.eapproval.command.application.dto.DraftCreateResponseCommandDTO;
+import com.ddis.ddis_hr.eapproval.command.application.dto.DraftTempReqDTO;
 import com.ddis.ddis_hr.eapproval.command.application.service.ApprovalWorkflowService;
 import com.ddis.ddis_hr.eapproval.command.application.service.DraftCommandService;
 import com.ddis.ddis_hr.eapproval.command.domain.entity.ApprovalLine;
@@ -9,6 +10,7 @@ import com.ddis.ddis_hr.eapproval.command.domain.entity.Draft;
 import com.ddis.ddis_hr.eapproval.command.domain.repository.ApprovalLineRepository;
 import com.ddis.ddis_hr.eapproval.command.domain.repository.DraftRepository;
 import com.ddis.ddis_hr.eapproval.query.dto.DraftDetailResponseQueryDTO;
+import com.ddis.ddis_hr.eapproval.command.application.dto.TempSaveResDTO;
 import com.ddis.ddis_hr.eapproval.query.service.DraftQueryService;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -67,6 +69,20 @@ public class DraftCommandController {
         DraftDetailResponseQueryDTO response = draftQueryService.getDraftDetail(docId);
         return ResponseEntity.ok(response);
     }
+
+//    @PostMapping("/temp")
+//    public ResponseEntity<TempSaveResDTO> saveTemp(
+//            @RequestBody DraftTempReqDTO dto,
+//            @AuthenticationPrincipal CustomUserDetails user) {
+//
+//        dto.setEmployeeId(user.getEmployeeId());
+//
+//        // ① draft_documents UPSERT (status = TEMP)
+//        Long docId = draftTempService.saveOrUpdate(dto);
+//
+//        // ② 응답
+//        return ResponseEntity.ok(new TempSaveResDTO(docId));
+//    }
 }
 
 

@@ -2,6 +2,8 @@ package com.ddis.ddis_hr.attendance.command.application.controller;
 
 import com.ddis.ddis_hr.attendance.command.application.dto.*;
 import com.ddis.ddis_hr.attendance.command.application.service.AttendanceCommandService;
+import com.ddis.ddis_hr.attendance.command.domain.aggregate.Meeting;
+import com.ddis.ddis_hr.attendance.command.domain.aggregate.PersonalSchedule;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,19 +34,50 @@ public class AttendanceCommandController {
 
     // 개인 일정 등록
     @PostMapping("/schedule/personal")
-    public ResponseEntity<Void> addPersonalSchedule(@RequestBody PersonalScheduleRequestDTO dto,
-                                                    @AuthenticationPrincipal CustomUserDetails user) {
+    public ResponseEntity<PersonalScheduleResponseDTO> addPersonalSchedule(@RequestBody PersonalScheduleRequestDTO dto,
+                                                                @AuthenticationPrincipal CustomUserDetails user) {
         Long employeeId = user.getEmployeeId();
-        attendanceCommandService.personalScheduleRegister(dto, employeeId);
+        PersonalSchedule saved = attendanceCommandService.personalScheduleRegister(dto, employeeId);
+        return ResponseEntity.ok(new PersonalScheduleResponseDTO(saved));
+    }
+
+    // 개인 일정 수정
+    @PutMapping("/schedule/personal/{id}")
+    public ResponseEntity<Void> updatePersonalSchedule(@PathVariable Long id,
+                                                       @RequestBody PersonalScheduleRequestDTO dto) {
+        attendanceCommandService.updatePersonalSchedule(id, dto);
         return ResponseEntity.ok().build();
     }
 
+    // 개인 일정 삭제
+    @DeleteMapping("/schedule/personal/{id}")
+    public ResponseEntity<Void> deletePersonalSchedule(@PathVariable Long id) {
+        attendanceCommandService.deletePersonalSchedule(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
     // 회의 일정 등록
     @PostMapping("/schedule/meeting")
-    public ResponseEntity<Void> addMeetingSchedule(@RequestBody MeetingScheduleRequestDTO dto,
+    public ResponseEntity<MeetingScheduleResponseDTO> addMeetingSchedule(@RequestBody MeetingScheduleRequestDTO dto,
                                                 @AuthenticationPrincipal CustomUserDetails user) {
-        attendanceCommandService.MeetingScheduleRegister(dto, user.getEmployeeId(), user.getTeamId());
+        Meeting saved = attendanceCommandService.MeetingScheduleRegister(dto, user.getEmployeeId(), user.getTeamId());
+        return ResponseEntity.ok(new MeetingScheduleResponseDTO(saved));
+    }
+
+    // 회의 일정 수정
+    @PutMapping("/schedule/meeting/{id}")
+    public ResponseEntity<Void> updateMeetingSchedule(@PathVariable Long id,
+                                                       @RequestBody MeetingScheduleRequestDTO dto) {
+        attendanceCommandService.updateMeetingSchedule(id, dto);
         return ResponseEntity.ok().build();
+    }
+
+    // 회의 일정 삭제
+    @DeleteMapping("/schedule/meeting/{id}")
+    public ResponseEntity<Void> deleteMeetingSchedule(@PathVariable Long id) {
+        attendanceCommandService.deleteMeetingSchedule(id);
+        return ResponseEntity.noContent().build();
     }
 
     // 출근 정정 신청

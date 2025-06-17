@@ -16,6 +16,7 @@
     <select id="findPersonalSchedules" resultType="com.ddis.ddis_hr.attendance.query.dto.PersonalScheduleQueryDTO">
         SELECT
                employee_id
+             , personal_schedule_id
              , schedule_date
              , schedule_title
              , schedule_time
@@ -26,6 +27,7 @@
     <select id="findMeetings" resultType="com.ddis.ddis_hr.attendance.query.dto.MeetingQueryDTO">
         SELECT
                team_id
+             , meeting_id
              , meeting_date
              , meeting_title
              , meeting_time

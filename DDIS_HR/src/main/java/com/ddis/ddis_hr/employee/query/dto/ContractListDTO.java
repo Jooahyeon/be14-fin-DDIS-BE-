@@ -10,12 +10,14 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class DisciplinaryListDTO {
-    private Integer disciplinaryId;
-    private String  disciplinaryDescription;
-    private Date    disciplinaryDate;
+public class ContractListDTO {
+    private Integer contractId;
+    private String  contractDescription;
+    private Date contractDate;
+    private Date requestDate;
+    private Date endDate;
 
-    private List<DisciplinaryFileDTO> fileList;
+    private List<ContractFileDTO> fileList;
     private Long    employeeId;
     private String  employeeName;
 }

@@ -59,4 +59,13 @@ public class EmployeeQueryServiceImpl implements EmployeeQueryService {
     public List<EmployeeListDTO> getAll() {
         return employeeMapper.findAll();
     }
+
+    @Override
+    public List<EmployeeDTO> searchByName(String name) {
+        if (name == null || name.isBlank()) {
+            return List.of();
+            }
+            return employeeMapper.findByNameContaining(name.trim());
+        }
 }
+

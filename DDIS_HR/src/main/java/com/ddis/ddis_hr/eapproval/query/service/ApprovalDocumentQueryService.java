@@ -7,18 +7,17 @@ import java.util.List;
 
 public interface ApprovalDocumentQueryService {
 
-    // 결재 탭 (미결 + 심사중)
-    List<DocumentDTO> getPendingApprovals(Long employeeId);
+    // 상태별 기안문서 목록 조회
+//    List<DraftDTO> getDraftsByStatus(Long employeeId, String status);
 
-    // 진행 탭 (승인 + 심사중)
-    List<DocumentDTO> getInProgressApprovals(Long employeeId);
-
-    // 완료 탭 (승인 + 결재완료)
-    List<DocumentDTO> getCompletedApprovals(Long employeeId);
-
-    // 전체 탭 (모든 문서 + 반려 포함)
-    List<DocumentDTO> getAllApprovals(Long employeeId);
-
+    // 기안함 전체탭
     List<DraftDTO> getMyDrafts(Long employeeId);
+
+
+    // 결재함
+    List<DocumentDTO> getPendingApprovals(Long employeeId);
+    List<DocumentDTO> getInProgressApprovals(Long employeeId);
+    List<DocumentDTO> getCompletedApprovals(Long employeeId);
+    List<DocumentDTO> getAllApprovals(Long employeeId);
 
 }

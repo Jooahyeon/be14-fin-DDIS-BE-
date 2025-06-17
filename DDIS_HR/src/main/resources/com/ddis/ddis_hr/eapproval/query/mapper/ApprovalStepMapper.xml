@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
-<!--이거 사용 안함.. 검토중-->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.ddis.ddis_hr.eapproval.query.mapper.ApprovalStepMapper">
 
-    <!-- 결재 단계 매핑: 결재 단계(step)와 직급명(rank_name)을 DTO에 매핑 -->
-    <resultMap id="ApprovalStepMap" type="com.ddis.ddis_hr.eapproval.query.dto.ApprovalStepQueryDTO">
+    <!-- 결재 단계 매핑: step, rank_name -->
+    <resultMap id="ApprovalStepMap"
+               type="com.ddis.ddis_hr.eapproval.query.dto.ApprovalStepQueryDTO">
         <result property="step" column="step"/>
         <result property="rank" column="rank_name"/>
     </resultMap>
 
-    <!--
-        기안자의 직급 순서(baseRankOrder)를 기준으로 상위 직급을 조회하여 결재 단계를 구성함
-        예: 과장(rank_order=3)이 기안 시, 그보다 높은 부장(4), 상무(5), 사장(6) 등이 결재 대상이 됨
-    -->
+    <!-- 1) 기안자보다 높은 rank_order를 가진 모든 직급을 순서대로 조회 -->
     <select id="findApprovalStepsByBaseRankOrder"
             resultMap="ApprovalStepMap"
             parameterType="int">
@@ -27,16 +24,13 @@
         ORDER BY rank_order ASC
     </select>
 
-    <!--
-        조직 범위(팀, 부서, 본부)와 직급명을 기반으로 해당 조건에 맞는 결재자 1명을 조회
-        기안자의 조직 정보를 기준으로 결재자를 자동 매칭함
-    -->
+    <!-- 2) 조직 범위(team/department/head)와 직급명으로 단일 결재자 조회 -->
     <select id="findApproverByRankAndOrg"
             resultType="com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO">
         SELECT
-        e.employee_id AS employeeId,
-        e.rank_id AS rankId,
-        e.employee_name AS name
+            e.employee_id   AS employeeId,
+            e.employee_name AS employeeName,
+            e.rank_id       AS rankId
         FROM employee e
         JOIN rank r ON e.rank_id = r.rank_id
         WHERE r.rank_name = #{rankName}
@@ -54,7 +48,7 @@
         LIMIT 1
     </select>
 
-    <!-- 팀 단위에서 직급 기준으로 결재자 조회 -->
+    <!-- 3) 팀 단위에서 rank 기준 결재자 조회 -->
     <select id="findApproverByTeamAndRank"
             resultType="com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO">
         SELECT
@@ -62,13 +56,13 @@
             e.employee_name AS employeeName,
             r.rank_id       AS rankId
         FROM employee e
-                 JOIN rank r ON e.rank_id = r.rank_id
+        JOIN rank r ON e.rank_id = r.rank_id
         WHERE r.rank_name = #{rankName}
           AND e.team_id = #{teamId}
         LIMIT 1
     </select>
 
-    <!-- 부서 단위에서 직급 기준으로 결재자 조회 -->
+    <!-- 4) 부서 단위에서 rank 기준 결재자 조회 -->
     <select id="findApproverByDepartmentAndRank"
             resultType="com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO">
         SELECT
@@ -76,13 +70,13 @@
             e.employee_name AS employeeName,
             r.rank_id       AS rankId
         FROM employee e
-                 JOIN rank r ON e.rank_id = r.rank_id
+        JOIN rank r ON e.rank_id = r.rank_id
         WHERE r.rank_name = #{rankName}
           AND e.department_id = #{departmentId}
         LIMIT 1
     </select>
 
-    <!-- 본부 단위에서 직급 기준으로 결재자 조회 -->
+    <!-- 5) 본부 단위에서 rank 기준 결재자 조회 -->
     <select id="findApproverByHeadAndRank"
             resultType="com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO">
         SELECT
@@ -90,7 +84,7 @@
             e.employee_name AS employeeName,
             r.rank_id       AS rankId
         FROM employee e
-                 JOIN rank r ON e.rank_id = r.rank_id
+        JOIN rank r ON e.rank_id = r.rank_id
         WHERE r.rank_name = #{rankName}
           AND e.head_id = #{headId}
         LIMIT 1

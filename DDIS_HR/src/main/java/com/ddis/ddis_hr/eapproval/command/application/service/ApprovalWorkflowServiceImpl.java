@@ -1,7 +1,7 @@
 package com.ddis.ddis_hr.eapproval.command.application.service;
 
 import com.ddis.ddis_hr.eapproval.command.domain.entity.ApprovalLine;
-import com.ddis.ddis_hr.eapproval.command.domain.entity.Draft;
+import com.ddis.ddis_hr.eapproval.command.domain.entity.DraftDocument;
 import com.ddis.ddis_hr.eapproval.command.domain.repository.ApprovalLineRepository;
 import com.ddis.ddis_hr.eapproval.command.domain.repository.DraftRepository;
 import jakarta.transaction.Transactional;
@@ -32,9 +32,9 @@ public class ApprovalWorkflowServiceImpl implements ApprovalWorkflowService {
      */
     @Override
     @Transactional
-    public void initializeWorkflow(Draft draft) {
+    public void initializeWorkflow(DraftDocument draftDocument) {
         // 1) 문서 ID 기준 결재라인 조회
-        List<ApprovalLine> lines = lineRepo.findByDocIdOrderByStep(draft.getDocId());
+        List<ApprovalLine> lines = lineRepo.findByDocIdOrderByStep(draftDocument.getDocId());
 
         // 2) 상태 설정: step == 1 (기안자)는 무시
         List<ApprovalLine> initLines = lines.stream()
@@ -56,10 +56,10 @@ public class ApprovalWorkflowServiceImpl implements ApprovalWorkflowService {
         lineRepo.saveAll(initLines);
 
         // 3) 문서 상태: '심사중' 처리
-        Draft updatedDraft = draft.toBuilder()
+        DraftDocument updatedDraftDocument = draftDocument.toBuilder()
                 .docStatus("심사중")
                 .build();
-        draftRepo.save(updatedDraft);
+        draftRepo.save(updatedDraftDocument);
     }
 
     /**
@@ -90,7 +90,7 @@ public class ApprovalWorkflowServiceImpl implements ApprovalWorkflowService {
         lineRepo.save(updatedCurr);
 
         // 다음 단계 활성화 및 Draft 상태 업데이트
-        Draft draft = draftRepo.findById(curr.getDocId())
+        DraftDocument draftDocument = draftRepo.findById(curr.getDocId())
                 .orElseThrow(() -> new IllegalArgumentException("기안문이 없습니다. ID=" + curr.getDocId()));
         List<ApprovalLine> lines = lineRepo.findByDocIdOrderByStep(curr.getDocId());
         int maxStep = lines.stream().mapToInt(ApprovalLine::getStep).max().orElse(curr.getStep());
@@ -106,17 +106,17 @@ public class ApprovalWorkflowServiceImpl implements ApprovalWorkflowService {
             lineRepo.save(next);
 
             // Draft 상태는 '심사중'
-            draft = draft.toBuilder()
+            draftDocument = draftDocument.toBuilder()
                     .docStatus("심사중")
                     .build();
         } else {
             // 마지막 단계 완료: Draft 상태 '결재완료'
-            draft = draft.toBuilder()
+            draftDocument = draftDocument.toBuilder()
                     .docStatus("결재완료")
                     .finalApprovalAt(LocalDateTime.now())
                     .build();
         }
-        draftRepo.save(draft);
+        draftRepo.save(draftDocument);
     }
 
     /**
@@ -138,12 +138,12 @@ public class ApprovalWorkflowServiceImpl implements ApprovalWorkflowService {
                 .build();
         lineRepo.save(updatedCurr);
 
-        Draft draft = draftRepo.findById(curr.getDocId())
+        DraftDocument draftDocument = draftRepo.findById(curr.getDocId())
                 .orElseThrow(() -> new IllegalArgumentException("기안문이 없습니다. ID=" + curr.getDocId()));
-        draft = draft.toBuilder()
+        draftDocument = draftDocument.toBuilder()
                 .docStatus("반려")
                 .build();
-        draftRepo.save(draft);
+        draftRepo.save(draftDocument);
     }
 }
 

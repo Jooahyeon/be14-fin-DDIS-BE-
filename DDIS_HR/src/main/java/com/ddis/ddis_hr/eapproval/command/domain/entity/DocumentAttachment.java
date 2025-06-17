@@ -20,7 +20,7 @@ public class DocumentAttachment {
     // 기안 테이블과 N:1 매핑
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doc_id", nullable = false)
-    private Draft draft;
+    private DraftDocument draftDocument;
 
     @Column(name = "file_name", nullable = false)
     private String fileName;
@@ -37,4 +37,7 @@ public class DocumentAttachment {
 
     @Column(name = "is_deleted")
     private Boolean isDeleted;
+
+    private Long draftDocId; // ← 이 필드명이 없으면 findByDraftDocId 사용 불가
+
 }

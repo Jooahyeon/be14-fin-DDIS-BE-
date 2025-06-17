@@ -3,7 +3,7 @@ package com.ddis.ddis_hr.eapproval.command.application.service;
 import com.ddis.ddis_hr.eapproval.command.application.dto.ApprovalLineDTO;
 import com.ddis.ddis_hr.eapproval.command.domain.entity.ApprovalLine;
 import com.ddis.ddis_hr.eapproval.command.domain.entity.ApprovalLineType;
-import com.ddis.ddis_hr.eapproval.command.domain.entity.Draft;
+import com.ddis.ddis_hr.eapproval.command.domain.entity.DraftDocument;
 import com.ddis.ddis_hr.eapproval.command.domain.repository.ApprovalLineRepository;
 import com.ddis.ddis_hr.eapproval.command.domain.repository.DraftRepository;
 import com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO;
@@ -39,9 +39,9 @@ public class ApprovalLineCommandServiceImpl implements ApprovalLineCommandServic
     public Long createAutoLine(Long docId, Long employeeId) {
 
         // 0) 기안문서 조회 → formId 확보
-        Draft draft = draftRepository.findById(docId)
+        DraftDocument draftDocument = draftRepository.findById(docId)
                 .orElseThrow(() -> new IllegalArgumentException("Draft not found: " + docId));
-        Long formId = draft.getFormId();
+        Long formId = draftDocument.getFormId();
 
         // 1) 결재선 미리보기 조회 (단계별 결재자)
         List<ApproverInfoQueryDTO> preview = approvalLineAutoMatchService.createApprovalLine(employeeId);
@@ -79,9 +79,9 @@ public class ApprovalLineCommandServiceImpl implements ApprovalLineCommandServic
     @Override
     public List<Long> saveManualLine(Long docId, List<ApprovalLineDTO> lines, Long drafterId) {
         // 0) 기안문서 조회 → formId 확보
-        Draft draft = draftRepository.findById(docId)
+        DraftDocument draftDocument = draftRepository.findById(docId)
                 .orElseThrow(() -> new IllegalArgumentException("Draft not found: " + docId));
-        Long formId = draft.getFormId();
+        Long formId = draftDocument.getFormId();
 
         // 1) DTO → 엔티티 변환
         List<ApprovalLine> entities = new ArrayList<>();

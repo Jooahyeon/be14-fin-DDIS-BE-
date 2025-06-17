@@ -12,7 +12,6 @@ import java.util.List;
 @Builder
 public class ContentQueryDTO {
 
-    private String title;
     private List<FileQueryDTO> refFile;
     private List<String> receiver;    // ✅ 수신자
     private List<String> reference;   // ✅ 참조자

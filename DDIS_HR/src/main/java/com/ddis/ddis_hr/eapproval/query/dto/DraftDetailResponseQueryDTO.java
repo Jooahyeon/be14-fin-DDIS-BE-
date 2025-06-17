@@ -13,8 +13,10 @@ import java.util.List;
 @ToString
 @Builder
 public class DraftDetailResponseQueryDTO {
-    private int docId;                              // 문서번호
-    private String docTitle;
+    private Long docId;                              // 문서번호
+    private Long drafterId;                          // 기안자id
+    private String docStatus;                       // 문서상태
+    private String docTitle;                        // 문서제목
     private String team;                            // 팀이름
     private String position;                        // 직책명
     private String drafter;                         // 기안자 이름

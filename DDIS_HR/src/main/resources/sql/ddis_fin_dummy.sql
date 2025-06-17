@@ -1724,47 +1724,37 @@ values
 
 -- 계약
 INSERT INTO contract (
-    employee_id,
-    contract_descrip,
-    request_date,
-    contract_date,
-    end_date,
-    contract_file_name,
-    contract_file,
-    contract_file_size
+    contract_id, contract_descrip, request_date, contract_date, end_date, employee_id
 ) VALUES
-      (20151123010001, '개인 정보 수집 및 이용 동의서', '2025-05-26', '2025-05-27', '2026-05-27',
-       'test7.pdf',
-       'https://ddisbucket-fin.s3.ap-northeast-2.amazonaws.com/test7',
-       102400),
-      (20151123010001, '근로 계약서', '2025-05-26', '2025-05-27', '2026-05-27',
-       'test6.pdf',
-       'https://ddisbucket-fin.s3.ap-northeast-2.amazonaws.com/test6',
-       204800),
-      (20151123010001, '보안 서약서', '2025-05-26', '2025-05-27', '2026-05-27',
-       'test5.pdf',
-       'https://ddisbucket-fin.s3.ap-northeast-2.amazonaws.com/test5',
-       153600),
-      (20070601016001, '재직 증명서 요청 동의서', '2025-05-26', '2025-05-27', '2026-05-27',
-       'test4.pdf',
-       'https://ddisbucket-fin.s3.ap-northeast-2.amazonaws.com/test4',
-       307200),
-      (20071010003001, '가족관계 등록부 제출 동의서', '2025-05-26', '2025-05-27', '2026-05-27',
-       'test3.pdf',
-       'https://ddisbucket-fin.s3.ap-northeast-2.amazonaws.com/test3',
-       256000),
-      (20080415009001, '연봉 계약 확인서', '2025-05-26', '2025-05-27', '2026-05-27',
-       'test.jpg',
-       'https://ddisbucket-fin.s3.ap-northeast-2.amazonaws.com/test.jpg',
-       128000),
-      (20080807020001, '4대 보험 가입 신청서', '2025-05-26', '2025-05-27', '2026-05-27',
-       'test.jpg',
-       'https://ddisbucket-fin.s3.ap-northeast-2.amazonaws.com/test.jpg',
-       128000),
-      (20080820030001, '퇴직금 중간 정산 신청서', '2025-05-26', '2025-05-27', '2026-05-27',
-       'test.pdf',
-       'https://ddisbucket-fin.s3.ap-northeast-2.amazonaws.com/test',
-       102400);
+      (1, '개인 정보 수집 및 이용 동의서',     '2025-05-26', '2025-05-27', '2026-05-27', 20151123010001),
+      (2, '근로 계약서',                     '2025-05-26', '2025-05-27', '2026-05-27', 20151123010001),
+      (3, '보안 서약서',                     '2025-05-26', '2025-05-27', '2026-05-27', 20151123010001),
+      (4, '재직 증명서 요청 동의서',          '2025-05-26', '2025-05-27', '2026-05-27', 20070601016001),
+      (5, '가족관계 등록부 제출 동의서',      '2025-05-26', '2025-05-27', '2026-05-27', 20071010003001),
+      (6, '연봉 계약 확인서',                '2025-05-26', '2025-05-27', '2026-05-27', 20080415009001),
+      (7, '4대 보험 가입 신청서',            '2025-05-26', '2025-05-27', '2026-05-27', 20080807020001),
+      (8, '퇴직금 중간 정산 신청서',          '2025-05-26', '2025-05-27', '2026-05-27', 20080820030001);
+
+-- 계약 파일
+INSERT INTO contract_file (
+    contract_file_id, contract_id, file_name, file_url, file_size, uploaded_at
+) VALUES
+    /* 계약 1 */
+      (1, 1, '개인정보_수집_이용_동의서.pdf', 'contract/1/개인정보_수집_이용_동의서.pdf',  245678, '2025-05-26 09:00:00'),
+    /* 계약 2 */
+      (2, 2, '근로_계약서.pdf',              'contract/2/근로_계약서.pdf',              312456, '2025-05-26 09:05:00'),
+    /* 계약 3 */
+      (3, 3, '보안_서약서.pdf',               'contract/3/보안_서약서.pdf',               198765, '2025-05-26 09:10:00'),
+    /* 계약 4 */
+      (4, 4, '재직_증명서_요청_동의서.pdf',    'contract/4/재직_증명서_요청_동의서.pdf',    276543, '2025-05-26 09:15:00'),
+    /* 계약 5 */
+      (5, 5, '가족관계_등록부_제출_동의서.pdf', 'contract/5/가족관계_등록부_제출_동의서.pdf', 357890, '2025-05-26 09:20:00'),
+    /* 계약 6 */
+      (6, 6, '연봉_계약_확인서.pdf',          'contract/6/연봉_계약_확인서.pdf',          223450, '2025-05-26 09:25:00'),
+    /* 계약 7 */
+      (7, 7, '4대보험_가입_신청서.pdf',         'contract/7/4대보험_가입_신청서.pdf',         189012, '2025-05-26 09:30:00'),
+    /* 계약 8 */
+      (8, 8, '퇴직금_중간_정산_신청서.pdf',     'contract/8/퇴직금_중간_정산_신청서.pdf',     201234, '2025-05-26 09:35:00');
 -- 징계
 INSERT INTO disciplinary (
     disciplinary_id,
@@ -1785,12 +1775,7 @@ INSERT INTO disciplinary (
 
 -- 징계 파일
 INSERT INTO disciplinary_file (
-    disciplinary_file_id,
-    disciplinary_id,
-    file_name,
-    file_url,
-    file_size,
-    uploaded_at
+    disciplinary_file_id, disciplinary_id, file_name, file_url, file_size, uploaded_at
 ) VALUES
 -- 1) 지각 5회 이상으로 인한 경고 조치
 ( 1,  1, '징계문서_1.pdf',

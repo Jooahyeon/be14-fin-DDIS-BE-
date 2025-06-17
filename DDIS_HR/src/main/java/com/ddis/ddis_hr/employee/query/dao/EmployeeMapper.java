@@ -23,4 +23,6 @@ public interface EmployeeMapper {
     EmployeeHrDTO findHrById(@Param("employeeId") Long employeeId);
 
     List<EmployeeListDTO> findAll();
+
+    List<EmployeeDTO> findByNameContaining(@Param("name") String name);
 }

@@ -42,6 +42,8 @@ DROP TABLE IF EXISTS `dictionary`;
 DROP TABLE IF EXISTS `menu`;
 DROP TABLE IF EXISTS `favorite_menu`;
 DROP TABLE IF EXISTS `board_file`;
+DROP TABLE IF EXISTS `contract_file`;
+DROP TABLE IF EXISTS `disciplinary_file`;
 
 
 SET FOREIGN_KEY_CHECKS = 1;
@@ -468,6 +470,17 @@ CREATE TABLE `contract` (
       PRIMARY KEY (`contract_id`),
       FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`)
 )   ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE contract_file (
+      `contract_file_id`     BIGINT       NOT NULL AUTO_INCREMENT,
+      `contract_id`          BIGINT       NOT NULL,
+      `file_name`                VARCHAR(255) NOT NULL,
+      `file_url`                 VARCHAR(1024) NOT NULL,   -- S3 키 저장
+      `file_size`                BIGINT       NOT NULL,
+      `uploaded_at`              DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (`contract_file_id`),
+      FOREIGN KEY (`contract_id`) REFERENCES contract(contract_id)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 징계
 CREATE TABLE disciplinary (

@@ -19,4 +19,9 @@ public class DisciplinaryQueryServiceImpl implements DisciplinaryQueryService {
     public List<DisciplinaryListDTO> findAll() {
         return mapper.selectAll();
     }
+
+    @Override
+    public List<DisciplinaryListDTO> findByEmployeeId(Long employeeId) {
+        return mapper.selectByEmployeeId(employeeId);
+    }
 }

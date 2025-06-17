@@ -62,6 +62,7 @@
           FROM meeting
          WHERE team_id = #{teamId}
            AND meeting_date = #{today}
+         ORDER BY meeting_time ASC
     </select>
 
     <select id="findSchedulesToday" resultType="com.ddis.ddis_hr.attendance.query.dto.PersonalScheduleQueryDTO">

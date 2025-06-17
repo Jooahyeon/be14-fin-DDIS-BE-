@@ -6,6 +6,7 @@ import lombok.Data;
 public class MyCommuteCorrectionQueryDTO {
 
     private String approvalStatus;
+    private String workDate;
     private String requestTime;
     private String beforeCheckInTime;
     private String requestedTimeChange;

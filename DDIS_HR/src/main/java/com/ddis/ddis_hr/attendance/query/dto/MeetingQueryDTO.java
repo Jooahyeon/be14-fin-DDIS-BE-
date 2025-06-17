@@ -8,6 +8,7 @@ import java.time.LocalDate;
 public class MeetingQueryDTO {
 
     private Long teamId;
+    private Long meetingId;
     private LocalDate meetingDate;   // LocalDate 또는 String
     private String meetingTitle;
     private String meetingTime;

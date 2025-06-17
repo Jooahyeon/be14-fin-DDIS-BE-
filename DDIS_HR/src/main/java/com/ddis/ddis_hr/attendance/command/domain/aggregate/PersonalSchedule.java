@@ -2,15 +2,13 @@ package com.ddis.ddis_hr.attendance.command.domain.aggregate;
 
 import com.ddis.ddis_hr.member.command.domain.aggregate.entity.Employee;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

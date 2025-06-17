@@ -12,6 +12,7 @@ import java.time.LocalDate;
 public class TeamCalendarQueryDTO {
 
     private String type; // "meeting" or "attendance"
+    private Long meetingId;
     private String title; // 회의명 (meeting)
     private String time;  // 회의 시간 (meeting)
     private String status; // 근무 상태명 (attendance)

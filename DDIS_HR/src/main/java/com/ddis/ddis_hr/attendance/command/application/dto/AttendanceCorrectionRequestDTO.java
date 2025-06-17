@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class AttendanceCorrectionRequestDTO {
 
+    private String requestedDate;
     private String requestedTimeChange;
     private String reason;
 

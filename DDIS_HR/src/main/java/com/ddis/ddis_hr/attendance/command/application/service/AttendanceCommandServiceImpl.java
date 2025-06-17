@@ -138,7 +138,7 @@ public class AttendanceCommandServiceImpl implements AttendanceCommandService{
 
 
     @Override
-    public void personalScheduleRegister(PersonalScheduleRequestDTO dto, Long employeeId) {
+    public PersonalSchedule personalScheduleRegister(PersonalScheduleRequestDTO dto, Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사원"));
 
@@ -149,11 +149,32 @@ public class AttendanceCommandServiceImpl implements AttendanceCommandService{
                 .scheduleTime(dto.getScheduleTime())
                 .build();
 
-        repository.save(schedule);
+        return repository.save(schedule);
     }
 
     @Override
-    public void MeetingScheduleRegister(MeetingScheduleRequestDTO dto, Long employeeId, Long teamId) {
+    @Transactional
+    public void updatePersonalSchedule(Long id, PersonalScheduleRequestDTO dto) {
+        PersonalSchedule schedule = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("일정이 존재하지 않습니다."));
+
+        schedule.setScheduleDate(LocalDate.parse(dto.getScheduleDate()));
+        schedule.setScheduleTitle(dto.getScheduleTitle());
+        schedule.setScheduleTime(dto.getScheduleTime());
+        // JPA가 dirty checking으로 자동 업데이트
+    }
+
+    @Override
+    @Transactional
+    public void deletePersonalSchedule(Long id) {
+        PersonalSchedule schedule = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("일정이 존재하지 않습니다."));
+
+        repository.delete(schedule);
+    }
+
+    @Override
+    public Meeting MeetingScheduleRegister(MeetingScheduleRequestDTO dto, Long employeeId, Long teamId) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사원"));
         TeamEntity team = teamRepository.findById(teamId)
@@ -167,14 +188,35 @@ public class AttendanceCommandServiceImpl implements AttendanceCommandService{
                 .meetingTime(dto.getMeetingTime())
                 .build();
 
-        meetingScheduleRepository.save(meeting);
+        return meetingScheduleRepository.save(meeting);
+    }
+
+    @Override
+    @Transactional
+    public void updateMeetingSchedule(Long id, MeetingScheduleRequestDTO dto) {
+        Meeting meeting = meetingScheduleRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("일정이 존재하지 않습니다."));
+
+        meeting.setMeetingDate(LocalDate.parse(dto.getMeetingDate()));
+        meeting.setMeetingTitle(dto.getMeetingTitle());
+        meeting.setMeetingTime(dto.getMeetingTime());
+        // JPA가 dirty checking으로 자동 업데이트
+    }
+
+    @Override
+    @Transactional
+    public void deleteMeetingSchedule(Long id) {
+        Meeting meeting = meetingScheduleRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("일정이 존재하지 않습니다."));
+
+        meetingScheduleRepository.delete(meeting);
     }
 
     @Transactional
     @Override
     public void requestCorrection(Long employeeId, AttendanceCorrectionRequestDTO dto) {
-        LocalDate today = LocalDate.now();
-        Attendance attendance = attendanceRepository.findByEmployee_EmployeeIdAndWorkDate(employeeId, today)
+        LocalDate targetDate = LocalDate.parse(dto.getRequestedDate());
+        Attendance attendance = attendanceRepository.findByEmployee_EmployeeIdAndWorkDate(employeeId, targetDate)
                 .orElseThrow(() -> new IllegalStateException("출근 기록이 없습니다. 먼저 출근해주세요."));
 
         attendance.applyCorrection(

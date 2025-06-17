@@ -1,6 +1,6 @@
 package com.ddis.ddis_hr.eapproval.command.application.dto;
 
-import com.ddis.ddis_hr.eapproval.command.domain.entity.Draft;
+import com.ddis.ddis_hr.eapproval.command.domain.entity.DraftDocument;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -44,13 +44,13 @@ public class DraftCreateCommandDTO {
     private List<String> fileTypes;             // MIME 타입 리스트
     private List<Long> fileSizes;               // 파일 사이즈 리스트
 
-    public Draft toEntity() {
+    public DraftDocument toEntity() {
         LocalDate baseDate = (this.submittedAt != null
                 ? this.submittedAt.toLocalDate()
                 : LocalDate.now());
         LocalDate calculatedExpiration = baseDate.plusYears(this.retentionPeriod);
 
-        return Draft.builder()
+        return DraftDocument.builder()
                 .docTitle(this.title)
                 .docContent(this.docContent)
                 .preservePeriod(this.retentionPeriod)

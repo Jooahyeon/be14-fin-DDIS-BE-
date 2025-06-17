@@ -19,4 +19,6 @@ public interface EmployeeQueryService {
     Object findByIdWithRole(Long id, Collection<? extends GrantedAuthority> authorities);
 
     List<EmployeeListDTO> getAll();
+
+    List<EmployeeDTO> searchByName(String name);
 }

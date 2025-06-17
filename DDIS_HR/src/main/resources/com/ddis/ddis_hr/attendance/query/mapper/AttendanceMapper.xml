@@ -83,6 +83,7 @@
              , e.employee_photo_url AS employeePhotoUrl
              , COALESCE(ws.work_status_name, '-') AS work_status_name
              , p.position_id
+             , a.check_out_time
           FROM employee e
           LEFT JOIN attendance a ON e.employee_id = a.employee_id AND a.work_date = #{today}
           LEFT JOIN work_status ws ON a.work_status_id = ws.work_status_id

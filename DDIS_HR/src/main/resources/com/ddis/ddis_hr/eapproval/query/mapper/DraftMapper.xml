@@ -5,7 +5,6 @@
 
 <mapper namespace="com.ddis.ddis_hr.eapproval.query.mapper.DraftMapper">
 
-    <!-- ✅ DTO 맵핑 설정 -->
     <resultMap id="DraftDetailResultMap" type="com.ddis.ddis_hr.eapproval.query.dto.DraftDetailResponseQueryDTO">
         <!-- 기본 정보 매핑 -->
         <id property="docId" column="doc_id" />
@@ -13,12 +12,16 @@
         <result property="team" column="team" />
         <result property="position" column="position" />
         <result property="drafter" column="drafter" />
+        <result property="drafterId" column="drafter_id" /> <!-- ✅ 기안자 사번 추가 -->
+        <result property="docStatus" column="doc_status" /> <!-- ✅ 문서 상태 추가 -->
         <result property="date" column="date" />
         <result property="docContent" column="doc_content" />
         <result property="keepYear" column="keep_year" />
         <result property="rankId" column="drafterRankId" />
         <result property="rankName" column="drafterRankName" />
         <result property="role" column="documentBoxRole" />
+        <result property="isDeleted" column="is_deleted" />
+
 
         <!-- 🗂️ 결재라인 리스트 매핑 (1:N) -->
         <collection property="approvalLine" ofType="com.ddis.ddis_hr.eapproval.query.dto.ApprovalLineQueryDTO">
@@ -28,6 +31,7 @@
             <result property="name" column="approvalLine_name" />
             <result property="team" column="approvalLine_team" />
             <result property="position" column="approvalLine_position" />
+            <result property="rankName" column="approvalLine_rankName" />
             <result property="status" column="approvalLine_status" />
             <result property="type" column="approvalLine_type" />
             <result property="submitDate" column="approvalLine_submitDate" />
@@ -36,38 +40,40 @@
         </collection>
     </resultMap>
 
-    <!--  전체 기안 상세 정보 + 결재라인 + 파일 조회 + rank, document_box.role 추가 -->
-    <!-- 1) 첨부파일 컬럼(file_url, file_name, file_size, file_type)도 함께 조회 -->
     <select id="selectDraftDetail" resultMap="DraftDetailResultMap">
         SELECT
             dd.doc_id,
             dd.doc_title,
-            dd.doc_content        AS doc_content,
-            dd.preserve_period    AS keep_year,
-            dd.created_at         AS date,
-          e.employee_name       AS drafter,
-          t.team_name           AS team,
-          p.position_name       AS position,
-          r.rank_id AS drafterRankId,                   --  기안자 직급 ID
-          r.rank_name AS drafterRankName,               --  기안자 직급명
-          db.role AS documentBoxRole,
+            dd.doc_content         AS doc_content,
+            dd.preserve_period     AS keep_year,
+            dd.created_at          AS date,
+            dd.doc_status          AS doc_status,      -- ✅ 문서 상태
+            dd.employee_id         AS drafter_id,      -- ✅ 기안자 사번
+            dd.submitted_at        AS submitted_date,
 
-          al.approval_line_id   AS approvalLine_id,
-          al.step               AS step,
-          al.employee_id        AS employee_id,
-          ae.employee_name      AS approvalLine_name,
-          at.team_name          AS approvalLine_team,
-          ap.position_name      AS approvalLine_position,
-          al.status             AS approvalLine_status,
-          al.type               AS approvalLine_type,
-          al.approved_at        AS approvalLine_approveDate,
-          al.opinion            AS approvalLine_comment,
-          dd.submitted_at       AS submitted_date,
+            e.employee_name        AS drafter,
+            t.team_name            AS team,
+            p.position_name        AS position,
+            r.rank_id              AS drafterRankId,
+            r.rank_name            AS drafterRankName,
+            db.role                AS documentBoxRole,
 
-          df.file_url           AS file_url,
-          df.file_name          AS file_name,
-          df.file_size          AS file_size,
-          df.file_type          AS file_type
+            al.approval_line_id    AS approvalLine_id,
+            al.step                AS step,
+            al.employee_id         AS employee_id,
+            ae.employee_name       AS approvalLine_name,
+            at.team_name           AS approvalLine_team,
+            ap.position_name       AS approvalLine_position,
+            ar.rank_name           AS approvalLine_rankName,
+            al.status              AS approvalLine_status,
+            al.type                AS approvalLine_type,
+            al.approved_at         AS approvalLine_approveDate,
+            al.opinion             AS approvalLine_comment,
+
+            df.file_url            AS file_url,
+            df.file_name           AS file_name,
+            df.file_size           AS file_size,
+            df.file_type           AS file_type
 
         FROM draft_documents dd
                  LEFT JOIN employee e ON dd.employee_id = e.employee_id
@@ -80,11 +86,13 @@
                  LEFT JOIN employee ae ON al.employee_id = ae.employee_id
                  LEFT JOIN team at ON ae.team_id = at.team_id
                  LEFT JOIN position ap ON ae.position_id = ap.position_id
+                 LEFT JOIN rank ar ON ae.rank_id = ar.rank_id
 
                  LEFT JOIN document_attachment df ON dd.doc_id = df.doc_id
 
         WHERE dd.doc_id = #{docId}
     </select>
+
 
     <!-- 2) resultMap 에 attachmentKeys 와 contentDto.refFile 추가 -->
 <!--    <resultMap id="DraftDetailResultMap"-->
@@ -130,12 +138,12 @@
 
 <!--    </resultMap>-->
     <select id="countFirstApproverAction" parameterType="long" resultType="int">
-        <!-- 1차 결재자(step=2)가 이미 결재(status IS NOT NULL)했는지 확인 -->
+        <!-- 1차 결재자(step=2)가 아직 결재 안했는지 확인 (미결이면 회수 가능) -->
         SELECT COUNT(*)
         FROM approval_line
         WHERE doc_id = #{docId}
-        AND step   = 2
-        AND status IS NOT NULL
+        AND step = 2
+        AND status = '미결'
     </select>
 
     <!-- document_box에서 기안자 제외한 결재자·협조자 엔트리 삭제 및 draft_documents 상태 변경 -->
@@ -144,4 +152,10 @@
             SET doc_status = '회수'
             WHERE doc_id = #{docId}
         </update>
+
+    <update id="deleteDocumentBoxExceptDrafter" parameterType="long">
+        UPDATE document_box
+        SET is_deleted = TRUE
+        WHERE doc_id = #{docId}
+    </update>
 </mapper>

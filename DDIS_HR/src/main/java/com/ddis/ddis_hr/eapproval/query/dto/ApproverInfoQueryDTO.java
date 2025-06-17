@@ -40,7 +40,7 @@ public class ApproverInfoQueryDTO {
     private String typeLabel;
 
     /** 결재선 유형 한글 라벨 */
-//    private String lineTypeLabel;
+    private String lineTypeLabel;
 
     /** 결재선 단계 */
     private int step;

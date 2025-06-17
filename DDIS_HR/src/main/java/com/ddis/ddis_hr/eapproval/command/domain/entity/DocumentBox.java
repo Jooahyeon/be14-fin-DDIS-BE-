@@ -27,7 +27,6 @@ public class DocumentBox {
     private Boolean isDeleted;
 }  // '기안자','결재자','협조자','수신자','참조자'
 
-    // constructor, getters/setters
 
 
 

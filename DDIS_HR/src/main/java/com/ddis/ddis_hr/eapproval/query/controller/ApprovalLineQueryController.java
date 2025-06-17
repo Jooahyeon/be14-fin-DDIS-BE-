@@ -2,8 +2,6 @@ package com.ddis.ddis_hr.eapproval.query.controller;
 
 import com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO;
 import com.ddis.ddis_hr.eapproval.query.service.ApprovalLineAutoMatchService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

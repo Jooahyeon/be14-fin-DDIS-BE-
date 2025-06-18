@@ -2,43 +2,52 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-
 <mapper namespace="com.ddis.ddis_hr.eapproval.query.mapper.DraftMapper">
 
-    <resultMap id="DraftDetailResultMap" type="com.ddis.ddis_hr.eapproval.query.dto.DraftDetailResponseQueryDTO">
-        <!-- 기본 정보 매핑 -->
-        <id property="docId" column="doc_id" />
-        <result property="docTitle" column="doc_title" />
-        <result property="team" column="team" />
-        <result property="position" column="position" />
-        <result property="drafter" column="drafter" />
-        <result property="drafterId" column="drafter_id" /> <!-- ✅ 기안자 사번 추가 -->
-        <result property="docStatus" column="doc_status" /> <!-- ✅ 문서 상태 추가 -->
-        <result property="date" column="date" />
-        <result property="docContent" column="doc_content" />
-        <result property="keepYear" column="keep_year" />
-        <result property="rankId" column="drafterRankId" />
-        <result property="rankName" column="drafterRankName" />
-        <result property="role" column="documentBoxRole" />
-        <result property="isDeleted" column="is_deleted" />
+
+        <resultMap id="DraftDetailResultMap" type="com.ddis.ddis_hr.eapproval.query.dto.DraftDetailResponseQueryDTO">
+            <!-- 기본 정보 매핑 -->
+            <id property="docId" column="doc_id" />
+            <result property="docTitle" column="doc_title" />
+            <result property="team" column="team" />
+            <result property="position" column="position" />
+            <result property="drafter" column="drafter" />
+            <result property="drafterId" column="drafter_id" /> <!-- ✅ 기안자 사번 추가 -->
+            <result property="docStatus" column="doc_status" /> <!-- ✅ 문서 상태 추가 -->
+            <result property="date" column="date" />
+            <result property="docContent" column="doc_content" />
+            <result property="keepYear" column="keep_year" />
+            <result property="rankId" column="drafterRankId" />
+            <result property="rankName" column="drafterRankName" />
+            <result property="role" column="documentBoxRole" />
+            <result property="isDeleted" column="is_deleted" />
 
 
-        <!-- 🗂️ 결재라인 리스트 매핑 (1:N) -->
-        <collection property="approvalLine" ofType="com.ddis.ddis_hr.eapproval.query.dto.ApprovalLineQueryDTO">
-            <result property="id" column="approvalLine_id" />
-            <result property="step" column="step"/>
-            <result property="employeeId" column="employee_id"/>
-            <result property="name" column="approvalLine_name" />
-            <result property="team" column="approvalLine_team" />
-            <result property="position" column="approvalLine_position" />
-            <result property="rankName" column="approvalLine_rankName" />
-            <result property="status" column="approvalLine_status" />
-            <result property="type" column="approvalLine_type" />
-            <result property="submitDate" column="approvalLine_submitDate" />
-            <result property="approveDate" column="approvalLine_approveDate" />
-            <result property="comment" column="approvalLine_comment" />
-        </collection>
-    </resultMap>
+            <!-- 🗂️ 결재라인 리스트 매핑 (1:N) -->
+            <collection property="approvalLine" ofType="com.ddis.ddis_hr.eapproval.query.dto.ApprovalLineQueryDTO">
+                <result property="id" column="approvalLine_id" />
+                <result property="step" column="step"/>
+                <result property="employeeId" column="employee_id"/>
+                <result property="name" column="approvalLine_name" />
+                <result property="team" column="approvalLine_team" />
+                <result property="position" column="approvalLine_position" />
+                <result property="rankName" column="approvalLine_rankName" />
+                <result property="status" column="approvalLine_status" />
+                <result property="type" column="approvalLine_type" />
+                <result property="submitDate" column="approvalLine_submitDate" />
+                <result property="approveDate" column="approvalLine_approveDate" />
+                <result property="comment" column="approvalLine_comment" />
+            </collection>
+
+        <!-- 🗂️ 첨부파일 리스트 매핑 (1:N) -->
+            <collection property="attachments" ofType="com.ddis.ddis_hr.eapproval.query.dto.FileQueryDTO">
+                <result property="key" column="file_url"/>
+                <result property="name" column="file_name"/>
+                <result property="size" column="file_size"/>
+                <result property="type" column="file_type"/>
+            </collection>
+
+        </resultMap>
 
     <select id="selectDraftDetail" resultMap="DraftDetailResultMap">
         SELECT
@@ -93,50 +102,55 @@
         WHERE dd.doc_id = #{docId}
     </select>
 
+<!--    첨부파일 조회-->
+    <select id="selectAttachmentsByDocId" parameterType="long" resultType="com.ddis.ddis_hr.eapproval.query.dto.FileQueryDTO">
+        SELECT
+            file_name,
+            file_url,
+            file_type,
+            file_size
+        FROM document_attachment
+        WHERE doc_id = #{docId}
+    </select>
 
-    <!-- 2) resultMap 에 attachmentKeys 와 contentDto.refFile 추가 -->
-<!--    <resultMap id="DraftDetailResultMap"-->
-<!--               type="com.ddis.ddis_hr.eapproval.query.dto.DraftDetailResponseQueryDTO">-->
+    <!-- 상세화면 내 수신자 조회-->
+    <select id="selectReceiversByDocId" parameterType="long" resultType="com.ddis.ddis_hr.eapproval.query.dto.ReferenceDocDTO">
+        SELECT
+            e.employee_id       AS employeeId,
+            e.employee_name     AS employeeName,
+            db.doc_id           AS docId,
+            p.position_name     AS position,
+            db.is_read          AS isRead,
+            db.role             AS role,
+            db.read_at          AS readAt
+        FROM document_box db
+                 JOIN employee e ON db.employee_id = e.employee_id
+                 LEFT JOIN team t ON e.team_id = t.team_id
+                 LEFT JOIN position p ON e.position_id = p.position_id
+        WHERE db.doc_id = #{docId}
+          AND db.role = '수신자'
+    </select>
 
-        <!-- 기본 필드 매핑 -->
-<!--        <id     property="docId"      column="doc_id"/>-->
-<!--        <result property="docTitle"   column="doc_title"/>-->
-<!--        <result property="team"       column="team"/>-->
-<!--        <result property="position"   column="position"/>-->
-<!--        <result property="drafter"    column="drafter"/>-->
-<!--        <result property="date"       column="date"/>-->
-<!--        <result property="docContent" column="doc_content"/>-->
-<!--        <result property="keepYear"   column="keep_year"/>-->
-<!--        <result property="submitDate" column="submitted_date"/>-->
-<!--        <result property="rankId" column="drafterRankId" />-->
-<!--        <result property="rankName" column="drafterRankName" />-->
-<!--        <result property="role" column="documentBoxRole" />-->
-<!--        <association property="contentDto"-->
-<!--                     javaType="com.ddis.ddis_hr.eapproval.query.dto.ContentQueryDTO">-->
-            <!-- 제목, receiver, reference, body 등 다른 필드가 있으면 여기에 매핑해 주세요 -->
-<!--            <result property="title" column="doc_title"/>-->
-<!--            <result property="body" column="doc_content"/>-->
-
-<!--            <collection property="refFile"-->
-<!--                        ofType="com.ddis.ddis_hr.eapproval.query.dto.FileQueryDTO">-->
-<!--                <result property="key"  column="file_url"/>-->
-<!--                <result property="name" column="file_name"/>-->
-<!--                <result property="size" column="file_size"/>-->
-<!--                <result property="type" column="file_type"/>-->
-<!--            </collection>-->
-            <!-- 수신자·참조자 리스트도 contentDto 에 있다면 아래처럼 매핑 -->
-    <!-- 결재 이력 삭제 후 회수 처리 -->
-
-
-            <!-- 본문(body) 매핑 -->
-<!--        </association>-->
-
-        <!-- attachmentKeys : S3 Key 컬렉션으로만 뽑아낼 때 -->
-
-        <!-- contentDto.refFile : FileQueryDTO (name/size/type) 매핑 -->
+    <!-- 상세화면 내 참조자 조회-->
+    <select id="selectReferersByDocId" parameterType="long" resultType="com.ddis.ddis_hr.eapproval.query.dto.ReferenceDocDTO">
+        SELECT
+            e.employee_id       AS employeeId,
+            e.employee_name     AS employeeName,
+            db.doc_id           AS docId,
+            p.position_name     AS position,
+            db.is_read          AS isRead,
+            db.role             AS role,
+            db.read_at          AS readAt
+        FROM document_box db
+                 JOIN employee e ON db.employee_id = e.employee_id
+                 LEFT JOIN team t ON e.team_id = t.team_id
+                 LEFT JOIN position p ON e.position_id = p.position_id
+        WHERE db.doc_id = #{docId}
+          AND db.role = '참조자'
+    </select>
 
 
-<!--    </resultMap>-->
+    <!--    회수 로직-->
     <select id="countFirstApproverAction" parameterType="long" resultType="int">
         <!-- 1차 결재자(step=2)가 아직 결재 안했는지 확인 (미결이면 회수 가능) -->
         SELECT COUNT(*)
@@ -158,4 +172,6 @@
         SET is_deleted = TRUE
         WHERE doc_id = #{docId}
     </update>
+
+
 </mapper>

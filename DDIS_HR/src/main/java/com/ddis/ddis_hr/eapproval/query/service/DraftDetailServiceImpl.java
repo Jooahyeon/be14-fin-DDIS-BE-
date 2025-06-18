@@ -2,10 +2,8 @@ package com.ddis.ddis_hr.eapproval.query.service;
 
 import com.ddis.ddis_hr.S3Config.service.S3Service;
 import com.ddis.ddis_hr.eapproval.command.application.dto.DraftCreateCommandDTO;
-import com.ddis.ddis_hr.eapproval.query.dto.ContentQueryDTO;
-import com.ddis.ddis_hr.eapproval.query.dto.DraftDTO;
-import com.ddis.ddis_hr.eapproval.query.dto.DraftDetailResponseQueryDTO;
-import com.ddis.ddis_hr.eapproval.query.dto.FileQueryDTO;
+import com.ddis.ddis_hr.eapproval.query.dto.*;
+import com.ddis.ddis_hr.eapproval.query.mapper.DocumentBoxMapper;
 import com.ddis.ddis_hr.eapproval.query.mapper.DraftDocumentMapper;
 import com.ddis.ddis_hr.eapproval.query.mapper.DraftMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,12 +20,13 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class RetrieveDocServiceImpl implements RetrieveDocService {
+public class DraftDetailServiceImpl implements DraftDetailService {
 
     private final DraftMapper draftMapper;
     private final ObjectMapper objectMapper;
     private final S3Service s3Service;
     private final DraftDocumentMapper draftDocumentMapper;
+    private final DocumentBoxMapper documentBoxMapper;
 
     // 기안 상세조회
     @Override
@@ -63,16 +62,21 @@ public class RetrieveDocServiceImpl implements RetrieveDocService {
         if (content.getRefFile() != null) {
             for (FileQueryDTO f : content.getRefFile()) {
                 String url = s3Service.generateDownloadUrl(f.getKey(), f.getType());
-                f.setUrl(url);
+                f.setKey(url);
             }
         }
 
         // 6) 수신자·참조자 문자열 조립
         if (content.getReceiver()  != null) dto.setReceiver(String.join(", ", content.getReceiver()));
-        if (content.getReference() != null) dto.setReferer(String.join(", ", content.getReference()));
+        if (content.getReferer() != null) dto.setReferer(String.join(", ", content.getReferer()));
 
         return dto;
     }
+
+
+
+
+
 
     // 회수
     @Override
@@ -120,11 +124,6 @@ public class RetrieveDocServiceImpl implements RetrieveDocService {
 
     }
 
-    @Override
-    public Long createDraft(DraftCreateCommandDTO requestDto) {
-        return 0L;
-    }
-
 
     @Override
     public List<DraftDTO> getMyDrafts(Long employeeId) {
@@ -132,12 +131,9 @@ public class RetrieveDocServiceImpl implements RetrieveDocService {
         return draftDocumentMapper.selectDraftsByDrafter(employeeId);
     }
 
-
     @Override
-    public List<DraftDTO> getMyReference(Long employeeId) {
-        return draftDocumentMapper.selectReferenceByemp(employeeId);
-
+    public FindDrafterQueryDTO getfindDrafterInfo(Long employeeId) {
+        return null;
     }
-
 
 }

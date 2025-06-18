@@ -4,7 +4,8 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-// 기안문 상세조회 DTO 이거로 쓰임!!!!!!!!!!!!!!!!
+
+// 기안문 상세조회 DTO
 
 @Getter
 @Setter
@@ -33,7 +34,7 @@ public class DraftDetailResponseQueryDTO {
     private ContentQueryDTO contentDto;             // 파싱한 객체
 
     private List<ApprovalLineQueryDTO> approvalLine;     // 결재라인 DTO
-    private List<String> attachmentKeys;
+    private List<FileQueryDTO> attachments;
 
     public void setContentDto(ContentQueryDTO contentDto) {
         this.contentDto = contentDto;

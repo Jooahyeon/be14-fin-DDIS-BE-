@@ -13,5 +13,8 @@ public class FileQueryDTO {
     private String name;            // 파일명
     private Long size;               // 파일용량
     private String type;            // 파일종류
-    private String url;
+
+
+
+
 }

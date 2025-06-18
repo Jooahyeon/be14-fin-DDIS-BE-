@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+// 기안자 정보 찾는 컨트롤러
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/drafter")

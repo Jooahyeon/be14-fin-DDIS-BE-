@@ -46,16 +46,6 @@ public class EmployeeQueryServiceImpl implements EmployeeQueryService {
     }
 
     @Override
-    public Object findByIdWithRole(Long id, Collection<? extends GrantedAuthority> authorities) {
-        boolean isHr = authorities.stream()
-                .anyMatch(a -> "ROLE_HR".equals(a.getAuthority()));
-        return isHr
-                ? getHrById(id)
-                : getPublicById(id);
-    }
-
-
-    @Override
     public List<EmployeeListDTO> getAll() {
         return employeeMapper.findAll();
     }

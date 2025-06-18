@@ -32,13 +32,11 @@ public class EmployeeController {
 
     // 사원 등록 API
     @PostMapping("/enroll")
-// @PreAuthorize("hasRole('HR')")
+    @PreAuthorize("hasAnyRole('HR')")
     public ResponseEntity<Long> enroll(
             @RequestBody EmployeeEnrollDTO dto,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
-        log.debug("▶ EnrollDTO.photoKey = '{}'", dto.getEmployeePhotoUrl());
-
         Long id = employeeService.enrollEmployee(dto);
         return ResponseEntity.ok(id);
     }
@@ -60,14 +58,14 @@ public class EmployeeController {
     }
 
     //사원 정보 수정 (인사팀) API
-//    @PutMapping("/{id}")
-//    @PreAuthorize("hasRole('HR')")
-//    public ResponseEntity<Void> adminUpdate(
-//            @PathVariable Long id,
-//            @RequestBody EmployeeHrUpdateDTO dto,
-//            @AuthenticationPrincipal CustomUserDetails user
-//    ) {
-//        employeeService.hrUpdateEmployee(id, dto);
-//        return ResponseEntity.ok().build();
-//    }
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('HR')")
+    public ResponseEntity<Void> adminUpdate(
+            @PathVariable Long id,
+            @RequestBody EmployeeHrUpdateDTO dto,
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        employeeService.hrUpdateEmployee(id, dto);
+        return ResponseEntity.ok().build();
+    }
 }

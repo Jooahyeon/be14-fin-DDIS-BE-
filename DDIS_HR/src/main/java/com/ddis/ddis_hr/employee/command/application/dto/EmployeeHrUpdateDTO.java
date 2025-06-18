@@ -35,7 +35,7 @@ public class EmployeeHrUpdateDTO {
     private String finalAcademic;
     private String employeeSchool;
     private String employeeDept;
-    private LocalDate graduationYear;
+    private Integer graduationYear;
     private String isFourInsurances;
     private Long positionId;
     private Long rankId;

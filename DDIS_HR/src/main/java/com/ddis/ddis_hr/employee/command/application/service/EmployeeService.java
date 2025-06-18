@@ -11,5 +11,5 @@ public interface EmployeeService {
 
     void updateEmployee(Long employeeId, EmployeeUpdateDTO dto);            // 사원 정보 수정 (일반 사원)
 
-//    void hrUpdateEmployee(Long employeeId, EmployeeHrUpdateDTO dto);     // 사원 정보 수정 (인사팀)
+    void hrUpdateEmployee(Long employeeId, EmployeeHrUpdateDTO dto);     // 사원 정보 수정 (인사팀)
 }

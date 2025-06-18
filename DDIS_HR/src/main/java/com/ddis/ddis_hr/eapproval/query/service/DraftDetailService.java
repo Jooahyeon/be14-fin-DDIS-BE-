@@ -5,6 +5,7 @@ import com.ddis.ddis_hr.eapproval.query.dto.DraftDetailResponseQueryDTO;
 import com.ddis.ddis_hr.eapproval.query.dto.FindDrafterQueryDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface DraftDetailService {
     DraftDetailResponseQueryDTO getDraftDetail(Long docId);
@@ -13,6 +14,7 @@ public interface DraftDetailService {
 
     // 회수
     void recallDocument(Long docId);
+
 
     FindDrafterQueryDTO getfindDrafterInfo(Long employeeId);
 

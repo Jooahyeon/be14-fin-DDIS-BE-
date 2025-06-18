@@ -1,6 +1,7 @@
 package com.ddis.ddis_hr.eapproval.command.application.dto;
 
 import com.ddis.ddis_hr.eapproval.command.domain.entity.DraftDocument;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,9 +35,10 @@ public class DraftCreateCommandDTO {
     private Long employeeId;
     private List<ApprovalLineDTO> approvalLines;
     private List<Long> approvers;
+    @JsonProperty("reference")
+    private List<Long> ccs;
     private List<Long> cooperators;
     private List<Long> receivers;
-    private List<Long> ccs;
 
     // ★ 첨부파일을 한 번에 담는 필드들
     private List<String> attachmentKeys;        // S3 key 리스트

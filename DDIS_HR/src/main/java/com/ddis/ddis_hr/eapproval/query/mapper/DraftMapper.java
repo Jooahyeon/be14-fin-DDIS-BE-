@@ -33,4 +33,7 @@ public interface DraftMapper {
         // 파일 첨부 조회
         FileQueryDTO selectAttachmentsByDocId(@Param("docId") Long docId);
 
+        //
+        List<String> selectRolesByDocIdAndEmployeeId(@Param("docId") Long docId, @Param("employeeId") Long employeeId);
+
 }

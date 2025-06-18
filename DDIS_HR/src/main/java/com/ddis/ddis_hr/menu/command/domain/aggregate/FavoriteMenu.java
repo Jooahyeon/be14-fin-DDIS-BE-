@@ -6,7 +6,10 @@ import lombok.*;
 
 
 @Entity
-@Table(name = "favorite_menu")
+@Table(
+        name = "favorite_menu",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"employee_id", "menu_id"}) // ← 이 부분 추가
+)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

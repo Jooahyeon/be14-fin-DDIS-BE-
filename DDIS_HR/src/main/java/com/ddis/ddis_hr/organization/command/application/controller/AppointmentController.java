@@ -6,6 +6,7 @@ import com.ddis.ddis_hr.organization.command.application.service.AppointmentServ
 import com.ddis.ddis_hr.organization.command.domain.aggregate.entity.AppointmentEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class AppointmentController {
     }
 
     /** 등록(Create) **/
+    @PreAuthorize("hasAnyRole('HR')")
     @PostMapping("/create")
     public ResponseEntity<AppointmentResponseDTO> createAppointment(@RequestBody AppointmentRequestDTO requestDTO) {
         AppointmentResponseDTO created = appointmentService.createAppointment(requestDTO);
@@ -29,6 +31,7 @@ public class AppointmentController {
     }
 
     /** 수정(Update) **/
+    @PreAuthorize("hasAnyRole('HR')")
     @PutMapping("/update/{id}")
     public ResponseEntity<AppointmentResponseDTO> updateAppointment(
             @PathVariable Long id,
@@ -38,6 +41,7 @@ public class AppointmentController {
     }
 
     /** 삭제(Delete) **/
+    @PreAuthorize("hasAnyRole('HR')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteAppointment(@PathVariable Long id) {
         appointmentService.deleteAppointment(id);

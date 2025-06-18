@@ -10,11 +10,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class ReferenceDocDTO {
+    private Long employeeId;
     private Long docId;
     private String title;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;
-    private String writerName;
+    private String employeeName;
     private boolean isRead;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime readAt;

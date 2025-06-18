@@ -24,5 +24,13 @@ public interface DraftMapper {
         // ④ draft_documents 상태를 '회수'로 변경
         void updateDocumentStatusToRecalled(@Param("docId") Long docId);
 
+        // 수신자 리스트 조회
+        List<ReferenceDocDTO> selectReceiversByDocId(@Param("docId") Long docId);
+
+        // 참조자 리스트 조회
+        List<ReferenceDocDTO> selectReferersByDocId(@Param("docId") Long docId);
+
+        // 파일 첨부 조회
+        FileQueryDTO selectAttachmentsByDocId(@Param("docId") Long docId);
 
 }

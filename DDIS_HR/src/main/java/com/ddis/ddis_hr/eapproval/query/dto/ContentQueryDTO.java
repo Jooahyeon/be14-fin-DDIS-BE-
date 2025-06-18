@@ -13,7 +13,8 @@ import java.util.List;
 public class ContentQueryDTO {
 
     private List<FileQueryDTO> refFile;
-    private List<String> receiver;    // ✅ 수신자
-    private List<String> reference;   // ✅ 참조자
+    private String receiver;     // 수신자 이름
+    private String referer;      // ✅ 참조자
     private String body;
+
 }

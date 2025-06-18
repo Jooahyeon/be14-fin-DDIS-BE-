@@ -5,12 +5,13 @@
 
 <mapper namespace="com.ddis.ddis_hr.eapproval.query.mapper.DocumentBoxMapper">
 
+<!--   수신함, 참조함 조회용-->
     <select id="selectReferenceDocsByEmployeeId" resultType="com.ddis.ddis_hr.eapproval.query.dto.ReferenceDocDTO">
         SELECT
             db.doc_id            AS docId,
-            d.doc_title              AS title,
+            d.doc_title          AS title,
             d.created_at         AS createdAt,
-            e.employee_name               AS writerName,
+            e.employee_name      AS reference,
             db.is_read           AS isRead,
             db.read_at           AS readAt,
             db.role              AS role
@@ -23,19 +24,12 @@
         ORDER BY d.created_at DESC
     </select>
 
-    <update id="updateReadStatus">
-        UPDATE document_box
-        SET read_at = #{readAt}, is_read = true
-        WHERE employee_id = #{employeeId}
-          AND doc_id = #{docId}
-    </update>
-
     <select id="selectReceiverDocsByEmployeeId" parameterType="long" resultType="com.ddis.ddis_hr.eapproval.query.dto.ReferenceDocDTO">
         SELECT
             db.doc_id            AS docId,
             d.doc_title          AS title,
             d.created_at         AS createdAt,
-            e.employee_name      AS writerName,
+            e.employee_name      AS receiver,
             db.is_read           AS isRead,
             db.read_at           AS readAt,
             db.role              AS role
@@ -47,4 +41,12 @@
           AND db.is_deleted = 0
         ORDER BY d.created_at DESC
     </select>
+
+    <update id="updateReadStatus">
+        UPDATE document_box
+        SET read_at = #{readAt}, is_read = true
+        WHERE employee_id = #{employeeId}
+          AND doc_id = #{docId}
+    </update>
+
 </mapper>

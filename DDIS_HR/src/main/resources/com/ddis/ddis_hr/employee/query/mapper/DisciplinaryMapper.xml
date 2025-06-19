@@ -28,7 +28,7 @@
         ORDER BY d.disciplinary_date DESC
     </select>
 
-    <!-- 사원별 목록 -->
+
     <select id="selectByEmployeeId"
             parameterType="long"
             resultMap="ListResult">

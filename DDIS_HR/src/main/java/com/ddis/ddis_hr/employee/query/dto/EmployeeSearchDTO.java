@@ -4,9 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * 사원 검색 결과용 DTO
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -6,9 +6,7 @@ import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
 
-/**
- * 일반 사원이 수정할 수 있는 필드만 담는 DTO
- */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

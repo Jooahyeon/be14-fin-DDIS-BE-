@@ -21,7 +21,10 @@ public class ContractEnrollDTO {
     private Long   employeeId;
 
 
-    @Getter @Setter @NoArgsConstructor @AllArgsConstructor
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class FileMeta {
         private String fileName;
         private String fileUrl;

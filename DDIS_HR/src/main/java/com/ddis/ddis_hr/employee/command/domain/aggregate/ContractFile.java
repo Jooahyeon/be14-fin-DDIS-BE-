@@ -21,7 +21,7 @@ public class ContractFile {
     private Contract contract;
 
     private String fileName;
-    private String fileUrl;   // S3 key
+    private String fileUrl;
     private Long fileSize;
 
     @Column(updatable = false)

@@ -22,7 +22,6 @@ public class EmployeePublicDTO {
     private LocalDate employmentDate;
     private LocalDate retirementDate;
 
-    // Optionally: 조인된 이름 정보도 추가 가능
     private String positionName;
     private String rankName;
     private String jobName;

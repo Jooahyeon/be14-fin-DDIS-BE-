@@ -7,14 +7,14 @@ import com.ddis.ddis_hr.employee.query.dto.EmployeeListDTO;
 import com.ddis.ddis_hr.employee.query.dto.EmployeePublicDTO;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class EmployeeQueryServiceImpl implements EmployeeQueryService {
 
     private final EmployeeMapper employeeMapper;

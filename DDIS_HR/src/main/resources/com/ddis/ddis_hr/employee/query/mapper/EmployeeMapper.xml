@@ -43,8 +43,6 @@
         <result column="department_id"       property="departmentId"/>
         <result column="team_id"             property="teamId"/>
 
-        <result column="job_name"           property="jobName"/>
-        <result column="position_name"     property="positionName"/>
         <result column="head_name"           property="headName"/>
         <result column="department_name"     property="departmentName"/>
         <result column="team_name"           property="teamName"/>
@@ -92,19 +90,15 @@
             e.head_id,
             e.department_id,
             e.team_id,
-            p.position_name,
-            r.rank_name,
-            j.job_name,
             h.head_name,
             d.department_name,
-            t.team_name
+            t.team_name,
+            r.rank_name
         FROM employee e
-                 LEFT JOIN position p ON     e.position_id = p.position_id
-                 LEFT JOIN job j ON          e.job_id = j.job_id
                  LEFT JOIN headquarters h ON e.head_id = h.head_id
-                 LEFT JOIN department d ON   e.department_id = d.department_id
-                 LEFT JOIN team t ON         e.team_id = t.team_id
-                 LEFT JOIN rank r ON         e.rank_id = r.rank_id
+                 LEFT JOIN department d ON e.department_id = d.department_id
+                 LEFT JOIN team t ON e.team_id = t.team_id
+                 LEFT JOIN rank r ON e.rank_id = r.rank_id
         WHERE e.employee_id = #{employeeId}
     </select>
 

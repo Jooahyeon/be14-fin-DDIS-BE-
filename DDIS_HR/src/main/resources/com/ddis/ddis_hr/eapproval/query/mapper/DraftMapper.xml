@@ -113,6 +113,14 @@
         WHERE doc_id = #{docId}
     </select>
 
+    <!-- 문서 ID + 사용자 ID로 역할 목록 조회 -->
+    <select id="selectRolesByDocIdAndEmployeeId" parameterType="map" resultType="string">
+        SELECT role
+        FROM document_box
+        WHERE doc_id = #{docId}
+          AND employee_id = #{employeeId}
+    </select>
+
     <!-- 상세화면 내 수신자 조회-->
     <select id="selectReceiversByDocId" parameterType="long" resultType="com.ddis.ddis_hr.eapproval.query.dto.ReferenceDocDTO">
         SELECT
@@ -148,7 +156,6 @@
         WHERE db.doc_id = #{docId}
           AND db.role = '참조자'
     </select>
-
 
     <!--    회수 로직-->
     <select id="countFirstApproverAction" parameterType="long" resultType="int">

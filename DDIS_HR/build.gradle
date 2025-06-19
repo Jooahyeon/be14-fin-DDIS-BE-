@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.5'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.openapi.generator' version '6.6.0'
 }
 
 group = 'com.DDIS'
@@ -24,6 +25,7 @@ repositories {
 }
 
 dependencies {
+
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -39,12 +41,16 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.4'
     testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'junit:junit:4.13.2'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'com.warrenstrange:googleauth:1.5.0'
     implementation 'com.google.zxing:core:3.5.1'
     implementation 'com.google.zxing:javase:3.5.1'
     implementation 'commons-codec:commons-codec:1.17.0'
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-api:2.7.0"
+
 
     // https://mvnrepository.com/artifact/org.modelmapper/modelmapper
     implementation 'org.modelmapper:modelmapper:3.2.0'
@@ -69,8 +75,27 @@ dependencies {
     // websocket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.2'
 }
+
+
+
+openApiGenerate {
+    generatorName.set('html2')                                // html2, markdown 등
+    inputSpec.set("$projectDir/api-docs.json")               // 스펙 파일 경로
+    // outputDir 에 buildDirectory 프로바이더 사용
+    outputDir.set(
+            layout.buildDirectory
+                    .dir('generated-docs')
+                    .map { dir -> dir.asFile.absolutePath }
+    )
+}
+
+tasks.build.dependsOn tasks.openApiGenerate
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+tasks.named('build') {
+    dependsOn tasks.named('openApiGenerate') // build 시 문서도 자동 생성
 }

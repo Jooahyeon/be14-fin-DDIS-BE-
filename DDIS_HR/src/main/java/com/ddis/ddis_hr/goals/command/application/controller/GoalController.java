@@ -4,6 +4,7 @@ import com.ddis.ddis_hr.goals.command.application.dto.GoalDTO;
 import com.ddis.ddis_hr.goals.command.application.dto.GoalInsertDTO;
 import com.ddis.ddis_hr.goals.command.application.service.GoalsService;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ public class GoalController {
     }
 
 
+    @Operation(summary = "회원 목록 조회", description = "모든 사용자 정보를 페이징 없이 반환한다")
     @GetMapping
     public ResponseEntity<List<GoalDTO>> getGoals( @AuthenticationPrincipal CustomUserDetails user) {
         if (user == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

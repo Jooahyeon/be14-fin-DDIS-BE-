@@ -63,10 +63,11 @@ CREATE TABLE `holiday` (
 
 -- 용어사전
 CREATE TABLE `dictionary` (
-    `dictionary_id`	BIGINT	NOT NULL AUTO_INCREMENT,
-    `dictionary_name`	VARCHAR(255)	NOT NULL,
-    `dictionary_content`	TEXT	NOT NULL,
-    PRIMARY KEY (`dictionary_id`)
+                              `dictionary_id`	BIGINT	NOT NULL AUTO_INCREMENT,
+                              `dictionary_name`	VARCHAR(255)	NOT NULL,
+                              `dictionary_content`	TEXT	NOT NULL,
+                              `dictionary_type` VARCHAR(10),
+                              PRIMARY KEY (`dictionary_id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 2. 직무 쪽
@@ -636,15 +637,17 @@ CREATE TABLE `appointment_history` (
 -- 알림 및 공지사항
 -- 알림
 CREATE TABLE `notice` (
-    `notice_id`      BIGINT NOT NULL AUTO_INCREMENT,
-    `notice_content` TEXT NOT NULL,
-    `notice_type`    VARCHAR(255) NOT NULL,
-    `is_read`        BOOLEAN NOT NULL DEFAULT FALSE,
-    `employee_id`    BIGINT       NOT NULL,
-    PRIMARY KEY (`notice_id`),
-    FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`)
-    # type check 필요
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
+                          `notice_id`      BIGINT         NOT NULL AUTO_INCREMENT,
+                          `notice_content` TEXT           NOT NULL,
+                          `notice_type`    VARCHAR(255)   NOT NULL,
+                          `created_at`     DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                          `is_read`        BOOLEAN        NOT NULL DEFAULT FALSE,
+                          `employee_id`    BIGINT         NOT NULL,
+                          PRIMARY KEY (`notice_id`),
+                          CHECK (`notice_type` IN ('연차촉진','결재','인사발령')),
+                          FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`)
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4;
 
 -- 공지사항
 CREATE TABLE `board` (

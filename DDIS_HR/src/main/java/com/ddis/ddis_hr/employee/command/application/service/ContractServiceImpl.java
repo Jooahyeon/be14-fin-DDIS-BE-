@@ -1,24 +1,26 @@
 package com.ddis.ddis_hr.employee.command.application.service;
 
-
-
 import com.ddis.ddis_hr.employee.command.application.dto.ContractEnrollDTO;
 import com.ddis.ddis_hr.employee.command.domain.aggregate.Contract;
 import com.ddis.ddis_hr.employee.command.domain.aggregate.ContractFile;
 import com.ddis.ddis_hr.employee.command.domain.repository.ContractRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 public class ContractServiceImpl implements ContractService {
 
-    private final ContractRepository repo;
+    private final ContractRepository  contractRepository;
+
+    @Autowired
+    public ContractServiceImpl(ContractRepository contractRepository) {
+        this.contractRepository = contractRepository;
+    }
 
     @Override
     public Long createContract(ContractEnrollDTO dto) {
@@ -40,14 +42,14 @@ public class ContractServiceImpl implements ContractService {
             }
         }
 
-        repo.save(c);
+        contractRepository.save(c);
         return c.getContractId();
     }
 
     @Override
     public void deleteContract(Long contractId) {
-        Contract c = repo.findById(contractId)
+        Contract c = contractRepository.findById(contractId)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 계약 id=" + contractId));
-        repo.delete(c);
+        contractRepository.delete(c);
     }
 }

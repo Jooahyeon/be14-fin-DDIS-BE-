@@ -4,7 +4,6 @@ import lombok.*;
 import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 
-@Alias("MemberEmployeeDTO") // member 패키지
+@Alias("MemberEmployeeDTO")
 public class EmployeeDTO {
     private Long employeeId;
     private String employeeName;

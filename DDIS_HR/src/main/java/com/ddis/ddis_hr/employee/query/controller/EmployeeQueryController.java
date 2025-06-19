@@ -21,8 +21,8 @@ public class EmployeeQueryController {
     private final EmployeeQueryService employeeQueryService;
 
     @Autowired
-    public EmployeeQueryController(EmployeeQueryService employeeQueryService) { //@Autowired를 통해 생성자 주입 방식으로
-        this.employeeQueryService = employeeQueryService;                       // employeeService의 인스턴스를 주입 받는다.
+    public EmployeeQueryController(EmployeeQueryService employeeQueryService) {
+        this.employeeQueryService = employeeQueryService;
     }
 
      // 본인 정보 상세 조회

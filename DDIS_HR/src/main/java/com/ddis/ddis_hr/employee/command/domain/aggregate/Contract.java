@@ -29,7 +29,6 @@ public class Contract {
             orphanRemoval = true)
     private List<ContractFile> files = new ArrayList<>();
 
-    // helper
     public void addFile(ContractFile file) {
         files.add(file);
         file.setContract(this);

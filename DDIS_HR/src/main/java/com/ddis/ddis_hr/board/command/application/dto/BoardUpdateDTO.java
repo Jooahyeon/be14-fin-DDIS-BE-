@@ -1,15 +1,19 @@
 package com.ddis.ddis_hr.board.command.application.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class BoardUpdateDTO {
     private String boardTitle;
     private String boardContent;
     private List<FileDTO> files;
 
-    @Data
+    @Getter
+    @Setter
     public static class FileDTO {
         private String key;
         private String fileName;

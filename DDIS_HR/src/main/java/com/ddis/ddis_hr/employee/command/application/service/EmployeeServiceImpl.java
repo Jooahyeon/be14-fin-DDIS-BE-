@@ -1,4 +1,3 @@
-// EmployeeServiceImpl.java
 package com.ddis.ddis_hr.employee.command.application.service;
 
 import com.ddis.ddis_hr.employee.command.application.dto.EmployeeEnrollDTO;
@@ -20,6 +19,7 @@ import com.ddis.ddis_hr.organization.command.domain.repository.DepartmentReposit
 import com.ddis.ddis_hr.organization.command.domain.repository.TeamRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +46,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @PersistenceContext
     private EntityManager em;
 
+    @Autowired
     public EmployeeServiceImpl(EmployeesRepository employeesRepository,
                                PositionRepository positionRepository,
                                RankRepository rankRepository,
@@ -116,7 +117,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .bankDepositor    (req.getBankDepositor())
                 .bankAccount      (req.getBankAccount())
                 .isDisorder       (req.getIsDisorder())
-                .militaryType     (req.getMilitaryType())    // DTO와 필드명 일치 확인
+                .militaryType     (req.getMilitaryType())
                 .isMarriage       (req.getIsMarriage())
                 .marriageDate     (req.getMarriageDate())
                 .familyCount      (req.getFamilyCount())
@@ -145,7 +146,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = employeesRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("등록된 사원이 없습니다: " + employeeId));
 
-        // 수정 가능 필드만 업데이트
         employee.setEmployeePhotoName(dto.getEmployeePhotoName());
         employee.setEmployeePhotoUrl(dto.getEmployeePhotoUrl());
         employee.setEmployeeBirth(dto.getEmployeeBirth());
@@ -164,7 +164,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee e = employeesRepository.findById(employeeId)
                 .orElseThrow(() -> new IllegalArgumentException("사원이 없습니다: "+employeeId));
 
-        // 비밀번호 제외 모든 필드 업데이트
         e.setEmployeeName     (dto.getEmployeeName());
         e.setEmployeePhotoName(dto.getEmployeePhotoName());
         e.setEmployeePhotoUrl (dto.getEmployeePhotoUrl());

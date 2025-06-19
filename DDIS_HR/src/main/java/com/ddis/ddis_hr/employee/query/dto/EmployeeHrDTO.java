@@ -4,7 +4,6 @@ import lombok.*;
 import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -57,7 +56,6 @@ public class EmployeeHrDTO {
     private Long departmentId;
     private Long teamId;
 
-    // Optionally: 조인된 이름 정보도 추가 가능
     private String positionName;
     private String rankName;
     private String jobName;

@@ -6,7 +6,13 @@ permissions:
 
 on:
   pull_request:
+    branches:
+      - main
     types: [opened, reopened, synchronize]
+
+  push:
+    branches:
+      - main
 
 jobs:
   test:
@@ -170,3 +176,29 @@ jobs:
         run: ./gradlew clean build -x test
         # run: ./DDIS_HR/gradlew clean build
         shell: bash
+
+      ###############################################
+      - name: Generate deployment package
+        working-directory: ./DDIS_HR
+        run: |
+         mkdir -p deploy
+         cp ./build/libs/*.jar deploy/application.jar
+         cp ./Procfile deploy/Procfile
+         cp -r ./.ebextensions deploy/.ebextensions
+         cp -r ./.platform deploy/.platform
+         cd deploy && zip -r deploy.zip .
+
+      - name: Beanstalk Deploy
+        uses: einaregilsson/beanstalk-deploy@v22
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: ddis-b
+          environment_name: Ddis-b-env
+          version_label: github-action-${{steps.current-time.outputs.formattedTime}}
+          region: ap-northeast-2
+          deployment_package: deploy/deploy.zip
+          use_existing_version_if_available: false
+          wait_for_deployment: true
+          wait_for_environment_recovery: 300
+        ###############################################

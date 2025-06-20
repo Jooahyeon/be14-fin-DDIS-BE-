@@ -36,7 +36,7 @@ jobs:
       - name: Create application.yml.template
         run: |
           mkdir -p DDIS_HR/src/main/resources
-          cat > DDIS_HR/src/main/resources/application.yml.template <<EOL
+          cat > DDIS_HR/src/main/resources/application.yml.template <<EOF
           server:
             port: 5000
             servlet:
@@ -152,7 +152,7 @@ jobs:
               configuration:
                 map-underscore-to-camel-case: true
           
-            EOL
+            EOF
 
       - name: Set Yaml
         run: |

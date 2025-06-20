@@ -4,7 +4,6 @@ import lombok.*;
 import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 
-@Alias("MemberEmployeeDTO") // member 패키지
+@Alias("MemberEmployeeDTO")
 public class EmployeeDTO {
     private Long employeeId;
     private String employeeName;
@@ -30,14 +29,14 @@ public class EmployeeDTO {
     private LocalDate employmentDate;
     private LocalDate retirementDate;
 
-    private Boolean workType;
+    private String workType;
     private String bankName;
     private String bankDepositor;
     private String bankAccount;
 
-    private Boolean isDisorder;
+    private String isDisorder;
     private String militaryType;
-    private Boolean isMarriage;
+    private String isMarriage;
     private LocalDate marriageDate;
     private Integer familyCount;
 
@@ -49,7 +48,7 @@ public class EmployeeDTO {
     private String employeeDept;
     private Integer graduationYear;
 
-    private Boolean isFourInsurances;
+    private String isFourInsurances;
 
     private Long positionId;
     private Long rankId;

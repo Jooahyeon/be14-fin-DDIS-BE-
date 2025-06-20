@@ -16,6 +16,9 @@ public class FavoriteMenuOrderChangeDTO {
 
     @Getter
     @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @ToString
     public static class OrderItem {
         private Long menuId;
         private Long displayOrder;

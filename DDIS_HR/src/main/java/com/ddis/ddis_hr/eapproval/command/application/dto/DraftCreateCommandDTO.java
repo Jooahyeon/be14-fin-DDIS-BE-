@@ -1,6 +1,7 @@
 package com.ddis.ddis_hr.eapproval.command.application.dto;
 
-import com.ddis.ddis_hr.eapproval.command.domain.entity.Draft;
+import com.ddis.ddis_hr.eapproval.command.domain.entity.DraftDocument;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,38 +20,46 @@ import java.util.List;
 @NoArgsConstructor
 @Slf4j
 public class DraftCreateCommandDTO {
-    private String title;                // 문서 제목
-    private String docContent;          // JSON 전체 내용
-    private int retentionPeriod;        // 보존 연한
-    private LocalDate expirationDate;   // 만료일
-    private String docStatus;           // 상태 (ex. "대기중")
-    private LocalDateTime createdAt;    // 작성일
-    private LocalDateTime submittedAt;  // 상신일
-    private LocalDateTime draftSavedAt; // 임시저장일
-    private LocalDateTime finalApprovalAt; // 최종결재일
-    private LocalDateTime deletedAt;    // 삭제일
-    private int draftVersion;           // 차수
-    private Long formId;                // 양식 ID
-    private Long employeeId;            // 작성자 사번
+    private String title;
+    private String docContent;
+    private int retentionPeriod;
+    private LocalDate expirationDate;
+    private String docStatus;
+    private LocalDateTime createdAt;
+    private LocalDateTime submittedAt;
+    private LocalDateTime draftSavedAt;
+    private LocalDateTime finalApprovalAt;
+    private LocalDateTime deletedAt;
+    private int draftVersion;
+    private Long formId;
+    private Long employeeId;
+    private List<ApprovalLineDTO> approvalLines;
+    private List<Long> approvers;
+    @JsonProperty("reference")
+    private List<Long> ccs;
+    private List<Long> cooperators;
+    private List<Long> receivers;
 
-    public Draft toEntity() {
+    // ★ 첨부파일을 한 번에 담는 필드들
+    private List<String> attachmentKeys;        // S3 key 리스트
+    private List<String> originalFileNames;     // 원본 파일명 리스트
+    private List<String> fileTypes;             // MIME 타입 리스트
+    private List<Long> fileSizes;               // 파일 사이즈 리스트
 
-        // 1) 기준 날짜 계산: submittedAt이 있으면 그 날짜, 없으면 지금 날짜
+    public DraftDocument toEntity() {
         LocalDate baseDate = (this.submittedAt != null
                 ? this.submittedAt.toLocalDate()
                 : LocalDate.now());
-
-        // 2) 보존 연한만큼 년 추가
         LocalDate calculatedExpiration = baseDate.plusYears(this.retentionPeriod);
 
-        return Draft.builder()
+        return DraftDocument.builder()
                 .docTitle(this.title)
                 .docContent(this.docContent)
                 .preservePeriod(this.retentionPeriod)
                 .expirationDate(calculatedExpiration)
                 .docStatus(this.docStatus != null ? this.docStatus : "대기중")
                 .createdAt(this.createdAt != null ? this.createdAt : LocalDateTime.now())
-                .submittedAt(LocalDateTime.now())
+                .submittedAt(this.submittedAt)
                 .draftSavedAt(this.draftSavedAt)
                 .finalApprovalAt(this.finalApprovalAt)
                 .deletedAt(this.deletedAt)

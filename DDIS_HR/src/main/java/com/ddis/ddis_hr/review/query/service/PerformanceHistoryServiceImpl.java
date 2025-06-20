@@ -16,4 +16,9 @@ public class PerformanceHistoryServiceImpl implements PerformanceHistoryService 
     public List<PerformanceHistoryDTO> getAllPerformanceHistory() {
         return performanceHistoryMapper.findAllPerformanceHistories();
     }
+
+    @Override
+    public List<PerformanceHistoryDTO> getPerformanceHistoriesByEmployee(Long employeeId) {
+        return performanceHistoryMapper.findPerformanceHistoriesByEmployee(employeeId);
+    }
 }

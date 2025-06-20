@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body style="margin:0;padding:0;font-family:'Pretendard','Arial',sans-serif;background:#f5f7f9">
+<!-- 아웃터 래퍼 -->
+<div style="max-width:600px;margin:0 auto;padding:40px 0">
+
+    <!-- 카드 -->
+    <div style="background:#ffffff;border-radius:16px;overflow:hidden;
+                box-shadow:0 6px 18px rgba(0,0,0,.08)">
+
+        <!-- 헤더 -->
+        <div style="background:#00A8E8;padding:40px;text-align:center">
+            <img src="cid:logoImg" width="56" style="display:block;margin:0 auto 12px"/>
+            <h1 style="margin:0;color:#ffffff;font-size:26px;letter-spacing:-0.5px">
+                OTP&nbsp;등록 안내
+            </h1>
+        </div>
+
+        <!-- 본문 -->
+        <div style="padding:32px 40px 48px;text-align:center">
+
+            <p style="margin:0 0 24px;font-size:15px;color:#4b5563;line-height:1.6">
+                아래&nbsp;QR&nbsp;코드를&nbsp;<strong style="color:#00A8E8">OTP&nbsp;앱</strong>으로 스캔한 뒤<br/>
+                생성되는&nbsp;6자리&nbsp;코드를 화면에 입력해&nbsp;주세요.
+            </p>
+
+            <!-- QR 코드 박스 -->
+            <div style="display:inline-block;background:#f0f9ff;padding:16px;border-radius:12px">
+                <img src="cid:qrImg" width="180" height="180" alt="OTP QR"/>
+            </div>
+
+            <!-- 백업용 Secret -->
+            <p style="margin:24px 0 0;font-size:13px;color:#4b5563;line-height:1.6">
+                스캔이 되지 않을 경우, 앱에서 수동 등록 후<br/>
+                아래&nbsp;Secret&nbsp;값을 입력하세요.
+            </p>
+            <div style="display:inline-block;background:#f0f9ff;color:#00A8E8;
+                        font-size:18px;font-weight:700;letter-spacing:2px;
+                        padding:10px 18px;border-radius:8px"
+                 th:text="${secret}">JBSWY3DPEHPK3PXP</div>
+
+            <!-- 안내 -->
+            <p style="margin:32px 0 0;font-size:13px;color:#9ca3af;line-height:1.5">
+                이 메일은 요청에 따라 자동 발송되었습니다.<br/>
+                문의&nbsp;:&nbsp;<a href="mailto:jerry20011214@gmail.com"
+                                  style="color:#00A8E8;text-decoration:none">jerry20011214@gmail.com</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- 푸터 -->
+    <p style="margin:24px 0 0;text-align:center;font-size:11px;color:#9ca3af">
+        © DDIS&nbsp;HR&nbsp;All&nbsp;Rights&nbsp;Reserved.
+    </p>
+</div>
+</body>
+</html>

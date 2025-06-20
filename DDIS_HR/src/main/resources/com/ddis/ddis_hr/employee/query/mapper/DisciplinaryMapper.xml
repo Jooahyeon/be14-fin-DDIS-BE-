@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ddis.ddis_hr.employee.query.dao.DisciplinaryMapper">
+
+    <resultMap id="ListResult" type="com.ddis.ddis_hr.employee.query.dto.DisciplinaryListDTO">
+        <id     column="disciplinary_id"       property="disciplinaryId"/>
+        <result column="disciplinary_descrip"  property="disciplinaryDescription"/>
+        <result column="disciplinary_date"     property="disciplinaryDate"/>
+        <result column="employee_id"           property="employeeId"/>
+        <result column="employee_name"         property="employeeName"/>
+        <collection property="fileList"
+                    ofType="com.ddis.ddis_hr.employee.query.dto.DisciplinaryFileDTO"
+                    select="com.ddis.ddis_hr.employee.query.dao.DisciplinaryFileMapper.findByDisciplinaryId"
+                    column="disciplinary_id"/>
+    </resultMap>
+
+    <select id="selectAll" resultMap="ListResult">
+        SELECT
+            d.disciplinary_id,
+            d.disciplinary_descrip,
+            d.disciplinary_date,
+            d.employee_id,
+            e.employee_name
+        FROM disciplinary d
+                 JOIN employee e ON d.employee_id = e.employee_id
+        ORDER BY d.disciplinary_date DESC
+    </select>
+
+
+    <select id="selectByEmployeeId"
+            parameterType="long"
+            resultMap="ListResult">
+        SELECT
+            d.disciplinary_id,
+            d.disciplinary_descrip,
+            d.disciplinary_date,
+            d.employee_id,
+            e.employee_name
+        FROM disciplinary d
+                 JOIN employee e ON d.employee_id = e.employee_id
+        WHERE d.employee_id = #{employeeId}
+        ORDER BY d.disciplinary_date DESC
+    </select>
+
+</mapper>

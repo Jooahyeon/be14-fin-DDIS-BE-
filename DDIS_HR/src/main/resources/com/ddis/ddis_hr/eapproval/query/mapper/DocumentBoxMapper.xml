@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ddis.ddis_hr.eapproval.query.mapper.DocumentBoxMapper">
+
+<!--   수신함, 참조함 조회용-->
+    <select id="selectReferenceDocsByEmployeeId" resultType="com.ddis.ddis_hr.eapproval.query.dto.ReferenceDocDTO">
+        SELECT
+            db.doc_id           AS docId,
+            d.doc_title         AS title,
+            d.created_at        AS createdAt,
+            e.employee_name     AS drafterName,
+            r.rank_name         AS drafterRank,
+            db.is_read          AS isRead,
+            db.read_at          AS readAt,
+            db.role             AS role
+        FROM document_box db
+                 JOIN draft_documents d ON db.doc_id = d.doc_id
+                 JOIN employee e ON d.employee_id = e.employee_id
+                 JOIN rank r ON e.rank_id = r.rank_id
+        WHERE db.employee_id = #{employeeId}
+          AND db.role = '참조자'
+          AND db.is_deleted = 0
+        ORDER BY d.created_at DESC
+    </select>
+
+    <select id="selectReceiverDocsByEmployeeId" parameterType="long" resultType="com.ddis.ddis_hr.eapproval.query.dto.ReferenceDocDTO">
+        SELECT
+            db.doc_id           AS docId,
+            d.doc_title         AS title,
+            d.created_at        AS createdAt,
+            e.employee_name     AS drafterName,
+            r.rank_name         AS drafterRank,
+            db.is_read          AS isRead,
+            db.read_at          AS readAt,
+            db.role             AS role
+        FROM document_box db
+                 JOIN draft_documents d ON db.doc_id = d.doc_id
+                 JOIN employee e ON d.employee_id = e.employee_id
+                 JOIN rank r ON e.rank_id = r.rank_id
+        WHERE db.employee_id = #{employeeId}
+          AND db.role = '수신자'
+          AND db.is_deleted = 0
+        ORDER BY d.created_at DESC
+    </select>
+
+    <update id="updateReadStatus">
+        UPDATE document_box
+        SET read_at = #{readAt}, is_read = true
+        WHERE employee_id = #{employeeId}
+          AND doc_id = #{docId}
+    </update>
+
+</mapper>

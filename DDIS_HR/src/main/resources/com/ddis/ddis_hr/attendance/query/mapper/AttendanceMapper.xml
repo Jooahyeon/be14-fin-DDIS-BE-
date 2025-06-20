@@ -16,6 +16,7 @@
     <select id="findPersonalSchedules" resultType="com.ddis.ddis_hr.attendance.query.dto.PersonalScheduleQueryDTO">
         SELECT
                employee_id
+             , personal_schedule_id
              , schedule_date
              , schedule_title
              , schedule_time
@@ -26,6 +27,7 @@
     <select id="findMeetings" resultType="com.ddis.ddis_hr.attendance.query.dto.MeetingQueryDTO">
         SELECT
                team_id
+             , meeting_id
              , meeting_date
              , meeting_title
              , meeting_time
@@ -60,6 +62,7 @@
           FROM meeting
          WHERE team_id = #{teamId}
            AND meeting_date = #{today}
+         ORDER BY meeting_time ASC
     </select>
 
     <select id="findSchedulesToday" resultType="com.ddis.ddis_hr.attendance.query.dto.PersonalScheduleQueryDTO">
@@ -83,6 +86,7 @@
              , e.employee_photo_url AS employeePhotoUrl
              , COALESCE(ws.work_status_name, '-') AS work_status_name
              , p.position_id
+             , a.check_out_time
           FROM employee e
           LEFT JOIN attendance a ON e.employee_id = a.employee_id AND a.work_date = #{today}
           LEFT JOIN work_status ws ON a.work_status_id = ws.work_status_id
@@ -240,7 +244,7 @@
              , SUM(CASE WHEN a.overtime_type = '시간외근무' THEN a.overtime_duration ELSE 0 END) AS overtimeExtra
              , SUM(CASE WHEN a.overtime_type = '야간근무' THEN a.overtime_duration ELSE 0 END) AS overtimeNight
              , SUM(CASE WHEN a.overtime_type = '휴일근무' THEN a.overtime_duration ELSE 0 END) AS overtimeHoliday
-             , a.work_duration + IFNULL(a.overtime_duration, 0) AS totalWorkTime
+             , IFNULL(a.work_duration, 0) + IFNULL(a.overtime_duration, 0) AS totalWorkTime
           FROM attendance a
           JOIN work_status ws ON a.work_status_id = ws.work_status_id
          WHERE a.employee_id = #{employeeId}
@@ -265,8 +269,7 @@
              , SUM(CASE WHEN ws.work_status_name = '지각' THEN 1 ELSE 0 END) AS lateCount
              , SUM(CASE WHEN ws.work_status_name = '결근' THEN 1 ELSE 0 END) AS absentCount
              , SUM(CASE WHEN a.check_in_time IS NOT NULL THEN 1 ELSE 0 END) AS presentCount
-             , SUM(CASE WHEN a.work_duration IS NOT NULL THEN a.work_duration ELSE 0 END +
-                   CASE WHEN a.overtime_duration IS NOT NULL THEN a.overtime_duration ELSE 0 END) AS totalWorkMinutes
+             , SUM(IFNULL(a.work_duration, 0)) + SUM(IFNULL(a.overtime_duration, 0)) AS totalWorkTime
           FROM attendance a
           JOIN employee e ON a.employee_id = e.employee_id
           JOIN work_status ws ON a.work_status_id = ws.work_status_id
@@ -305,13 +308,102 @@
              , SUM(CASE WHEN a.overtime_type = '시간외근무' THEN a.overtime_duration ELSE 0 END) AS overtimeExtra
              , SUM(CASE WHEN a.overtime_type = '야간근무' THEN a.overtime_duration ELSE 0 END) AS overtimeNight
              , SUM(CASE WHEN a.overtime_type = '휴일근무' THEN a.overtime_duration ELSE 0 END) AS overtimeHoliday
-             , a.work_duration + IFNULL(a.overtime_duration, 0) AS totalWorkTime
+             , IFNULL(a.work_duration, 0) + IFNULL(a.overtime_duration, 0) AS totalWorkTime
           FROM attendance a
           JOIN work_status ws ON a.work_status_id = ws.work_status_id
          WHERE a.employee_id = #{employeeId}
            AND DATE_FORMAT(a.work_date, '%Y-%m') BETWEEN #{startDate} AND #{endDate}
          GROUP BY a.attendance_id
          ORDER BY a.work_date DESC
+    </select>
+
+    <select id="findCommuteCorrectionsByEmployeeId" resultType="com.ddis.ddis_hr.attendance.query.dto.MyCommuteCorrectionQueryDTO">
+        SELECT
+               approval_status
+             , work_date
+             , request_time
+             , before_check_in_time
+             , requested_time_change
+             , processed_time
+             , reason
+             , reject_reason
+          FROM attendance
+         WHERE employee_id = #{employeeId}
+           AND requested_time_change IS NOT NULL
+           AND approval_status IN ('승인', '반려')
+         ORDER BY request_time DESC
+    </select>
+
+    <select id="findCommuteCorrectionsRequestByEmployeeId" resultType="com.ddis.ddis_hr.attendance.query.dto.MyCommuteCorrectionQueryDTO">
+        SELECT
+               approval_status
+             , work_date
+             , request_time
+             , before_check_in_time
+             , requested_time_change
+             , processed_time
+             , reason
+             , reject_reason
+          FROM attendance
+         WHERE employee_id = #{employeeId}
+           AND requested_time_change IS NOT NULL
+           AND approval_status = '대기중'
+         ORDER BY request_time DESC
+    </select>
+
+    <select id="findAllCommuteCorrections" resultType="com.ddis.ddis_hr.attendance.query.dto.AllCommuteCorrectionQueryDTO">
+        SELECT
+               e.employee_id AS employeeId
+             , e.employee_name AS employeeName
+             , h.head_name AS headName
+             , d.department_name AS departmentName
+             , t.team_name AS teamName
+             , r.rank_name AS rankName
+             , a.approval_status AS approvalStatus
+             , a.work_date AS workDate
+             , a.request_time AS requestTime
+             , a.before_check_in_time AS beforeCheckInTime
+             , a.requested_time_change AS requestedTimeChange
+             , a.processed_time AS processedTime
+             , a.reason AS reason
+             , a.reject_reason AS rejectReason
+          FROM attendance a
+          JOIN employee e ON a.employee_id = e.employee_id
+          LEFT JOIN headquarters h ON e.head_id = h.head_id
+          LEFT JOIN department d ON e.department_id = d.department_id
+          LEFT JOIN team t ON e.team_id = t.team_id
+          LEFT JOIN rank r ON e.rank_id = r.rank_id
+         WHERE a.requested_time_change IS NOT NULL
+           AND a.approval_status IN ('승인', '반려')
+         ORDER BY a.request_time DESC
+    </select>
+
+    <select id="findAllCommuteCorrectionsRequest" resultType="com.ddis.ddis_hr.attendance.query.dto.AllCommuteCorrectionQueryDTO">
+        SELECT
+               a.attendance_id AS attendanceId
+             , e.employee_id AS employeeId
+             , e.employee_name AS employeeName
+             , h.head_name AS headName
+             , d.department_name AS departmentName
+             , t.team_name AS teamName
+             , r.rank_name AS rankName
+             , a.approval_status AS approvalStatus
+             , a.work_date AS workDate
+             , a.request_time AS requestTime
+             , a.before_check_in_time AS beforeCheckInTime
+             , a.requested_time_change AS requestedTimeChange
+             , a.processed_time AS processedTime
+             , a.reason AS reason
+             , a.reject_reason AS rejectReason
+          FROM attendance a
+          JOIN employee e ON a.employee_id = e.employee_id
+          LEFT JOIN headquarters h ON e.head_id = h.head_id
+          LEFT JOIN department d ON e.department_id = d.department_id
+          LEFT JOIN team t ON e.team_id = t.team_id
+          LEFT JOIN rank r ON e.rank_id = r.rank_id
+         WHERE a.requested_time_change IS NOT NULL
+           AND a.approval_status = '대기중'
+         ORDER BY a.request_time DESC
     </select>
 
 

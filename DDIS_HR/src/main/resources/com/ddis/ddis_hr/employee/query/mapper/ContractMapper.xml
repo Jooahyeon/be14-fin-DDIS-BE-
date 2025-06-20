@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ddis.ddis_hr.employee.query.dao.ContractMapper">
+
+    <resultMap id="ListResult" type="com.ddis.ddis_hr.employee.query.dto.ContractListDTO">
+        <id     column="contract_id"           property="contractId"/>
+        <result column="contract_descrip"      property="contractDescription"/>
+        <result column="request_date"          property="requestDate"/>
+        <result column="contract_date"         property="contractDate"/>
+        <result column="end_date"              property="endDate"/>
+        <result column="employee_id"           property="employeeId"/>
+        <result column="employee_name"         property="employeeName"/>
+        <collection property="fileList"
+                    ofType="com.ddis.ddis_hr.employee.query.dto.ContractFileDTO"
+                    select="com.ddis.ddis_hr.employee.query.dao.ContractFileMapper.findByContractId"
+                    column="contract_id"/>
+    </resultMap>
+
+
+    <select id="selectAll" resultMap="ListResult">
+        SELECT
+            c.contract_id,
+            c.contract_descrip,
+            c.request_date,
+            c.contract_date,
+            c.end_date,
+            c.employee_id,
+            e.employee_name
+        FROM contract c
+                 JOIN employee e ON c.employee_id = e.employee_id
+        ORDER BY c.contract_date DESC
+    </select>
+
+
+    <select id="selectByEmployeeId" parameterType="long" resultMap="ListResult">
+        SELECT
+            c.contract_id,
+            c.contract_descrip,
+            c.request_date,
+            c.contract_date,
+            c.end_date,
+            c.employee_id,
+            e.employee_name
+        FROM contract c
+                 JOIN employee e ON c.employee_id = e.employee_id
+        WHERE c.employee_id = #{employeeId}
+        ORDER BY c.contract_date DESC
+    </select>
+
+</mapper>

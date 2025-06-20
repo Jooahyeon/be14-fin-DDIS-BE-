@@ -4,7 +4,6 @@ import lombok.*;
 import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,14 +29,14 @@ public class EmployeeHrDTO {
     private LocalDate employmentDate;
     private LocalDate retirementDate;
 
-    private Boolean workType;
+    private String workType;
     private String bankName;
     private String bankDepositor;
     private String bankAccount;
 
-    private Boolean isDisorder;
+    private String isDisorder;
     private String militaryType;
-    private Boolean isMarriage;
+    private String isMarriage;
     private LocalDate marriageDate;
     private Integer familyCount;
 
@@ -49,7 +48,7 @@ public class EmployeeHrDTO {
     private String employeeDept;
     private Integer graduationYear;
 
-    private Boolean isFourInsurances;
+    private String isFourInsurances;
     private Long positionId;
     private Long rankId;
     private Long jobId;
@@ -57,7 +56,6 @@ public class EmployeeHrDTO {
     private Long departmentId;
     private Long teamId;
 
-    // Optionally: 조인된 이름 정보도 추가 가능
     private String positionName;
     private String rankName;
     private String jobName;

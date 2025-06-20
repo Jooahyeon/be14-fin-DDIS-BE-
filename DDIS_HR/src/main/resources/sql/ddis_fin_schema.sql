@@ -41,6 +41,9 @@ DROP TABLE IF EXISTS `holiday`;
 DROP TABLE IF EXISTS `dictionary`;
 DROP TABLE IF EXISTS `menu`;
 DROP TABLE IF EXISTS `favorite_menu`;
+DROP TABLE IF EXISTS `board_file`;
+DROP TABLE IF EXISTS `contract_file`;
+DROP TABLE IF EXISTS `disciplinary_file`;
 
 
 SET FOREIGN_KEY_CHECKS = 1;
@@ -60,11 +63,11 @@ CREATE TABLE `holiday` (
 
 -- 용어사전
 CREATE TABLE `dictionary` (
-    `dictionary_id`	BIGINT	NOT NULL AUTO_INCREMENT,
-    `dictionary_name`	VARCHAR(255)	NOT NULL,
-    `dictionary_content`	TEXT	NOT NULL,
-    `dictionary_type`	VARCHAR(255)	NOT NULL,
-    PRIMARY KEY (`dictionary_id`)
+                              `dictionary_id`	BIGINT	NOT NULL AUTO_INCREMENT,
+                              `dictionary_name`	VARCHAR(255)	NOT NULL,
+                              `dictionary_content`	TEXT	NOT NULL,
+                              `dictionary_type` VARCHAR(10),
+                              PRIMARY KEY (`dictionary_id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 2. 직무 쪽
@@ -167,13 +170,13 @@ CREATE TABLE `employee` (
     `employee_address` VARCHAR(255) NOT NULL,
     `employment_date` DATE NOT NULL,
     `retirement_date` DATE,
-    `work_type`     BOOLEAN NOT NULL DEFAULT TRUE,
+    `work_type`     VARCHAR(10) NOT NULL DEFAULT '정규직',
     `bank_name`     VARCHAR(255) NOT NULL,
     `bank_depositor` VARCHAR(255) NOT NULL,
     `bank_account`  VARCHAR(255) NOT NULL,
-    `is_disorder`   BOOLEAN NOT NULL DEFAULT FALSE,
+    `is_disorder`   VARCHAR(10) NOT NULL DEFAULT '비장애',
     `military_type`   VARCHAR(255) NOT NULL DEFAULT '미필',
-    `is_marriage`   BOOLEAN NOT NULL DEFAULT TRUE,
+    `is_marriage`   VARCHAR(10) NOT NULL DEFAULT '미혼',
     `marriage_date` DATE,
     `family_count` INT NOT NULL,
     `career_year_count` INT,
@@ -182,7 +185,7 @@ CREATE TABLE `employee` (
     `employee_school` VARCHAR(255) NOT NULL,
     `employee_dept`  VARCHAR(255),
     `graduation_year` INT,
-    `is_four_insurances` BOOLEAN NOT NULL DEFAULT TRUE,
+    `is_four_insurances` VARCHAR(10) NOT NULL DEFAULT '가입',
     `position_id`   BIGINT NOT NULL,
     `rank_id`       BIGINT NOT NULL,
     `job_id`        BIGINT,
@@ -196,7 +199,11 @@ CREATE TABLE `employee` (
     FOREIGN KEY (`head_id`)       REFERENCES `headquarters`(`head_id`),
     FOREIGN KEY (`department_id`) REFERENCES `department`(`department_id`),
     FOREIGN KEY (`team_id`)       REFERENCES `team`(`team_id`),
-    CHECK (`military_type` IN ('군필', '보충역', '면제', '미필'))
+    CHECK (`military_type` IN ('군필', '보충역', '면제', '미필', '해당 없음')),
+    CHECK (`work_type` IN ('정규직', '계약직')),
+    CHECK (`is_disorder` IN ('장애', '비장애')),
+    CHECK (`is_marriage` IN ('미혼', '기혼')),
+    CHECK (`is_four_insurances` IN ('가입', '미가입'))
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 전자결재양식
@@ -407,6 +414,7 @@ CREATE TABLE `attendance` (
     `processed_time` DATETIME,
     `reason` VARCHAR(255),
     `reject_reason` VARCHAR(255),
+    `before_check_in_time` TIME,
     PRIMARY KEY (`attendance_id`),
     FOREIGN KEY (`employee_id`)     REFERENCES `employee`(`employee_id`) ON DELETE CASCADE,
     FOREIGN KEY (`work_status_id`)  REFERENCES `work_status`(`work_status_id`) ON DELETE CASCADE,
@@ -451,25 +459,49 @@ CREATE TABLE `personal_schedule` (
 -- 계약 및 징계
 -- 계약
 CREATE TABLE `contract` (
-    `contract_id`      BIGINT NOT NULL AUTO_INCREMENT,
-    `employee_id`      BIGINT NOT NULL,
-    `contract_descrip` VARCHAR(255) NOT NULL,
-    `contract_file`    VARCHAR(255) NOT NULL,
-    `contract_file_size` BIGINT,
-    `request_date`	DATE	NOT NULL,
-    `contract_date`	DATE	NOT NULL,
-    `end_date`	DATE	NOT NULL,
-    PRIMARY KEY (`contract_id`),
-    FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`) ON DELETE CASCADE
+      `contract_id`	BIGINT	NOT NULL AUTO_INCREMENT,
+      `contract_descrip`	VARCHAR(255)	NOT NULL,
+      `request_date`	    DATE	        NOT NULL,
+      `contract_date`	    DATE	        NOT NULL,
+      `end_date`	        DATE	        NOT NULL,
+      `contract_file_name`	VARCHAR(255)	NOT NULL,
+      `contract_file`	    VARCHAR(255)	NOT NULL,
+      `contract_file_size`	BIGINT	NULL,
+      `employee_id`	        BIGINT	NOT NULL,
+      PRIMARY KEY (`contract_id`),
+      FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`)
+)   ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE contract_file (
+      `contract_file_id`     BIGINT       NOT NULL AUTO_INCREMENT,
+      `contract_id`          BIGINT       NOT NULL,
+      `file_name`                VARCHAR(255) NOT NULL,
+      `file_url`                 VARCHAR(1024) NOT NULL,   -- S3 키 저장
+      `file_size`                BIGINT       NOT NULL,
+      `uploaded_at`              DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (`contract_file_id`),
+      FOREIGN KEY (`contract_id`) REFERENCES contract(contract_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 징계
-CREATE TABLE `disciplinary` (
-    `disciplinary_id`  BIGINT NOT NULL AUTO_INCREMENT,
-    `employee_id`      BIGINT NOT NULL,
-    `disciplinary_descrip` VARCHAR(255) NOT NULL,
-    PRIMARY KEY (`disciplinary_id`),
-    FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`) ON DELETE CASCADE
+CREATE TABLE disciplinary (
+    disciplinary_id         BIGINT       NOT NULL AUTO_INCREMENT,
+    disciplinary_descrip     VARCHAR(255) NOT NULL,
+    disciplinary_date        DATE         NOT NULL,
+    employee_id              BIGINT       NOT NULL,
+    PRIMARY KEY (disciplinary_id),
+    FOREIGN KEY (employee_id) REFERENCES employee(employee_id)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE disciplinary_file (
+    disciplinary_file_id     BIGINT       NOT NULL AUTO_INCREMENT,
+    disciplinary_id          BIGINT       NOT NULL,
+    file_name                VARCHAR(255) NOT NULL,
+    file_url                 VARCHAR(1024) NOT NULL,   -- S3 키 저장
+    file_size                BIGINT       NOT NULL,
+    uploaded_at              DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (disciplinary_file_id),
+    FOREIGN KEY (disciplinary_id) REFERENCES disciplinary(disciplinary_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
 -- 평가 및 성과 부분
@@ -605,29 +637,39 @@ CREATE TABLE `appointment_history` (
 -- 알림 및 공지사항
 -- 알림
 CREATE TABLE `notice` (
-    `notice_id`      BIGINT NOT NULL AUTO_INCREMENT,
-    `notice_content` TEXT NOT NULL,
-    `notice_type`    VARCHAR(255) NOT NULL,
-    `is_read`        BOOLEAN NOT NULL DEFAULT FALSE,
-    `employee_id`    BIGINT       NOT NULL,
-    PRIMARY KEY (`notice_id`),
-    FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`)
-    # type check 필요
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
+                          `notice_id`      BIGINT         NOT NULL AUTO_INCREMENT,
+                          `notice_content` TEXT           NOT NULL,
+                          `notice_type`    VARCHAR(255)   NOT NULL,
+                          `created_at`     DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                          `is_read`        BOOLEAN        NOT NULL DEFAULT FALSE,
+                          `employee_id`    BIGINT         NOT NULL,
+                          PRIMARY KEY (`notice_id`),
+                          CHECK (`notice_type` IN ('연차촉진','결재','인사발령')),
+                          FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`)
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4;
 
 -- 공지사항
 CREATE TABLE `board` (
-    `board_id`      BIGINT NOT NULL AUTO_INCREMENT,
-    `board_title`   VARCHAR(255) NOT NULL,
-    `board_content` VARCHAR(255) NOT NULL,
-    `board_created_at` DATETIME NOT NULL,
-    `board_file`    VARCHAR(255),
-    `board_file_size` BIGINT,
-    `employee_id`   BIGINT NOT NULL,
+    `board_id`	BIGINT	NOT NULL AUTO_INCREMENT,
+    `board_title`	VARCHAR(255)	NOT NULL,
+    `board_file_name`	VARCHAR(255)	NULL,
+    `board_content`	VARCHAR(255)	NOT NULL,
+    `board_created_at`	DATE	NOT NULL,
+    `employee_id`	BIGINT	NOT NULL,
     PRIMARY KEY (`board_id`),
     FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE board_file (
+    board_file_id BIGINT       AUTO_INCREMENT PRIMARY KEY,
+    board_id      BIGINT       NOT NULL,
+    file_name     VARCHAR(255) NOT NULL,
+    file_url      VARCHAR(1024) NOT NULL,
+    file_size     BIGINT       NOT NULL,
+    uploaded_at   DATETIME     DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (board_id) REFERENCES board(board_id)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 -- 메뉴
 CREATE TABLE `menu` (
     `menu_id` BIGINT NOT NULL AUTO_INCREMENT,

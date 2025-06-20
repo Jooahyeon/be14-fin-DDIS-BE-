@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class AppointmentHistory {
+    private Long appointmentHistoryId;
     private Long appointmentId;
     private Long employeeId;
     private String fromHeadCode;

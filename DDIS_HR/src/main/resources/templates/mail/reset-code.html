@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body style="margin:0;padding:0;font-family:'Pretendard','Arial',sans-serif;background:#f5f7f9">
+<!-- 아웃터 래퍼 -->
+<div style="max-width:600px;margin:0 auto;padding:40px 0">
+
+    <!-- 카드 -->
+    <div style="background:#ffffff;border-radius:16px;overflow:hidden;
+              box-shadow:0 6px 18px rgba(0,0,0,.08)">
+
+        <!-- 헤더 블록 -->
+        <div style="background:#00A8E8;padding:40px;text-align:center">
+            <img src="cid:logoImg" width="56" style="display:block;margin:0 auto 12px"/>
+            <h1 style="margin:0;color:#ffffff;font-size:26px;letter-spacing:-0.5px">
+                비밀번호 재설정
+            </h1>
+        </div>
+
+        <!-- 본문 -->
+        <div style="padding:32px 40px 48px;text-align:center">
+            <p style="margin:0 0 24px;font-size:15px;color:#4b5563;line-height:1.6">
+                아래 <strong style="color:#00A8E8">6자리 코드</strong>를
+                <span th:text="${expires}"></span> 까지 입력해 주세요.
+            </p>
+
+            <!-- 코드 박스 -->
+            <div style="display:inline-block;background:#f0f9ff;color:#00A8E8;
+                      font-size:34px;font-weight:700;letter-spacing:6px;
+                      padding:14px 24px;border-radius:10px"
+                 th:text="${code}">123456</div>
+
+            <!-- 안내 -->
+            <p style="margin:32px 0 0;font-size:13px;color:#9ca3af;line-height:1.5">
+                이 메일은 요청에 따라 자동 발송되었습니다.<br/>
+                문의&nbsp;:&nbsp;<a href="jerry20011214@gmail.com"
+                                  style="color:#00A8E8;text-decoration:none">jerry20011214@gmail.com</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- 푸터 -->
+    <p style="margin:24px 0 0;text-align:center;font-size:11px;color:#9ca3af">
+        © DDIS&nbsp;HR&nbsp;All&nbsp;Rights&nbsp;Reserved.
+    </p>
+</div>
+</body>
+</html>

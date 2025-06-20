@@ -32,12 +32,12 @@ public class AttendanceQueryServiceImpl implements AttendanceQueryService {
         List<PersonalCalendarQueryDTO> events = new ArrayList<>();
 
         for (PersonalScheduleQueryDTO ps : attendanceMapper.findPersonalSchedules(employeeId)) {
-            events.add(new PersonalCalendarQueryDTO("personal", ps.getScheduleTitle(), ps.getScheduleTime(), null, null, ps.getScheduleDate()));
+            events.add(new PersonalCalendarQueryDTO("personal", ps.getPersonalScheduleId(), ps.getScheduleTitle(), ps.getScheduleTime(), null, null, ps.getScheduleDate()));
         }
 
         List<String> validStatuses = List.of("LATE", "ABSENT", "BUSINESS_TRIP", "FIELD_WORK", "ANNUAL_LEAVE", "HALF_AM", "HALF_PM");
         for (AttendanceQueryDTO at : attendanceMapper.findWorkStatuses(teamId, employeeId, validStatuses)) {
-            events.add(new PersonalCalendarQueryDTO("attendance", null, null, at.getWorkStatusName(), at.getEmployeeName(), at.getWorkDate()));
+            events.add(new PersonalCalendarQueryDTO("attendance",null, null, null, at.getWorkStatusName(), at.getEmployeeName(), at.getWorkDate()));
         }
 
         return events;
@@ -51,12 +51,12 @@ public class AttendanceQueryServiceImpl implements AttendanceQueryService {
         List<TeamCalendarQueryDTO> events = new ArrayList<>();
 
         for (MeetingQueryDTO m : attendanceMapper.findMeetings(teamId)) {
-            events.add(new TeamCalendarQueryDTO("meeting", m.getMeetingTitle(), m.getMeetingTime(), null, null, m.getMeetingDate()));
+            events.add(new TeamCalendarQueryDTO("meeting", m.getMeetingId(), m.getMeetingTitle(), m.getMeetingTime(), null, null, m.getMeetingDate()));
         }
 
         List<String> validStatuses = List.of("LATE", "ABSENT", "BUSINESS_TRIP", "FIELD_WORK", "ANNUAL_LEAVE", "HALF_AM", "HALF_PM");
         for (AttendanceQueryDTO at : attendanceMapper.findWorkStatuses(teamId, employeeId, validStatuses)) {
-            events.add(new TeamCalendarQueryDTO("attendance", null, null, at.getWorkStatusName(), at.getEmployeeName(), at.getWorkDate()));
+            events.add(new TeamCalendarQueryDTO("attendance", null, null, null, at.getWorkStatusName(), at.getEmployeeName(), at.getWorkDate()));
         }
 
         return events;
@@ -148,7 +148,11 @@ public class AttendanceQueryServiceImpl implements AttendanceQueryService {
 
     @Override
     public List<AllCommuteSummaryDTO> getAllCommuteSummaryList(String startDate, String endDate) {
-        return attendanceMapper.getAllCommuteSummaryList(startDate, endDate);
+
+        String startMonth = startDate.substring(0, 7);
+        String endMonth = endDate.substring(0, 7);
+
+        return attendanceMapper.getAllCommuteSummaryList(startMonth, endMonth);
     }
 
     @Override
@@ -162,5 +166,24 @@ public class AttendanceQueryServiceImpl implements AttendanceQueryService {
         return result;
     }
 
+    @Override
+    public List<MyCommuteCorrectionQueryDTO> getCorrectionHistory(Long employeeId) {
+        return attendanceMapper.findCommuteCorrectionsByEmployeeId(employeeId);
+    }
+
+    @Override
+    public List<MyCommuteCorrectionQueryDTO> getCorrectionRequestHistory(Long employeeId) {
+        return attendanceMapper.findCommuteCorrectionsRequestByEmployeeId(employeeId);
+    }
+
+    @Override
+    public List<AllCommuteCorrectionQueryDTO> getAllCorrectionHistory() {
+        return attendanceMapper.findAllCommuteCorrections();
+    }
+
+    @Override
+    public List<AllCommuteCorrectionQueryDTO> getAllCorrectionRequestHistory() {
+        return attendanceMapper.findAllCommuteCorrectionsRequest();
+    }
 
 }

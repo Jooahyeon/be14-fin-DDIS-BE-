@@ -6,6 +6,7 @@ import com.ddis.ddis_hr.organization.command.application.dto.UpdateIntroductionD
 import com.ddis.ddis_hr.organization.command.application.service.IntroductionService;
 import com.ddis.ddis_hr.organization.command.domain.aggregate.entity.IntroductionEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -20,6 +21,7 @@ public class IntroductionController {
     }
 
     // 부서 소개 등록
+    @PreAuthorize("hasAnyRole('HR')")
     @PostMapping("/create/department/{departmentId}")
     public ResponseEntity<IntroductionResponseDTO> createDepartmentIntroduction(
             @PathVariable("departmentId") Long deptId,
@@ -42,6 +44,7 @@ public class IntroductionController {
 
 
     // 부서 소개 수정
+    @PreAuthorize("hasAnyRole('HR')")
     @PutMapping("/update/department/{departmentId}")
     public ResponseEntity<IntroductionResponseDTO> updateDepartmentIntroduction(
             @PathVariable("departmentId") Long deptId,
@@ -62,6 +65,7 @@ public class IntroductionController {
     }
 
     // 부서 소개 삭제
+    @PreAuthorize("hasAnyRole('HR')")
     @DeleteMapping("/delete/department/{departmentId}")
     public ResponseEntity<Void> deleteDepartmentIntroduction(
             @PathVariable("departmentId") Long deptId) {
@@ -72,6 +76,7 @@ public class IntroductionController {
 
 
     // 팀 소개 등록
+    @PreAuthorize("hasAnyRole('HR')")
     @PostMapping("/team/{teamId}")
     public ResponseEntity<IntroductionResponseDTO> createTeamIntroduction(
             @PathVariable("teamId") Long teamId,
@@ -93,6 +98,7 @@ public class IntroductionController {
     }
 
     // 팀 소개 수정
+    @PreAuthorize("hasAnyRole('HR')")
     @PutMapping("/team/{teamId}")
     public ResponseEntity<IntroductionResponseDTO> updateTeamIntroduction(
             @PathVariable("teamId") Long teamId,
@@ -113,6 +119,7 @@ public class IntroductionController {
     }
 
     // 팀 소개 삭제
+    @PreAuthorize("hasAnyRole('HR')")
     @DeleteMapping("/team/{teamId}")
     public ResponseEntity<Void> deleteTeamIntroduction(
             @PathVariable("teamId") Long teamId) {

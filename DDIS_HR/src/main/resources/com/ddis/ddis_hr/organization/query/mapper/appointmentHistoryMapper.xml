@@ -83,28 +83,31 @@
     <!-- (3) employee_id 로 조회 -->
     <select id="selectByEmployeeId" resultMap="AppointmentHistoryResultMap">
         SELECT
-            appointment_history_id            AS appointmentHistoryId,
-            appointment_id                    AS appointmentId,
-            employee_id                       AS employeeId,
-            from_head_code                    AS fromHeadCode,
-            to_head_code                      AS toHeadCode,
-            from_department_code              AS fromDepartmentCode,
-            to_department_code                AS toDepartmentCode,
-            from_team_code                    AS fromTeamCode,
-            to_team_code                      AS toTeamCode,
-            from_position_code                AS fromPositionCode,
-            to_position_code                  AS toPositionCode,
-            from_rank_code                    AS fromRankCode,
-            to_rank_code                      AS toRankCode,
-            from_job_code                     AS fromJobCode,
-            to_job_code                       AS toJobCode,
-            appointment_type                  AS appointmentType,
-            appointment_reason                AS appointmentReason,
-            appointment_effective_date        AS appointmentEffectiveDate,
-            appointment_history_created_at    AS appointmentHistoryCreatedAt
-        FROM appointment_history
-        WHERE employee_id = #{employeeId}
-        ORDER BY appointment_effective_date DESC
+        ah.appointment_history_id          AS appointment_history_id,
+        ah.appointment_id                  AS appointment_id,
+        ah.employee_id                     AS employee_id,
+        e.employee_name                    AS employee_name,
+        ah.from_head_code                  AS from_head_code,
+        ah.to_head_code                    AS to_head_code,
+        ah.from_department_code            AS from_department_code,
+        ah.to_department_code              AS to_department_code,
+        ah.from_team_code                  AS from_team_code,
+        ah.to_team_code                    AS to_team_code,
+        ah.from_position_code              AS from_position_code,
+        ah.to_position_code                AS to_position_code,
+        ah.from_rank_code                  AS from_rank_code,
+        ah.to_rank_code                    AS to_rank_code,
+        ah.from_job_code                   AS from_job_code,
+        ah.to_job_code                     AS to_job_code,
+        ah.appointment_type                AS appointment_type,
+        ah.appointment_reason              AS appointment_reason,
+        ah.appointment_effective_date      AS appointment_effective_date,
+        ah.appointment_status              AS appointment_status,
+        ah.appointment_history_created_at  AS appointment_history_created_at
+        FROM appointment_history ah
+        LEFT JOIN employee e ON ah.employee_id = e.employee_id
+        WHERE ah.employee_id = #{employeeId}
+        ORDER BY ah.appointment_effective_date DESC
     </select>
 
     <select id="selectByAppointmentHistoryId" resultMap="AppointmentHistoryResultMap">

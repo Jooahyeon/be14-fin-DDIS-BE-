@@ -29,7 +29,8 @@ public class Employee {
     @Column(name = "employee_photo_name")
     private String employeePhotoName;            // 프로필 사진 파일명
 
-    @Column(name = "employee_photo_url")
+    @Column(name = "employee_photo_url",
+    columnDefinition = "TEXT")
     private String employeePhotoUrl;             // 프로필 사진 URL
 
     @Column(name = "employee_nation", nullable = false)
@@ -60,7 +61,7 @@ public class Employee {
     private LocalDate retirementDate;            // 퇴사일
 
     @Column(name = "work_type", nullable = false)
-    private Boolean workType;                    // 재직 여부
+    private String workType;                    // 재직 여부
 
     @Column(name = "bank_name", nullable = false)
     private String bankName;                     // 은행명
@@ -72,13 +73,13 @@ public class Employee {
     private String bankAccount;                  // 계좌번호
 
     @Column(name = "is_disorder", nullable = false)
-    private Boolean isDisorder;                  // 장애 여부
+    private String isDisorder;                  // 장애 여부
 
     @Column(name = "military_type", nullable = false)
     private String militaryType;                 // 군필 여부
 
     @Column(name = "is_marriage", nullable = false)
-    private Boolean isMarriage;                  // 결혼 여부
+    private String isMarriage;                  // 결혼 여부
 
     @Column(name = "marriage_date")
     private LocalDate marriageDate;              // 결혼일
@@ -105,7 +106,7 @@ public class Employee {
     private Integer graduationYear;              // 졸업 연도
 
     @Column(name = "is_four_insurances", nullable = false)
-    private Boolean isFourInsurances;            // 4대 보험 가입 여부
+    private String isFourInsurances;            // 4대 보험 가입 여부
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "position_id", nullable = false)

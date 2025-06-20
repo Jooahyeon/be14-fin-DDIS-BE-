@@ -7,9 +7,9 @@ import com.ddis.ddis_hr.employee.command.application.dto.EmployeeUpdateDTO;
 
 public interface EmployeeService {
 
-    Long enrollEmployee(EmployeeEnrollDTO dto);                             // 사원 등록
+    Long enrollEmployee(EmployeeEnrollDTO dto);
 
-    void updateEmployee(Long employeeId, EmployeeUpdateDTO dto);            // 사원 정보 수정 (일반 사원)
+    void updateEmployee(Long employeeId, EmployeeUpdateDTO dto);
 
-//    void hrUpdateEmployee(Long employeeId, EmployeeHrUpdateDTO dto);     // 사원 정보 수정 (인사팀)
+    void hrUpdateEmployee(Long employeeId, EmployeeHrUpdateDTO dto);
 }

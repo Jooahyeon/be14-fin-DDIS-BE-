@@ -199,7 +199,7 @@ CREATE TABLE `employee` (
     FOREIGN KEY (`head_id`)       REFERENCES `headquarters`(`head_id`),
     FOREIGN KEY (`department_id`) REFERENCES `department`(`department_id`),
     FOREIGN KEY (`team_id`)       REFERENCES `team`(`team_id`),
-    CHECK (`military_type` IN ('군필', '보충역', '면제', '미필')),
+    CHECK (`military_type` IN ('군필', '보충역', '면제', '미필', '해당 없음')),
     CHECK (`work_type` IN ('정규직', '계약직')),
     CHECK (`is_disorder` IN ('장애', '비장애')),
     CHECK (`is_marriage` IN ('미혼', '기혼')),

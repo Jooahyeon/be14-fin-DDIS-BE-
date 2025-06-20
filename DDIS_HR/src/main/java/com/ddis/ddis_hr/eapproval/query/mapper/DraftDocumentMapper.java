@@ -11,7 +11,7 @@ import java.util.List;
 public interface DraftDocumentMapper {
     List<DraftDTO> selectDraftsByDrafter(@Param("employeeId") Long employeeId);
 
-    List<DraftDTO> selectReferenceByemp(Long employeeId);
-
-    List<DraftDTO> selectDocumentsByDrafter(@Param("employeeId") Long employeeId);
+//    List<DraftDTO> selectReferenceByemp(Long employeeId);
+//
+//    List<DraftDTO> selectDocumentsByDrafter(@Param("employeeId") Long employeeId);
 }

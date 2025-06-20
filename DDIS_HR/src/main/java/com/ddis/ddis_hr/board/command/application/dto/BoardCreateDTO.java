@@ -1,18 +1,22 @@
 package com.ddis.ddis_hr.board.command.application.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class BoardCreateDTO {
     private String boardTitle;
     private String boardContent;
     private List<FileDTO> files;
 
-    @Data
+    @Getter
+    @Setter
     public static class FileDTO {
-        private String key;       // S3 객체 키
-        private String fileName;  // 원본 파일명
+        private String key;
+        private String fileName;
         private Long fileSize;
     }
 }

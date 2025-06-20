@@ -3,7 +3,7 @@ package com.ddis.ddis_hr.eapproval.query.controller;
 import com.ddis.ddis_hr.eapproval.query.dto.DraftDTO;
 import com.ddis.ddis_hr.eapproval.query.dto.DraftDetailResponseQueryDTO;
 import com.ddis.ddis_hr.eapproval.query.dto.ReferenceDocDTO;
-import com.ddis.ddis_hr.eapproval.query.service.RetrieveDocService;
+import com.ddis.ddis_hr.eapproval.query.service.DraftDetailService;
 import com.ddis.ddis_hr.eapproval.query.service.ReceiverDocService;
 import com.ddis.ddis_hr.eapproval.query.service.ReferenceDocService;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
@@ -14,19 +14,21 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// 상세 조회 컨트롤러
+
 @RestController
 @RequestMapping("/drafts/query")
 @RequiredArgsConstructor
 public class DraftQueryController {
 
-    private final RetrieveDocService retrieveDocService;
+    private final DraftDetailService draftDetailService;
     private final ReferenceDocService referenceDocService;
     private final ReceiverDocService receiverDocService;
 
     // 상세조회
     @GetMapping("/{id}")
     public ResponseEntity<DraftDetailResponseQueryDTO> getDraftDetail(@PathVariable("id") Long docId) {
-        DraftDetailResponseQueryDTO dto = retrieveDocService.getDraftDetail(docId);
+        DraftDetailResponseQueryDTO dto = draftDetailService.getDraftDetail(docId);
         return ResponseEntity.ok(dto);
     }
 
@@ -35,28 +37,30 @@ public class DraftQueryController {
     public ResponseEntity<List<DraftDTO>> getMyDrafts(
             @AuthenticationPrincipal CustomUserDetails user) {
         Long employeeId = user.getEmployeeId();
-        List<DraftDTO> dtos = retrieveDocService.getMyDrafts(employeeId);
+        List<DraftDTO> dtos = draftDetailService.getMyDrafts(employeeId);
         return ResponseEntity.ok(dtos);
     }
 
     // 회수
     @PostMapping("/{docId}/recall")
     public ResponseEntity<Void> recall(@PathVariable Long docId) {
-        retrieveDocService.recallDocument(docId);
+        draftDetailService.recallDocument(docId);
         return ResponseEntity.ok().build();
     }
 
+    // 참조함 조회
     @GetMapping("/reference")
     public List<ReferenceDocDTO> getReferenceDocs(@AuthenticationPrincipal CustomUserDetails user) {
         return referenceDocService.getReferenceDocsByEmployeeId(user.getEmployeeId());
     }
 
-    // 수신함 (요청하신 부분)
+    // 수신함 조회
     @GetMapping("/receiver")
     public List<ReferenceDocDTO> getReceiverDocs(@AuthenticationPrincipal CustomUserDetails userDetails) {
         return receiverDocService.getReceiverDocsByEmployeeId(userDetails.getEmployeeId());
     }
 
+    // 읽음여부 (수신함..읽음여부가 필요한데 둘다 들어오나?_)
     @PatchMapping("/reference/{docId}/read")
     public void markReferenceDocAsRead(@PathVariable Long docId, @AuthenticationPrincipal CustomUserDetails user) {
         referenceDocService.markAsRead(user.getEmployeeId(), docId);

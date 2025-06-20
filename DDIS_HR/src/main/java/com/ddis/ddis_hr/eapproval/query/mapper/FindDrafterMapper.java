@@ -9,11 +9,11 @@ import org.apache.ibatis.annotations.Param;
 public interface FindDrafterMapper {
         FindDrafterQueryDTO findDrafterInfo(@Param("empId")Long empId);
 
-        ApproverInfoQueryDTO findApproverByTeamAndPosition(@Param("teamId") Long teamId,
-                                                           @Param("positionName") String positionName);
-        ApproverInfoQueryDTO findApproverByDepartmentAndPosition(@Param("departmentId") Long deptId,
-                                                                 @Param("positionName") String positionName);
-        ApproverInfoQueryDTO findApproverByHeadAndPosition(@Param("headId") Long headId,
-                                                           @Param("positionName") String positionName);
+//        ApproverInfoQueryDTO findApproverByTeamAndPosition(@Param("teamId") Long teamId,
+//                                                           @Param("positionName") String positionName);
+//        ApproverInfoQueryDTO findApproverByDepartmentAndPosition(@Param("departmentId") Long deptId,
+//                                                                 @Param("positionName") String positionName);
+//        ApproverInfoQueryDTO findApproverByHeadAndPosition(@Param("headId") Long headId,
+//                                                           @Param("positionName") String positionName);
 }
 

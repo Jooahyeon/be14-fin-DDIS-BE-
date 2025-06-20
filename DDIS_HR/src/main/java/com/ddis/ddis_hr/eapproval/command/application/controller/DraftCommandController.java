@@ -2,7 +2,6 @@ package com.ddis.ddis_hr.eapproval.command.application.controller;
 
 import com.ddis.ddis_hr.eapproval.command.application.dto.DraftCreateCommandDTO;
 import com.ddis.ddis_hr.eapproval.command.application.dto.DraftCreateResponseCommandDTO;
-import com.ddis.ddis_hr.eapproval.command.application.dto.DraftTempReqDTO;
 import com.ddis.ddis_hr.eapproval.command.application.service.ApprovalWorkflowService;
 import com.ddis.ddis_hr.eapproval.command.application.service.DraftCommandService;
 import com.ddis.ddis_hr.eapproval.command.domain.entity.ApprovalLine;
@@ -12,6 +11,7 @@ import com.ddis.ddis_hr.eapproval.command.domain.repository.DraftRepository;
 import com.ddis.ddis_hr.eapproval.query.dto.DraftDetailResponseQueryDTO;
 import com.ddis.ddis_hr.eapproval.command.application.dto.TempSaveResDTO;
 import com.ddis.ddis_hr.eapproval.query.service.RetrieveDocService;
+import com.ddis.ddis_hr.eapproval.query.service.DraftDetailService;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ public class DraftCommandController {
     private final ApprovalLineRepository approvalLineRepo;
     private final ApprovalWorkflowService workflow;
     private final DraftCommandService draftCommandService;
-    private final RetrieveDocService retrieveDocService;
+    private final DraftDetailService draftDetailService;
 
 
     @PostMapping("/creation")
@@ -64,11 +64,11 @@ public class DraftCommandController {
      * @param docId PathVariable로 전달받은 문서 ID
      * @return DraftDetailResponseQueryDTO
      */
-    @GetMapping("/{docId}")
-    public ResponseEntity<DraftDetailResponseQueryDTO> getDraftDetail(@PathVariable Long docId) {
-        DraftDetailResponseQueryDTO response = retrieveDocService.getDraftDetail(docId);
-        return ResponseEntity.ok(response);
-    }
+//    @GetMapping("/{docId}")
+//    public ResponseEntity<DraftDetailResponseQueryDTO> getDraftDetail(@PathVariable Long docId) {
+//        DraftDetailResponseQueryDTO response = DraftDetailService.getDraftDetail(docId);
+//        return ResponseEntity.ok(response);
+//    }
 
 //    @PostMapping("/temp")
 //    public ResponseEntity<TempSaveResDTO> saveTemp(

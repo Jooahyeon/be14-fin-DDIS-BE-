@@ -8,9 +8,8 @@ import java.util.List;
 
 @Mapper
 public interface ContractMapper {
-    /** 전체 계약서 목록 조회 */
+
     List<ContractListDTO> selectAll();
 
-    /** 사원별 계약서 목록 조회 */
     List<ContractListDTO> selectByEmployeeId(@Param("employeeId") Long employeeId);
 }

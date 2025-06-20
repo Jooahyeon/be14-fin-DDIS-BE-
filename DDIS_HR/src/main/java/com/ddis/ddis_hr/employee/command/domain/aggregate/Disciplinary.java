@@ -19,13 +19,13 @@ public class Disciplinary {
     private LocalDate disciplinaryDate;
     private Long employeeId;
 
-    // 파일 메타 정보
+
     @OneToMany(mappedBy = "disciplinary",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private List<DisciplinaryFile> files = new ArrayList<>();
 
-    // 헬퍼 메서드
+
     public void addFile(DisciplinaryFile file) {
         files.add(file);
         file.setDisciplinary(this);

@@ -4,7 +4,7 @@
 
 <mapper namespace="com.ddis.ddis_hr.employee.query.dao.EmployeeMapper">
 
-    <!-- 1) 단일 사원 조회용 resultMap 정의 -->
+
     <resultMap id="EmployeeResult" type="com.ddis.ddis_hr.employee.query.dto.EmployeeDTO">
         <id     column="employee_id"         property="employeeId"/>
         <result column="employee_name"       property="employeeName"/>
@@ -42,14 +42,16 @@
         <result column="head_id"             property="headId"/>
         <result column="department_id"       property="departmentId"/>
         <result column="team_id"             property="teamId"/>
-        <!-- 조인된 이름 컬럼 -->
+
+        <result column="job_name"           property="jobName"/>
+        <result column="position_name"     property="positionName"/>
         <result column="head_name"           property="headName"/>
         <result column="department_name"     property="departmentName"/>
         <result column="team_name"           property="teamName"/>
         <result column="rank_name"           property="rankName"/>
     </resultMap>
 
-    <!-- 2) findById 쿼리 (단일 사원 상세) -->
+
     <select id="findMyInfo"
             parameterType="long"
             resultMap="EmployeeResult">
@@ -90,15 +92,19 @@
             e.head_id,
             e.department_id,
             e.team_id,
+            p.position_name,
+            r.rank_name,
+            j.job_name,
             h.head_name,
             d.department_name,
-            t.team_name,
-            r.rank_name
+            t.team_name
         FROM employee e
+                 LEFT JOIN position p ON     e.position_id = p.position_id
+                 LEFT JOIN job j ON          e.job_id = j.job_id
                  LEFT JOIN headquarters h ON e.head_id = h.head_id
-                 LEFT JOIN department d ON e.department_id = d.department_id
-                 LEFT JOIN team t ON e.team_id = t.team_id
-                 LEFT JOIN rank r ON e.rank_id = r.rank_id
+                 LEFT JOIN department d ON   e.department_id = d.department_id
+                 LEFT JOIN team t ON         e.team_id = t.team_id
+                 LEFT JOIN rank r ON         e.rank_id = r.rank_id
         WHERE e.employee_id = #{employeeId}
     </select>
 
@@ -162,7 +168,7 @@
         ORDER BY e.employee_id
     </select>
 
-    <!-- 일반 사원용: Public -->
+
     <select id="findPublicById"
             parameterType="long"
             resultType="com.ddis.ddis_hr.employee.query.dto.EmployeePublicDTO">
@@ -192,7 +198,7 @@
         WHERE e.employee_id = #{employeeId}
     </select>
 
-    <!-- 인사팀용: HR -->
+
     <select id="findHrById"
             parameterType="long"
             resultType="com.ddis.ddis_hr.employee.query.dto.EmployeeHrDTO">
@@ -255,6 +261,7 @@
             e.employee_id      AS employeeId,
             e.employee_name    AS employeeName,
             e.employee_birth   AS employeeBirth,
+            e.retirement_date  AS retirementDate,
             p.position_name    AS positionName,
             r.rank_name        AS rankName,
             j.job_name         AS jobName,
@@ -280,7 +287,7 @@
         FROM employee
         WHERE employee_name LIKE CONCAT('%', #{name}, '%')
         ORDER BY employee_name
-        LIMIT 20               <!-- optional: 최대 20건으로 제한 -->
+        LIMIT 20
     </select>
 
 

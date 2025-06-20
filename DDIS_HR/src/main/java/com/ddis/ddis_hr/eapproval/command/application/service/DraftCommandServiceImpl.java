@@ -12,7 +12,6 @@ import com.ddis.ddis_hr.eapproval.command.domain.repository.DocumentAttachmentRe
 import com.ddis.ddis_hr.eapproval.command.domain.repository.DocumentBoxRepository;
 import com.ddis.ddis_hr.eapproval.command.domain.repository.DraftRepository;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,17 +28,17 @@ public class DraftCommandServiceImpl implements DraftCommandService {
     private final ApprovalLineCommandService approvalLineCommandService;
     private final DocumentBoxRepository documentBoxRepository;
     private final S3Service s3Service;
-    private final ApprovalWorkflowService workflow;
     private final DocumentAttachmentRepository documentAttachmentRepository;
 
     @Transactional
     @Override
     public DraftCreateResponseCommandDTO createDraft(DraftCreateCommandDTO dto) {
+        log.info("🟢 createDraft() 호출됨");
+
         // 1) Draft 저장 → docId 획득
         DraftDocument savedDraftDocument = draftRepository.save(dto.toEntity());
         Long docId = savedDraftDocument.getDocId();
         log.debug("⏺️ createDraft 호출, DTO = {}", dto);
-
 
         // 2) 기안자 저장 (DocumentBox)
         saveDocumentBoxEntry(dto.getEmployeeId(), docId, "기안자");
@@ -50,14 +49,24 @@ public class DraftCommandServiceImpl implements DraftCommandService {
         if (lines != null && !lines.isEmpty()) {
             // 3-1) 수동 결재라인 저장
             approvalLineIds = approvalLineCommandService.saveManualLine(docId, lines, dto.getEmployeeId());
-            lines.forEach(line -> saveDocumentBoxEntry(line.getEmployeeId(), docId, "결재자"));
+
+            // 💡 line의 type 값에 따라 role 지정
+            lines.forEach(line -> {
+                String role = "결재".equals(line.getType()) ? "결재자"
+                        : "협조".equals(line.getType()) ? "협조자"
+                        : "결재자"; // 기본값 fallback
+                saveDocumentBoxEntry(line.getEmployeeId(), docId, role);
+            });
+
         } else {
             // 3-2) 자동 결재라인 생성 및 저장
             Long approvalLineId = approvalLineCommandService.createAutoLine(docId, dto.getEmployeeId());
             approvalLineIds = List.of(approvalLineId);
+
             List<Long> approvers = dto.getApprovers() != null ? dto.getApprovers() : List.of();
-            approvers.forEach(empId -> saveDocumentBoxEntry(empId, docId, "결재자"));
+            approvers.forEach(empId -> saveDocumentBoxEntry(empId, docId, "결재자")); // 자동라인은 일괄 결재자로 간주
         }
+
 
         // 5) 협조자 저장 (DocumentBox만)
         List<Long> cooperators = dto.getCooperators() != null ? dto.getCooperators() : List.of();
@@ -133,6 +142,8 @@ public class DraftCommandServiceImpl implements DraftCommandService {
     @Transactional
     @Override
     public DraftDocument saveDraftAndLines(DraftCreateCommandDTO dto) {
+        log.info("🟠 saveDraftAndLines() 호출됨");
+
         DraftDocument savedDraftDocument = draftRepository.save(dto.toEntity());
         Long docId = savedDraftDocument.getDocId();
 

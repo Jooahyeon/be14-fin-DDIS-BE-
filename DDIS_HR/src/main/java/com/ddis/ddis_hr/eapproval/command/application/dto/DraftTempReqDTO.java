@@ -3,6 +3,8 @@ package com.ddis.ddis_hr.eapproval.command.application.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+// 임시저장 DTO
+
 @Getter
 @Setter
 public class DraftTempReqDTO {

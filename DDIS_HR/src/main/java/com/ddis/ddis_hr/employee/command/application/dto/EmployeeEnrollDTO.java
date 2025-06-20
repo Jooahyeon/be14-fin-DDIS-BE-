@@ -5,9 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
-/**
- * 사원 등록 요청 정보를 담는 DTO
- */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -18,7 +18,7 @@
                     column="contract_id"/>
     </resultMap>
 
-    <!-- 전체 목록 -->
+
     <select id="selectAll" resultMap="ListResult">
         SELECT
             c.contract_id,
@@ -33,7 +33,7 @@
         ORDER BY c.contract_date DESC
     </select>
 
-    <!-- 사원별 목록 -->
+
     <select id="selectByEmployeeId" parameterType="long" resultMap="ListResult">
         SELECT
             c.contract_id,

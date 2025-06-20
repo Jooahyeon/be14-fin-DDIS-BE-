@@ -4,6 +4,8 @@ import com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Map;
+
 /**
  * ApproverMapper
  *

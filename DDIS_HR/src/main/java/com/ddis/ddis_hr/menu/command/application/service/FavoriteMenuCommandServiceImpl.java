@@ -17,6 +17,19 @@ public class FavoriteMenuCommandServiceImpl implements FavoriteMenuCommandServic
     @Override
     @Transactional
     public void addFavoriteMenu(FavoriteMenuCommandDTO dto) {
+        // 중복 등록 방지
+        if (favoriteMenuRepository.existsByEmployeeIdAndMenuId(dto.getEmployeeId(), dto.getMenuId())) {
+            throw new IllegalStateException("이미 등록된 즐겨찾기 메뉴입니다.");
+        }
+
+        // displayOrder 기본값 지정
+        if (dto.getDisplayOrder() == null) {
+            Long maxOrder = favoriteMenuRepository
+                    .findMaxDisplayOrderByEmployeeId(dto.getEmployeeId())
+                    .orElse(0L);
+            dto.setDisplayOrder(maxOrder + 1);
+        }
+
         FavoriteMenu favorite = FavoriteMenu.of(dto);
         favoriteMenuRepository.save(favorite);
     }
@@ -33,11 +46,13 @@ public class FavoriteMenuCommandServiceImpl implements FavoriteMenuCommandServic
         for (FavoriteMenuOrderChangeDTO.OrderItem item : dto.getOrders()) {
             favoriteMenuRepository
                     .findByEmployeeIdAndMenuId(dto.getEmployeeId(), item.getMenuId())
-                    .ifPresent(fm -> {
+                    .ifPresentOrElse(fm -> {
                         fm.setDisplayOrder(item.getDisplayOrder());
-                        // 변경 감지로 저장됨 (flush 생략 가능)
+                    }, () -> {
+                        // 없는 경우 로깅 (무시 or throw는 선택)
+                        System.out.printf("순서 변경 대상 없음: employeeId=%d, menuId=%d%n",
+                                dto.getEmployeeId(), item.getMenuId());
                     });
         }
     }
-
 }

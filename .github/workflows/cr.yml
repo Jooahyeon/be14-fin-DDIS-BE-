@@ -8,7 +8,10 @@ on:
   pull_request:
     branches:
       - main
-    types: [opened, reopened, synchronize]
+    types:
+      - opened
+      - reopened
+      - synchronize
 
   push:
     branches:
@@ -36,13 +39,9 @@ jobs:
       - name: Create application.yml.template
         run: |
           mkdir -p DDIS_HR/src/main/resources
-          cat > DDIS_HR/src/main/resources/application.yml.template <<'EOL'
+          cat > DDIS_HR/src/main/resources/application.yml.template <<EOL
           server:
             port: 5000
-            servlet:
-              encoding:
-                charset: UTF-8
-                force: true
           
           cloud:
             aws:
@@ -51,11 +50,11 @@ jobs:
               stack.auto: false
               region.static: ap-northeast-2
               credentials:
-                accessKey: ${S3_ACCESSKEY}
-                secretKey: ${S3_SECRETKEY}
+                accessKey: \${S3_ACCESSKEY}
+                secretKey: \${S3_SECRETKEY}
           
           token:
-            secret: ${TOKEN_SECRET}
+            secret: \${TOKEN_SECRET}
             expiration_time: 86400000
           
           spring:
@@ -73,7 +72,7 @@ jobs:
               show-sql: true
               properties:
                 hibernate:
-                  format_sql: true
+                  '[format_sql]': true
               database: mysql
           
             data:
@@ -84,8 +83,8 @@ jobs:
             mail:
               host: smtp.gmail.com
               port: 587
-              username: ${SMTP_USERNAME}
-              password: ${SMTP_PASSWORD}
+              username: \${SMTP_USERNAME}
+              password: \${SMTP_PASSWORD}
               properties:
                 mail:
                   smtp:
@@ -93,23 +92,24 @@ jobs:
                     starttls:
                       enable: true
                       required: true
-                    connection-timeout: 5000
+                    connection timeout: 5000
                     timeout: 5000
-                    write-timeout: 5000
-              auth-code-expiration-millis: 1800000
+                    write timeout: 5000
+                auth-code-expiration-millis: 1800000
           
             datasource:
               driver-class-name: org.mariadb.jdbc.Driver
-              url: jdbc:mariadb://${RDS_HOSTNAME}:${RDS_PORT}/${RDS_DB_NAME}
-              username: ${RDS_USERNAME}
-              password: ${RDS_PASSWORD}
+              url: jdbc:mariadb://\${RDS_HOSTNAME}:\${RDS_PORT}/\${RDS_DB_NAME}
+              username: \${RDS_USERNAME}
+              password: \${RDS_PASSWORD}
+          
               hikari:
                 maximum-pool-size: 10
                 minimum-idle: 1
                 idle-timeout: 5000
                 max-lifetime: 9000
                 connection-timeout: 3000
-          
+        
           batch:
             job:
               enabled: true
@@ -147,10 +147,13 @@ jobs:
               com.ddis.ddis_hr.reminder.query.dto,
               com.ddis.ddis_hr.review.query.dto,
               com.ddis.ddis_hr.menu.query.dto,
+              com.ddis.ddis_hr.notice.query.dto,
+              com.ddis.ddis_hr.dictionary.query.dto,
               com.ddis.ddis_hr.board.query.dto
             configuration:
               map-underscore-to-camel-case: true
-EOL
+          
+          EOL
 
       - name: Set Yaml
         run: |

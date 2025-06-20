@@ -152,7 +152,7 @@ jobs:
               configuration:
                 map-underscore-to-camel-case: true
           
-            EOL
+          EOL
 
       - name: Set Yaml
         run: |

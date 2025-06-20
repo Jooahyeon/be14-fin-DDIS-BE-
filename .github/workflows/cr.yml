@@ -166,6 +166,7 @@ jobs:
           TOKEN_SECRET: ${{ secrets.TOKEN_SECRET }}
 
       - name: Build with Gradle
-        run: ./DDIS_HR/gradlew clean build -x test
+        working-directory: ./DDIS_HR
+        run: ./gradlew clean build -x test
         # run: ./DDIS_HR/gradlew clean build
         shell: bash

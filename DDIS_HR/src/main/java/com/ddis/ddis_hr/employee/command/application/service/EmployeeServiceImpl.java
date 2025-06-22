@@ -17,16 +17,15 @@ import com.ddis.ddis_hr.organization.command.domain.repository.JobsRepository;
 import com.ddis.ddis_hr.organization.command.domain.repository.HeadquartersRepository;
 import com.ddis.ddis_hr.organization.command.domain.repository.DepartmentRepository;
 import com.ddis.ddis_hr.organization.command.domain.repository.TeamRepository;
-
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.OptimisticLockException;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 
 import java.time.format.DateTimeFormatter;
 
@@ -34,7 +33,8 @@ import java.time.format.DateTimeFormatter;
 @Transactional
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private final BCryptPasswordEncoder  bCryptPasswordEncoder;
+    private static final int MAX_RETRY = 3;
+
     private final EmployeesRepository    employeesRepository;
     private final PositionRepository     positionRepository;
     private final RankRepository         rankRepository;
@@ -42,19 +42,22 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final HeadquartersRepository headquartersRepository;
     private final DepartmentRepository   departmentRepository;
     private final TeamRepository         teamRepository;
+    private final BCryptPasswordEncoder  bCryptPasswordEncoder;
 
     @PersistenceContext
     private EntityManager em;
 
     @Autowired
-    public EmployeeServiceImpl(EmployeesRepository employeesRepository,
-                               PositionRepository positionRepository,
-                               RankRepository rankRepository,
-                               JobsRepository jobsRepository,
-                               HeadquartersRepository headquartersRepository,
-                               DepartmentRepository departmentRepository,
-                               TeamRepository teamRepository,
-                               BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public EmployeeServiceImpl(
+            EmployeesRepository employeesRepository,
+            PositionRepository positionRepository,
+            RankRepository rankRepository,
+            JobsRepository jobsRepository,
+            HeadquartersRepository headquartersRepository,
+            DepartmentRepository departmentRepository,
+            TeamRepository teamRepository,
+            BCryptPasswordEncoder bCryptPasswordEncoder
+    ) {
         this.employeesRepository    = employeesRepository;
         this.positionRepository     = positionRepository;
         this.rankRepository         = rankRepository;
@@ -67,6 +70,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Long enrollEmployee(EmployeeEnrollDTO req) {
+        int attempt = 0;
+        while (true) {
+            try {
+                return actuallyEnroll(req);
+            } catch (ObjectOptimisticLockingFailureException | OptimisticLockException ex) {
+                attempt++;
+                if (attempt >= MAX_RETRY) {
+                    throw ex;  // 최대 재시도 초과 시 예외 상위로 전달
+                }
+                // (선택) Thread.sleep(50);
+            }
+        }
+    }
+
+    private Long actuallyEnroll(EmployeeEnrollDTO req) {
         // 1) 연관 엔티티 프록시 조회
         PositionEntity     position     = positionRepository.getReferenceById(req.getPositionId());
         RankEntity         rank         = rankRepository.getReferenceById(req.getRankId());
@@ -75,7 +93,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         DepartmentEntity   department   = departmentRepository.getReferenceById(req.getDepartmentId());
         TeamEntity         team         = teamRepository.getReferenceById(req.getTeamId());
 
-        // 2) 순번 계산 (YYYYMMDD + 2-digit jobId + 3-digit seq) — 락 포함 조회
+        // 2) 순번 계산 (YYYYMMDD + 3-digit jobId + 3-digit seq)
         String datePart = req.getEmploymentDate().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String jobPart  = String.format("%03d", req.getJobId());
         String prefix   = datePart + jobPart;
@@ -100,7 +118,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = Employee.builder()
                 .employeeId       (newEmployeeId)
                 .employeeName     (req.getEmployeeName())
-                .employeePwd       (encodedPwd)
+                .employeePwd      (encodedPwd)
                 .employeePhotoName(req.getEmployeePhotoName())
                 .employeePhotoUrl (req.getEmployeePhotoUrl())
                 .employeeNation   (req.getEmployeeNation())
@@ -136,13 +154,28 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .team             (team)
                 .build();
 
-        // 4) 저장 및 PK 반환 (조회 없이 바로 INSERT)
+        // 5) 저장 및 PK 반환
         em.persist(employee);
         return employee.getEmployeeId();
     }
 
     @Override
     public void updateEmployee(Long employeeId, EmployeeUpdateDTO dto) {
+        int attempt = 0;
+        while (true) {
+            try {
+                actuallyUpdate(employeeId, dto);
+                return;
+            } catch (ObjectOptimisticLockingFailureException | OptimisticLockException ex) {
+                attempt++;
+                if (attempt >= MAX_RETRY) {
+                    throw ex;
+                }
+            }
+        }
+    }
+
+    private void actuallyUpdate(Long employeeId, EmployeeUpdateDTO dto) {
         Employee employee = employeesRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("등록된 사원이 없습니다: " + employeeId));
 
@@ -161,8 +194,23 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void hrUpdateEmployee(Long employeeId, EmployeeHrUpdateDTO dto) {
+        int attempt = 0;
+        while (true) {
+            try {
+                actuallyHrUpdate(employeeId, dto);
+                return;
+            } catch (ObjectOptimisticLockingFailureException | OptimisticLockException ex) {
+                attempt++;
+                if (attempt >= MAX_RETRY) {
+                    throw ex;
+                }
+            }
+        }
+    }
+
+    private void actuallyHrUpdate(Long employeeId, EmployeeHrUpdateDTO dto) {
         Employee e = employeesRepository.findById(employeeId)
-                .orElseThrow(() -> new IllegalArgumentException("사원이 없습니다: "+employeeId));
+                .orElseThrow(() -> new EntityNotFoundException("사원이 없습니다: " + employeeId));
 
         e.setEmployeeName     (dto.getEmployeeName());
         e.setEmployeePhotoName(dto.getEmployeePhotoName());
@@ -193,7 +241,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         e.setGraduationYear   (dto.getGraduationYear());
         e.setIsFourInsurances (dto.getIsFourInsurances());
 
-
         PositionEntity     pos = positionRepository.getReferenceById(dto.getPositionId());
         RankEntity         rk  = rankRepository.getReferenceById(dto.getRankId());
         JobEntity          jb  = jobsRepository.getReferenceById(dto.getJobId());
@@ -208,6 +255,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         e.setTeam(tm);
 
         employeesRepository.save(e);
-
     }
+
 }

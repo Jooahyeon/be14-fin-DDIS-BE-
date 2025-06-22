@@ -91,7 +91,7 @@ public class WebSecurity {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         // 프론트 개발 서버 도메인 (Vue 기본 5173 포트)
-        config.setAllowedOrigins(Arrays.asList("http://localhost:8080"));
+        config.setAllowedOrigins(Arrays.asList("http://localhost:8080", "https://isddishr.site"));
         // 인증 쿠키/헤더 허용
         config.setAllowCredentials(true);
         // 허용 HTTP 메서드

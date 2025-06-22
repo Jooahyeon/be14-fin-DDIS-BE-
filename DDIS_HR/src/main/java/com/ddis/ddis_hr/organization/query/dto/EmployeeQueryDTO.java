@@ -12,6 +12,7 @@ import lombok.Setter;
 public class EmployeeQueryDTO {
     private Long employeeId;
     private String employeeName;
+    private String employeePhotoUrl;
     private String positionCode;
     private String positionName;
     private String rankCode;

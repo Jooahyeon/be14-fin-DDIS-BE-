@@ -100,6 +100,7 @@
         LEFT JOIN `position` p ON e.position_id = p.position_id
         LEFT JOIN `rank`     r ON e.rank_id     = r.rank_id
         WHERE e.team_id = #{teamId}
+            AND e.retirement_date IS NULL
     </select>
 
     <select id="selectDeptMembers" resultType="com.ddis.ddis_hr.organization.query.dto.EmployeeQueryDTO">
@@ -113,6 +114,7 @@
         LEFT JOIN position p ON e.position_id = p.position_id
         LEFT JOIN rank     r ON e.rank_id     = r.rank_id
         WHERE e.department_id = #{departmentId}
+            AND e.retirement_date IS NULL
     </select>
 
 
@@ -214,6 +216,7 @@
         LEFT JOIN rank     r ON e.rank_id     = r.rank_id
         LEFT JOIN job     j ON e.job_id     = j.job_id
         WHERE e.employee_id = #{employeeId}
+            AND e.retirement_date IS NULL
     </select>
 
 
@@ -255,6 +258,7 @@
         LEFT JOIN rank     r ON e.rank_id     = r.rank_id
         WHERE e.department_id = #{departmentId}
         AND p.position_name = '부장'
+        AND e.retirement_date IS NULL
         LIMIT 1
     </select>
 

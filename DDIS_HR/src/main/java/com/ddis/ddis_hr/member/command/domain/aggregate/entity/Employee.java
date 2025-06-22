@@ -108,6 +108,10 @@ public class Employee {
     @Column(name = "is_four_insurances", nullable = false)
     private String isFourInsurances;            // 4대 보험 가입 여부
 
+    @Version
+    @Column(name = "version", nullable = false)
+    private Integer version;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "position_id", nullable = false)
     private PositionEntity position;

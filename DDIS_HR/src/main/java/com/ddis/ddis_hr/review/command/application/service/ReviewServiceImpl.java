@@ -112,14 +112,32 @@ public class ReviewServiceImpl implements ReviewService {
             achievementRate = perf.getPerformanceValue() * 100.0 / perf.getGoal().getGoalValue();
         }
 
-        // (5-2) 공식 적용
-        // 목표 가중치 비율 (예: 20% → 0.2)
+// cappedRate: 100 초과하면 잘라내기
+        double cappedRate = Math.min(achievementRate, 100);
         double weightFraction = perf.getGoal().getGoalWeight() / 100.0;
-        // 상사평가 점수 → 백분율 (예: 5점 → 100%)
         double managerPercent = reviewerScore * 20.0;
-        double finalScore = achievementRate * 0.7 * weightFraction
-                + managerPercent   * 0.3;
 
+        double baseScore = cappedRate * weightFraction * 0.7
+                + managerPercent * 0.3;
+
+// 초과 보너스 계산
+        double rawExcess = Math.max(achievementRate - 100, 0);
+        double MAX_EXCESS = 50;
+        double effExcess = Math.min(rawExcess, MAX_EXCESS);
+
+        double bonus;
+        if (effExcess <= 10) {
+            bonus = effExcess * 0.2;
+        } else if (effExcess <= 30) {
+            bonus = 10 * 0.2
+                    + (effExcess - 10) * 0.3;
+        } else {
+            bonus = 10 * 0.2
+                    + 20 * 0.3
+                    + (effExcess - 30) * 0.5;
+        }
+
+        double finalScore = baseScore + bonus;
 
         int scoreKey = (int) Math.floor(finalScore);
         ReviewGrade grade = reviewGradeMapper.selectByScore(scoreKey);
@@ -127,17 +145,15 @@ public class ReviewServiceImpl implements ReviewService {
             throw new IllegalStateException("해당 점수 구간 등급 없음: " + scoreKey);
         }
 
-
         Review review = reviewMapper.selectBySelfreviewId(performanceId);
         if (review == null) {
             review = new Review();
         }
-        // 필수 필드 세팅
-        // 7) 필수 필드 세팅 (JPA 엔티티)
         review.setSelfreviewId(perf);
         review.setEmployeeId(reviewer);
         review.setReviewScore(finalScore);
         review.setReviewGradeId(grade);
+        reviewRepository.save(review);
 
 
         // 8) JPA save → insert/update 자동 분기

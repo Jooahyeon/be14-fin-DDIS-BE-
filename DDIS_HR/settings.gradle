@@ -1,1 +1,17 @@
+// ─── 최상단에 pluginManagement ───
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+    resolutionStrategy {
+        eachPlugin { details ->
+            if (details.requested.id.id == 'org.evosuite') {
+                details.useModule("org.evosuite:evosuite-gradle-plugin:${details.requested.version}")
+            }
+        }
+    }
+}
+
+// 그 다음에 rootProject.name
 rootProject.name = 'DDIS_HR'

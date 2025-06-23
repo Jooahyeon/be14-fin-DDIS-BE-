@@ -11,6 +11,7 @@ import com.ddis.ddis_hr.review.command.application.dto.ReviewedPerformanceDTO;
 import com.ddis.ddis_hr.review.command.application.mapper.ReviewMapper;
 import com.ddis.ddis_hr.review.command.application.service.ReviewService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,7 @@ public class ReviewController {
         this.reviewMapper = reviewMapper;
     }
 
+    @PreAuthorize("hasRole('ROLE_TEAMLEADER')")
     @GetMapping("/{teamId}")
     public List<EmployeeReviewDTO> getTeamReview(@PathVariable("teamId") Long teamId){
         return reviewService.getTeamReview(teamId);

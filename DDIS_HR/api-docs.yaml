@@ -1,0 +1,5594 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8000
+  description: Generated server url
+paths:
+  /org/update/team/{id}:
+    put:
+      tags:
+      - structure-controller
+      operationId: updateTeam
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TeamDTO'
+  /org/update/job/{id}:
+    put:
+      tags:
+      - job-controller
+      operationId: updateJob
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/JobResponseDTO'
+  /org/update/head/{id}:
+    put:
+      tags:
+      - structure-controller
+      operationId: updateHeadquarters
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HeadquartersRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/HeadquartersDTO'
+  /org/update/department/{id}:
+    put:
+      tags:
+      - structure-controller
+      operationId: updateDepartment
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepartmentRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DepartmentDTO'
+  /introduction/update/department/{departmentId}:
+    put:
+      tags:
+      - introduction-controller
+      operationId: updateDepartmentIntroduction
+      parameters:
+      - name: departmentId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateIntroductionDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/IntroductionResponseDTO'
+  /introduction/team/{teamId}:
+    get:
+      tags:
+      - introduction-query-controller
+      operationId: getTeam
+      parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TeamIntroductionQueryDTO'
+    put:
+      tags:
+      - introduction-controller
+      operationId: updateTeamIntroduction
+      parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateIntroductionDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/IntroductionResponseDTO'
+    post:
+      tags:
+      - introduction-controller
+      operationId: createTeamIntroduction
+      parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateIntroductionDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/IntroductionResponseDTO'
+    delete:
+      tags:
+      - introduction-controller
+      operationId: deleteTeamIntroduction
+      parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+  /goalsperf/{goalId}/performance/{perfId}:
+    put:
+      tags:
+      - performance-controller
+      operationId: updatePerformance
+      parameters:
+      - name: goalId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: perfId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PerformanceRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PerformanceResponseDTO'
+    delete:
+      tags:
+      - performance-controller
+      operationId: deletePerformance
+      parameters:
+      - name: goalId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: perfId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+  /boards/{boardId}:
+    put:
+      tags:
+      - board-controller
+      operationId: update
+      parameters:
+      - name: boardId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BoardUpdateDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+    delete:
+      tags:
+      - board-controller
+      operationId: delete
+      parameters:
+      - name: boardId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+  /attendance/schedule/personal/{id}:
+    put:
+      tags:
+      - attendance-command-controller
+      operationId: updatePersonalSchedule
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonalScheduleRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+    delete:
+      tags:
+      - attendance-command-controller
+      operationId: deletePersonalSchedule
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+  /attendance/schedule/meeting/{id}:
+    put:
+      tags:
+      - attendance-command-controller
+      operationId: updateMeetingSchedule
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeetingScheduleRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+    delete:
+      tags:
+      - attendance-command-controller
+      operationId: deleteMeetingSchedule
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+  /attendance/check-out:
+    put:
+      tags:
+      - attendance-command-controller
+      operationId: checkOut
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /appointment/update/{id}:
+    put:
+      tags:
+      - appointment-controller
+      operationId: updateAppointment
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppointmentResponseDTO'
+  /users:
+    post:
+      tags:
+      - user-controller
+      operationId: registUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResponseRegistUserVO'
+  /review/manager/performance/{performanceId}/evaluate:
+    post:
+      tags:
+      - review-controller
+      operationId: managerEvaluate
+      parameters:
+      - name: performanceId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EvaluationRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PerformanceReviewDTO'
+  /retirement/mail:
+    post:
+      tags:
+      - retirement-mail-controller
+      operationId: sendMail
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RetirementMailRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /payroll/mail:
+    post:
+      tags:
+      - payroll-mail-controller
+      operationId: sendMail_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayrollMailRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /org/create/team:
+    post:
+      tags:
+      - structure-controller
+      operationId: createTeam
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TeamDTO'
+  /org/create/job:
+    post:
+      tags:
+      - job-controller
+      operationId: createJob
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/JobResponseDTO'
+  /org/create/head:
+    post:
+      tags:
+      - structure-controller
+      operationId: createHeadquarters
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HeadquartersRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/HeadquartersDTO'
+  /org/create/department:
+    post:
+      tags:
+      - structure-controller
+      operationId: createDepartment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepartmentRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DepartmentDTO'
+  /notice:
+    post:
+      tags:
+      - notice-controller
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoticeDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/NoticeDTO'
+  /menus/favorites:
+    post:
+      tags:
+      - favorite-menu-command-controller
+      operationId: addFavorite
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FavoriteMenuCommandDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+    delete:
+      tags:
+      - favorite-menu-command-controller
+      operationId: removeFavorite
+      parameters:
+      - name: employeeId
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: menuId
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /introduction/create/department/{departmentId}:
+    post:
+      tags:
+      - introduction-controller
+      operationId: createDepartmentIntroduction
+      parameters:
+      - name: departmentId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateIntroductionDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/IntroductionResponseDTO'
+  /goalsperf/{goalId}/performance:
+    post:
+      tags:
+      - performance-controller
+      operationId: uploadPerformance
+      parameters:
+      - name: goalId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PerformanceRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /goals:
+    get:
+      tags:
+      - goal-controller
+      summary: 회원 목록 조회
+      description: 모든 사용자 정보를 페이징 없이 반환한다
+      operationId: getGoals
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GoalDTO'
+    post:
+      tags:
+      - goal-controller
+      operationId: createGoal
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GoalInsertDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: integer
+                format: int64
+  /employees/enroll:
+    post:
+      tags:
+      - employee-controller
+      operationId: enroll
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeEnrollDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: integer
+                format: int64
+  /email-verification/verify:
+    post:
+      tags:
+      - email-verification-controller
+      operationId: verifyCode
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailVerificationRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/EmailVerificationResponseDTO'
+  /email-verification/send:
+    post:
+      tags:
+      - email-verification-controller
+      operationId: sendVerification
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailSendRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/EmailVerificationResponseDTO'
+  /drafts/query/{docId}/recall:
+    post:
+      tags:
+      - draft-query-controller
+      operationId: recall
+      parameters:
+      - name: docId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+  /drafts/creation:
+    post:
+      tags:
+      - draft-command-controller
+      operationId: createDraft
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DraftCreateCommandDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DraftCreateResponseCommandDTO'
+  /docs/upload:
+    post:
+      tags:
+      - policy-pdf-upload-controller
+      operationId: upload
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UploadPolicyDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /docs/batch-upload:
+    post:
+      tags:
+      - policy-pdf-upload-controller
+      operationId: batchUpload
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/UploadPolicyDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  type: string
+  /disciplinary:
+    get:
+      tags:
+      - disciplinary-query-controller
+      operationId: list
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DisciplinaryListDTO'
+    post:
+      tags:
+      - disciplinary-controller
+      operationId: create_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisciplinaryEnrollDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: integer
+                format: int64
+  /contracts:
+    post:
+      tags:
+      - contract-controller
+      operationId: create_2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContractEnrollDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: integer
+                format: int64
+  /boards:
+    post:
+      tags:
+      - board-controller
+      operationId: create_3
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BoardCreateDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: integer
+                format: int64
+  /attendance/schedule/personal:
+    post:
+      tags:
+      - attendance-command-controller
+      operationId: addPersonalSchedule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonalScheduleRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PersonalScheduleResponseDTO'
+  /attendance/schedule/meeting:
+    post:
+      tags:
+      - attendance-command-controller
+      operationId: addMeetingSchedule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeetingScheduleRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MeetingScheduleResponseDTO'
+  /attendance/overtime-request:
+    post:
+      tags:
+      - attendance-command-controller
+      operationId: requestOvertime
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OvertimeRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+  /attendance/correction/request:
+    post:
+      tags:
+      - attendance-command-controller
+      operationId: requestCorrection
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttendanceCorrectionRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /attendance/correction/reject:
+    post:
+      tags:
+      - attendance-command-controller
+      operationId: rejectCorrection
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttendanceRejectRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+  /attendance/correction/approve:
+    post:
+      tags:
+      - attendance-command-controller
+      operationId: approveCorrection
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttendanceApproveRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+  /attendance/check-in:
+    post:
+      tags:
+      - attendance-command-controller
+      operationId: checkIn
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /approvals/{lineId}/reject:
+    post:
+      tags:
+      - approval-command-controller
+      operationId: reject
+      parameters:
+      - name: lineId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalActionRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+  /approvals/{lineId}/approve:
+    post:
+      tags:
+      - approval-command-controller
+      operationId: approve
+      parameters:
+      - name: lineId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalActionRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+  /appointment/create:
+    post:
+      tags:
+      - appointment-controller
+      operationId: createAppointment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentRequestDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppointmentResponseDTO'
+  /api/password-reset/verify:
+    post:
+      tags:
+      - password-reset-controller
+      operationId: verify
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ver'
+        required: true
+      responses:
+        "200":
+          description: OK
+  /api/password-reset/request:
+    post:
+      tags:
+      - password-reset-controller
+      operationId: request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Req'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TokenResp'
+  /api/password-reset/mfa/verify:
+    post:
+      tags:
+      - password-reset-controller
+      operationId: verifyOtp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OtpDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+  /api/password-reset/change-password:
+    post:
+      tags:
+      - password-reset-controller
+      operationId: change
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PwDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+  /notice/{noticeId}/read:
+    patch:
+      tags:
+      - notice-controller
+      operationId: markAsRead
+      parameters:
+      - name: noticeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+  /menus/favorites/order:
+    patch:
+      tags:
+      - favorite-menu-command-controller
+      operationId: changeOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FavoriteMenuOrderChangeDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /employees/{id}:
+    get:
+      tags:
+      - employee-query-controller
+      operationId: getEmployeeById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+    patch:
+      tags:
+      - employee-controller
+      operationId: update_1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeUpdateDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+  /drafts/query/reference/{docId}/read:
+    patch:
+      tags:
+      - draft-query-controller
+      operationId: markReferenceDocAsRead
+      parameters:
+      - name: docId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+  /users/{employeeId}:
+    get:
+      tags:
+      - user-controller
+      operationId: getUsers
+      parameters:
+      - name: employeeId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResponseFindUserVO'
+  /users/me:
+    get:
+      tags:
+      - user-controller
+      operationId: getMyInfo
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResponseFindUserVO'
+  /structure/teams/{teamId}:
+    get:
+      tags:
+      - structure-query-controller
+      operationId: getTeamHierarchy
+      parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TeamQueryDTO'
+  /structure/teams/{teamId}/members:
+    get:
+      tags:
+      - structure-query-controller
+      operationId: getMembers
+      parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmployeeQueryDTO'
+  /structure/hierarchy:
+    get:
+      tags:
+      - structure-query-controller
+      operationId: getFullHierarchy
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HeadQueryDTO'
+  /structure/heads:
+    get:
+      tags:
+      - structure-query-controller
+      operationId: getAllHeads
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HeadQueryDTO'
+  /structure/heads/{headId}:
+    get:
+      tags:
+      - structure-query-controller
+      operationId: getHeadHierarchy
+      parameters:
+      - name: headId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/HeadQueryDTO'
+  /structure/heads/{headId}/departments:
+    get:
+      tags:
+      - structure-query-controller
+      operationId: getDepartmentsByHeadId
+      parameters:
+      - name: headId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DepartmentQueryDTO'
+  /structure/head/{headId}/name:
+    get:
+      tags:
+      - structure-query-controller
+      operationId: getHeadName
+      parameters:
+      - name: headId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /structure/head/{headId}/code:
+    get:
+      tags:
+      - structure-query-controller
+      operationId: getHeadCode
+      parameters:
+      - name: headId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /structure/employee/{employeeId}:
+    get:
+      tags:
+      - structure-query-controller
+      operationId: getEmployeeDetail
+      parameters:
+      - name: employeeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/EmployeeQueryDTO'
+  /structure/departments/{deptId}:
+    get:
+      tags:
+      - structure-query-controller
+      operationId: getDepartmentHierarchy
+      parameters:
+      - name: deptId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DepartmentQueryDTO'
+  /structure/departments/{deptId}/manager:
+    get:
+      tags:
+      - structure-query-controller
+      operationId: getDeptManager
+      parameters:
+      - name: deptId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/EmployeeQueryDTO'
+  /structure/departments/{departmentId}/members:
+    get:
+      tags:
+      - structure-query-controller
+      operationId: getDeptMembers
+      parameters:
+      - name: departmentId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmployeeQueryDTO'
+  /s3/upload-url:
+    get:
+      tags:
+      - s-3-controller
+      operationId: getUploadUrl
+      parameters:
+      - name: filename
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: contentType
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+  /s3/download-url:
+    get:
+      tags:
+      - s-3-controller
+      operationId: getDownloadUrl
+      parameters:
+      - name: filename
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: contentType
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /review/{teamId}:
+    get:
+      tags:
+      - review-controller
+      operationId: getTeamReview
+      parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmployeeReviewDTO'
+  /review/{reviewerId}/performance:
+    get:
+      tags:
+      - review-controller
+      operationId: getMyReviews
+      parameters:
+      - name: reviewerId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReviewedPerformanceDTO'
+  /review/history/{employeeId}:
+    get:
+      tags:
+      - review-controller
+      operationId: getHistoryByEmployeeId
+      parameters:
+      - name: employeeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReviewHistoryDTO'
+  /review/history/employee:
+    get:
+      tags:
+      - performance-review-query-controller
+      operationId: getPerformanceHistoryByEmployeeId
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PerformanceHistoryDTO'
+  /review/history/all:
+    get:
+      tags:
+      - performance-review-query-controller
+      operationId: getAllPerformanceHistory
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PerformanceHistoryDTO'
+  /policies/files:
+    get:
+      tags:
+      - policy-pdf-query-controller
+      operationId: listUploadedFiles
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PolicyFileDTO'
+  /payroll/salaries:
+    get:
+      tags:
+      - payroll-query-controller
+      operationId: getSalarySummaries
+      parameters:
+      - name: condition
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/SalarySearchCondition'
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SalarySummaryDTO'
+  /payroll/salaries/{employeeId}:
+    get:
+      tags:
+      - payroll-query-controller
+      operationId: getSalaryDetail
+      parameters:
+      - name: employeeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: month
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SalaryDetailDTO'
+  /payroll/retirements:
+    get:
+      tags:
+      - retirement-query-controller
+      operationId: getRetirementList
+      parameters:
+      - name: condition
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/RetirementSearchCondition'
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RetirementSummaryDTO'
+  /payroll/retirements/{employeeId}:
+    get:
+      tags:
+      - retirement-query-controller
+      operationId: getDetail
+      parameters:
+      - name: employeeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RetirementDetailDTO'
+  /payroll/me:
+    get:
+      tags:
+      - payroll-query-controller
+      operationId: getMyEmployeeInfo
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/EmployeeSummaryDTO'
+  /payroll/me/salary:
+    get:
+      tags:
+      - payroll-query-controller
+      operationId: getMySalaryDetail
+      parameters:
+      - name: month
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SalaryDetailDTO'
+  /payroll/employees:
+    get:
+      tags:
+      - payroll-query-controller
+      operationId: getFilteredEmployees
+      parameters:
+      - name: condition
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/EmployeeSearchCondition'
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmployeeSummaryDTO'
+  /payroll/employees/{employeeId}:
+    get:
+      tags:
+      - payroll-query-controller
+      operationId: getEmployeeById_1
+      parameters:
+      - name: employeeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/EmployeeSummaryDTO'
+  /notice/me:
+    get:
+      tags:
+      - notice-query-controller
+      operationId: getNotice
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NoticeQueryDTO'
+  /menus:
+    get:
+      tags:
+      - menu-query-controller
+      operationId: getAllMenus
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MenuDTO'
+  /menus/favorites/{employeeId}:
+    get:
+      tags:
+      - favorite-menu-query-controller
+      operationId: getFavoriteMenus
+      parameters:
+      - name: employeeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MenuDTO'
+  /introduction/team/{teamId}/job:
+    get:
+      tags:
+      - introduction-query-controller
+      operationId: getJobsByTeam
+      parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JobIntroductionQueryDTO'
+  /introduction/job/{jobId}/ranks:
+    get:
+      tags:
+      - introduction-query-controller
+      operationId: getRanksByJob
+      parameters:
+      - name: jobId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RankDTO'
+  /introduction/job/{jobId}/positions:
+    get:
+      tags:
+      - introduction-query-controller
+      operationId: getPositionsByJob
+      parameters:
+      - name: jobId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PositionDTO'
+  /introduction/employees:
+    get:
+      tags:
+      - introduction-query-controller
+      operationId: getAllEmployees
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmployeeQueryDTO'
+  /introduction/employee/{employeeId}:
+    get:
+      tags:
+      - introduction-query-controller
+      operationId: getEmployee
+      parameters:
+      - name: employeeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/EmployeeQueryDTO'
+  /introduction/department:
+    get:
+      tags:
+      - introduction-query-controller
+      operationId: getAllDepartments
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DepartmentIntroductionQueryDTO'
+  /introduction/department/{departmentId}:
+    get:
+      tags:
+      - introduction-query-controller
+      operationId: getDepartmentById
+      parameters:
+      - name: departmentId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DepartmentIntroductionQueryDTO'
+  /introduction/department/{departmentId}/team:
+    get:
+      tags:
+      - introduction-query-controller
+      operationId: getTeamsByDepartment
+      parameters:
+      - name: departmentId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamIntroductionQueryDTO'
+  /health:
+    get:
+      tags:
+      - user-controller
+      operationId: status
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /goalsperf/attachment/download-url:
+    get:
+      tags:
+      - performance-controller
+      operationId: getAttachmentDownloadUrl
+      parameters:
+      - name: fileKey
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /employees/search:
+    get:
+      tags:
+      - employee-query-controller
+      operationId: searchByName
+      parameters:
+      - name: name
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmployeeDTO'
+  /employees/myinfo:
+    get:
+      tags:
+      - employee-query-controller
+      operationId: getMyProfile
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/EmployeeDTO'
+  /employees/list:
+    get:
+      tags:
+      - employee-query-controller
+      operationId: listAll
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmployeeListDTO'
+  /drafts/{docId}:
+    get:
+      tags:
+      - draft-command-controller
+      operationId: getDraftDetail
+      parameters:
+      - name: docId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DraftDetailResponseQueryDTO'
+  /drafts/query:
+    get:
+      tags:
+      - draft-query-controller
+      operationId: getMyDrafts
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DraftDTO'
+  /drafts/query/{id}:
+    get:
+      tags:
+      - draft-query-controller
+      operationId: getDraftDetail_1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DraftDetailResponseQueryDTO'
+  /drafts/query/reference:
+    get:
+      tags:
+      - draft-query-controller
+      operationId: getReferenceDocs
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReferenceDocDTO'
+  /drafts/query/receiver:
+    get:
+      tags:
+      - draft-query-controller
+      operationId: getReceiverDocs
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReferenceDocDTO'
+  /drafter/me:
+    get:
+      tags:
+      - drafter-query-controller
+      operationId: getMyInfo_1
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FindDrafterQueryDTO'
+  /disciplinary/employee/{employeeId}:
+    get:
+      tags:
+      - disciplinary-query-controller
+      operationId: listByEmployee
+      parameters:
+      - name: employeeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DisciplinaryListDTO'
+  /dictionary:
+    get:
+      tags:
+      - dictionary-query-controller
+      operationId: getAllDictionary
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DictionaryQueryDTO'
+  /contract:
+    get:
+      tags:
+      - contract-query-controller
+      operationId: list_1
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContractListDTO'
+  /contract/employee/{employeeId}:
+    get:
+      tags:
+      - contract-query-controller
+      operationId: listByEmployee_1
+      parameters:
+      - name: employeeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContractListDTO'
+  /boards/{id}:
+    get:
+      tags:
+      - board-query-controller
+      operationId: detail
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BoardDTO'
+  /boards/lists:
+    get:
+      tags:
+      - board-query-controller
+      operationId: list_2
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BoardListDTO'
+  /attendance/work-duration-summary:
+    get:
+      tags:
+      - attendance-query-controller
+      operationId: getWeeklyWorkDurationSummary
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/WeeklyWorkDurationQueryDTO'
+  /attendance/status/team:
+    get:
+      tags:
+      - attendance-query-controller
+      operationId: getTeamStatus
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+  /attendance/status/me:
+    get:
+      tags:
+      - attendance-query-controller
+      operationId: getMyWorkStatus
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MyWorkStatusQueryDTO'
+  /attendance/schedule/today:
+    get:
+      tags:
+      - attendance-query-controller
+      operationId: getTodaySchedules
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PersonalScheduleQueryDTO'
+  /attendance/overtime-summary:
+    get:
+      tags:
+      - attendance-query-controller
+      operationId: getWeeklyOvertimeSummary
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/WeeklyOvertimeSummaryQueryDTO'
+  /attendance/meeting/today:
+    get:
+      tags:
+      - attendance-query-controller
+      operationId: getTodayMeetings
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MeetingQueryDTO'
+  /attendance/leave/status/me:
+    get:
+      tags:
+      - attendance-query-controller
+      operationId: getMyLeaveStatus
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/LeaveStatusQueryDTO'
+  /attendance/leave/history/used/me:
+    get:
+      tags:
+      - attendance-query-controller
+      operationId: getLeaveHistory
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LeaveHistoryQueryDTO'
+  /attendance/leave/history/used/all:
+    get:
+      tags:
+      - attendance-query-controller
+      operationId: getAllLeaveUsedList
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AllLeaveHistoryQueryDTO'
+  /attendance/leave/history/request/me:
+    get:
+      tags:
+      - attendance-query-controller
+      operationId: getPendingLeaveRequests
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LeaveHistoryQueryDTO'
+  /attendance/leave/history/request/all:
+    get:
+      tags:
+      - attendance-query-controller
+      operationId: getAllLeavePendingList
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AllLeaveHistoryQueryDTO'
+  /attendance/correction/history/request/me:
+    get:
+      tags:
+      - attendance-query-controller
+      operationId: getCorrectionRequestHistory
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MyCommuteCorrectionQueryDTO'
+  /attendance/correction/history/request/all:
+    get:
+      tags:
+      - attendance-query-controller
+      operationId: getAllCorrectionRequestHistory
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AllCommuteCorrectionQueryDTO'
+  /attendance/correction/history/process/me:
+    get:
+      tags:
+      - attendance-query-controller
+      operationId: getCommuteCorrectionHistory
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MyCommuteCorrectionQueryDTO'
+  /attendance/correction/history/process/all:
+    get:
+      tags:
+      - attendance-query-controller
+      operationId: getAllCorrectionHistory
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AllCommuteCorrectionQueryDTO'
+  /attendance/commute/{employeeId}:
+    get:
+      tags:
+      - attendance-query-controller
+      operationId: getCommuteDetail
+      parameters:
+      - name: employeeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: startDate
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: endDate
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CommuteDetailDTO'
+  /attendance/commute/summary/all:
+    get:
+      tags:
+      - attendance-query-controller
+      operationId: getAllCommuteSummary
+      parameters:
+      - name: startDate
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: endDate
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AllCommuteSummaryDTO'
+  /attendance/commute/me:
+    get:
+      tags:
+      - attendance-query-controller
+      operationId: getMyCommuteList
+      parameters:
+      - name: startDate
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: endDate
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MyCommuteQueryDTO'
+  /attendance/calendar/team:
+    get:
+      tags:
+      - attendance-query-controller
+      operationId: getTeamCalendar
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TeamCalendarQueryDTO'
+  /attendance/calendar/personal:
+    get:
+      tags:
+      - attendance-query-controller
+      operationId: getMyCalendar
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PersonalCalendarQueryDTO'
+  /approvals/draftDoc:
+    get:
+      tags:
+      - approval-document-query-controller
+      operationId: getMyDrafts_1
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DraftDTO'
+  /approvals/ApprovalBox:
+    get:
+      tags:
+      - approval-document-query-controller
+      operationId: getApprovals
+      parameters:
+      - name: tab
+        in: query
+        required: false
+        schema:
+          type: string
+          default: 결재
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DocumentDTO'
+  /approval-line:
+    get:
+      tags:
+      - approval-line-query-controller
+      operationId: getAutoApprovalLine
+      parameters:
+      - name: employeeId
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApproverInfoQueryDTO'
+  /appointment/{appointmentId}:
+    get:
+      tags:
+      - appointment-query-controller
+      operationId: getAppointmentById
+      parameters:
+      - name: appointmentId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AppointmentQueryDTO'
+  /appointment/status/{status}:
+    get:
+      tags:
+      - appointment-query-controller
+      operationId: getByStatus
+      parameters:
+      - name: status
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppointmentQueryDTO'
+  /appointment/employee/{employeeId}:
+    get:
+      tags:
+      - appointment-query-controller
+      operationId: getByEmployeeId
+      parameters:
+      - name: employeeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppointmentQueryDTO'
+  /appointment/all:
+    get:
+      tags:
+      - appointment-query-controller
+      operationId: getAllAppointments
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppointmentQueryDTO'
+  /appointment-history/type/{appointmentType}:
+    get:
+      tags:
+      - appointment-history-query-controller
+      operationId: getByAppointmentType
+      parameters:
+      - name: appointmentType
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppointmentHistoryQueryDTO'
+  /appointment-history/history/{appointmentHistoryId}:
+    get:
+      tags:
+      - appointment-history-query-controller
+      operationId: getHistoriesByHistoryId
+      parameters:
+      - name: appointmentHistoryId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppointmentHistoryQueryDTO'
+  /appointment-history/employee/{employeeId}:
+    get:
+      tags:
+      - appointment-history-query-controller
+      operationId: getByEmployeeId_1
+      parameters:
+      - name: employeeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppointmentHistoryQueryDTO'
+  /appointment-history/approved:
+    get:
+      tags:
+      - appointment-history-query-controller
+      operationId: getApprovedOnly
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppointmentHistoryQueryDTO'
+  /appointment-history/appointment/{appointmentId}:
+    get:
+      tags:
+      - appointment-history-query-controller
+      operationId: getByAppointmentId
+      parameters:
+      - name: appointmentId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppointmentHistoryQueryDTO'
+  /appointment-history/all:
+    get:
+      tags:
+      - appointment-history-query-controller
+      operationId: getAllHistories
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppointmentHistoryQueryDTO'
+  /api/password-reset/mfa/qr:
+    get:
+      tags:
+      - password-reset-controller
+      operationId: qr
+      parameters:
+      - name: empId
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            image/png:
+              schema:
+                type: string
+                format: byte
+  /api/password-reset/mfa/exists:
+    get:
+      tags:
+      - password-reset-controller
+      operationId: exists
+      parameters:
+      - name: empId
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+  /s3/file:
+    delete:
+      tags:
+      - s-3-controller
+      operationId: deleteFile
+      parameters:
+      - name: filename
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: contentType
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /org/delete/team/{id}:
+    delete:
+      tags:
+      - structure-controller
+      operationId: deleteTeam
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+  /org/delete/job/{id}:
+    delete:
+      tags:
+      - job-controller
+      operationId: deleteJob
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+  /org/delete/head/{id}:
+    delete:
+      tags:
+      - structure-controller
+      operationId: deleteHeadquarters
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+  /org/delete/department/{id}:
+    delete:
+      tags:
+      - structure-controller
+      operationId: deleteDepartment
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+  /notice/{id}:
+    delete:
+      tags:
+      - notice-controller
+      operationId: delete_1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+  /introduction/delete/department/{departmentId}:
+    delete:
+      tags:
+      - introduction-controller
+      operationId: deleteDepartmentIntroduction
+      parameters:
+      - name: departmentId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+  /goals/{goalId}:
+    delete:
+      tags:
+      - goal-controller
+      operationId: deleteGoal
+      parameters:
+      - name: goalId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+  /disciplinary/{id}:
+    delete:
+      tags:
+      - disciplinary-controller
+      operationId: delete_2
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+  /contracts/{id}:
+    delete:
+      tags:
+      - contract-controller
+      operationId: delete_3
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+  /appointment/delete/{id}:
+    delete:
+      tags:
+      - appointment-controller
+      operationId: deleteAppointment
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+components:
+  schemas:
+    TeamRequestDTO:
+      type: object
+      properties:
+        teamName:
+          type: string
+        departmentId:
+          type: integer
+          format: int64
+    TeamDTO:
+      type: object
+      properties:
+        teamId:
+          type: integer
+          format: int64
+        teamName:
+          type: string
+        teamCode:
+          type: string
+    JobRequestDTO:
+      type: object
+      properties:
+        jobName:
+          type: string
+        jobCode:
+          type: string
+        jobRole:
+          type: string
+        jobNeed:
+          type: string
+        jobNecessary:
+          type: string
+        jobPreference:
+          type: string
+        teamId:
+          type: integer
+          format: int64
+    JobResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        jobName:
+          type: string
+        jobCode:
+          type: string
+        jobRole:
+          type: string
+        jobNeed:
+          type: string
+        jobNecessary:
+          type: string
+        jobPreference:
+          type: string
+        teamId:
+          type: integer
+          format: int64
+    HeadquartersRequestDTO:
+      type: object
+      properties:
+        headName:
+          type: string
+    DepartmentDTO:
+      type: object
+      properties:
+        departmentId:
+          type: integer
+          format: int64
+        departmentName:
+          type: string
+        departmentCode:
+          type: string
+        team:
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamDTO'
+    HeadquartersDTO:
+      type: object
+      properties:
+        headId:
+          type: integer
+          format: int64
+        headName:
+          type: string
+        headCode:
+          type: string
+        department:
+          type: array
+          items:
+            $ref: '#/components/schemas/DepartmentDTO'
+    DepartmentRequestDTO:
+      type: object
+      properties:
+        departmentName:
+          type: string
+        headId:
+          type: integer
+          format: int64
+    UpdateIntroductionDTO:
+      type: object
+      properties:
+        introductionContext:
+          type: string
+    IntroductionResponseDTO:
+      type: object
+      properties:
+        introductionId:
+          type: integer
+          format: int64
+        departmentId:
+          type: integer
+          format: int64
+        teamId:
+          type: integer
+          format: int64
+        introductionContext:
+          type: string
+        createdAt:
+          type: string
+          format: date
+    PerformanceRequestDTO:
+      type: object
+      properties:
+        performanceValue:
+          type: number
+          format: double
+        selfreviewContent:
+          type: string
+        selfCreatedAt:
+          type: integer
+          format: int64
+        employeeIdSelfreviewer:
+          type: integer
+          format: int64
+        fileSize:
+          type: number
+          format: double
+        attachmentKey:
+          type: string
+        originalFileName:
+          type: string
+        fileType:
+          type: string
+    PerformanceResponseDTO:
+      type: object
+      properties:
+        performanceId:
+          type: integer
+          format: int64
+        performanceValue:
+          type: integer
+          format: int32
+        selfreviewContent:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        fileId:
+          type: integer
+          format: int64
+        originalFileName:
+          type: string
+        attachmentKey:
+          type: string
+        fileType:
+          type: string
+        fileSize:
+          type: number
+          format: double
+    BoardUpdateDTO:
+      type: object
+      properties:
+        boardTitle:
+          type: string
+        boardContent:
+          type: string
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileDTO'
+    FileDTO:
+      type: object
+      properties:
+        key:
+          type: string
+        fileName:
+          type: string
+        fileSize:
+          type: integer
+          format: int64
+    PersonalScheduleRequestDTO:
+      type: object
+      properties:
+        scheduleDate:
+          type: string
+        scheduleTitle:
+          type: string
+        scheduleTime:
+          type: string
+    MeetingScheduleRequestDTO:
+      type: object
+      properties:
+        meetingDate:
+          type: string
+        meetingTitle:
+          type: string
+        meetingTime:
+          type: string
+    AppointmentRequestDTO:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        fromHeadCode:
+          type: string
+        toHeadCode:
+          type: string
+        fromDepartmentCode:
+          type: string
+        toDepartmentCode:
+          type: string
+        fromTeamCode:
+          type: string
+        toTeamCode:
+          type: string
+        fromPositionCode:
+          type: string
+        toPositionCode:
+          type: string
+        fromRankCode:
+          type: string
+        toRankCode:
+          type: string
+        fromJobCode:
+          type: string
+        toJobCode:
+          type: string
+        appointmentType:
+          type: string
+        appointmentReason:
+          type: string
+        appointmentEffectiveDate:
+          type: string
+          format: date
+        appointmentStatus:
+          type: string
+        isApplied:
+          type: boolean
+    AppointmentResponseDTO:
+      type: object
+      properties:
+        appointmentId:
+          type: integer
+          format: int64
+        employeeId:
+          type: integer
+          format: int64
+        fromHeadCode:
+          type: string
+        toHeadCode:
+          type: string
+        fromDepartmentCode:
+          type: string
+        toDepartmentCode:
+          type: string
+        fromTeamCode:
+          type: string
+        toTeamCode:
+          type: string
+        fromPositionCode:
+          type: string
+        toPositionCode:
+          type: string
+        fromRankCode:
+          type: string
+        toRankCode:
+          type: string
+        fromJobCode:
+          type: string
+        toJobCode:
+          type: string
+        appointmentType:
+          type: string
+        appointmentReason:
+          type: string
+        appointmentCreatedAt:
+          type: string
+          format: date
+        appointmentEffectiveDate:
+          type: string
+          format: date
+        appointmentStatus:
+          type: string
+        isApplied:
+          type: boolean
+    EmployeeDTO:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        employeeName:
+          type: string
+        employeePwd:
+          type: string
+        employeePhotoName:
+          type: string
+        employeePhotoUrl:
+          type: string
+        employeeNation:
+          type: string
+        employeeGender:
+          type: string
+        employeeBirth:
+          type: string
+          format: date
+        employeeResident:
+          type: string
+        employeeContact:
+          type: string
+        employeeEmail:
+          type: string
+        employeeAddress:
+          type: string
+        employmentDate:
+          type: string
+          format: date
+        retirementDate:
+          type: string
+          format: date
+        workType:
+          type: string
+        bankName:
+          type: string
+        bankDepositor:
+          type: string
+        bankAccount:
+          type: string
+        isDisorder:
+          type: string
+        militaryType:
+          type: string
+        isMarriage:
+          type: string
+        marriageDate:
+          type: string
+          format: date
+        familyCount:
+          type: integer
+          format: int32
+        careerYearCount:
+          type: integer
+          format: int32
+        previousCompany:
+          type: string
+        finalAcademic:
+          type: string
+        employeeSchool:
+          type: string
+        employeeDept:
+          type: string
+        graduationYear:
+          type: integer
+          format: int32
+        isFourInsurances:
+          type: string
+        positionId:
+          type: integer
+          format: int64
+        rankId:
+          type: integer
+          format: int64
+        jobId:
+          type: integer
+          format: int64
+        headId:
+          type: integer
+          format: int64
+        departmentId:
+          type: integer
+          format: int64
+        teamId:
+          type: integer
+          format: int64
+    ResponseRegistUserVO:
+      type: object
+      properties:
+        employeeName:
+          type: string
+    EvaluationRequest:
+      type: object
+      properties:
+        reviewerScore:
+          type: integer
+          format: int32
+        reviewerContent:
+          type: string
+        employeeIdReviewer:
+          type: integer
+          format: int64
+        decision:
+          type: string
+    PerformanceReviewDTO:
+      type: object
+      properties:
+        performanceId:
+          type: integer
+          format: int64
+        goalId:
+          type: integer
+          format: int64
+        goalTitle:
+          type: string
+        performanceValue:
+          type: number
+          format: double
+        reviewerScore:
+          type: integer
+          format: int32
+        reviewerContent:
+          type: string
+        reviewerCreatedAt:
+          type: string
+          format: date-time
+    MonthlySalaryDTO:
+      type: object
+      properties:
+        label:
+          type: string
+        amount:
+          type: integer
+          format: int32
+    RetirementMailRequestDTO:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        employeeName:
+          type: string
+        employeeEmail:
+          type: string
+        headName:
+          type: string
+        departmentName:
+          type: string
+        teamName:
+          type: string
+        rankName:
+          type: string
+        employmentDate:
+          type: string
+          format: date
+        retirementDate:
+          type: string
+          format: date
+        totalWorkDays:
+          type: integer
+          format: int32
+        totalYears:
+          type: integer
+          format: int32
+        month1:
+          type: string
+        month1Salary:
+          type: integer
+          format: int32
+        month2:
+          type: string
+        month2Salary:
+          type: integer
+          format: int32
+        month3:
+          type: string
+        month3Salary:
+          type: integer
+          format: int32
+        month4:
+          type: string
+        month4Salary:
+          type: integer
+          format: int32
+        totalBonus:
+          type: integer
+          format: int32
+        totalDays:
+          type: integer
+          format: int32
+        averageDailySalary:
+          type: integer
+          format: int32
+        retireTotal:
+          type: integer
+          format: int32
+        retireIncomeTax:
+          type: integer
+          format: int32
+        provisionActual:
+          type: integer
+          format: int32
+        provisionDate:
+          type: string
+        monthlySalaries:
+          type: array
+          items:
+            $ref: '#/components/schemas/MonthlySalaryDTO'
+    PayItem:
+      type: object
+      properties:
+        label:
+          type: string
+        amount:
+          type: integer
+          format: int32
+    PayrollMailRequestDTO:
+      type: object
+      properties:
+        employeeId:
+          type: string
+        employeeName:
+          type: string
+        employeeEmail:
+          type: string
+        departmentName:
+          type: string
+        headName:
+          type: string
+        teamName:
+          type: string
+        rankName:
+          type: string
+        salaryDate:
+          type: string
+        netSalary:
+          type: integer
+          format: int32
+        pays:
+          type: array
+          items:
+            $ref: '#/components/schemas/PayItem'
+        deductions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PayItem'
+    NoticeDTO:
+      type: object
+      properties:
+        noticeId:
+          type: integer
+          format: int64
+        noticeContent:
+          type: string
+        noticeType:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        isRead:
+          type: boolean
+        employeeId:
+          type: integer
+          format: int64
+    FavoriteMenuCommandDTO:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        menuId:
+          type: integer
+          format: int64
+        displayOrder:
+          type: integer
+          format: int64
+    CreateIntroductionDTO:
+      type: object
+      properties:
+        introductionContext:
+          type: string
+    GoalInsertDTO:
+      type: object
+      properties:
+        goalTitle:
+          type: string
+        goalContent:
+          type: string
+        goalValue:
+          type: integer
+          format: int32
+        goalWeight:
+          type: integer
+          format: int32
+        goalCreatedAt:
+          type: string
+          format: date-time
+        employeeId:
+          type: integer
+          format: int64
+    EmployeeEnrollDTO:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int32
+        employeeName:
+          type: string
+        employeePwd:
+          type: string
+        employeePhotoName:
+          type: string
+        employeePhotoUrl:
+          type: string
+        employeeNation:
+          type: string
+        employeeGender:
+          type: string
+        employeeBirth:
+          type: string
+          format: date
+        employeeResident:
+          type: string
+        employeeContact:
+          type: string
+        employeeEmail:
+          type: string
+        employeeAddress:
+          type: string
+        employmentDate:
+          type: string
+          format: date
+        retirementDate:
+          type: string
+          format: date
+        workType:
+          type: string
+        bankName:
+          type: string
+        bankDepositor:
+          type: string
+        bankAccount:
+          type: string
+        isDisorder:
+          type: string
+        militaryType:
+          type: string
+        isMarriage:
+          type: string
+        marriageDate:
+          type: string
+          format: date
+        familyCount:
+          type: integer
+          format: int32
+        careerYearCount:
+          type: integer
+          format: int32
+        previousCompany:
+          type: string
+        finalAcademic:
+          type: string
+        employeeSchool:
+          type: string
+        employeeDept:
+          type: string
+        graduationYear:
+          type: integer
+          format: int32
+        isFourInsurances:
+          type: string
+        positionId:
+          type: integer
+          format: int64
+        rankId:
+          type: integer
+          format: int64
+        jobId:
+          type: integer
+          format: int64
+        headId:
+          type: integer
+          format: int64
+        departmentId:
+          type: integer
+          format: int64
+        teamId:
+          type: integer
+          format: int64
+    EmailVerificationRequestDTO:
+      type: object
+      properties:
+        email:
+          type: string
+        verificationCode:
+          type: string
+    EmailVerificationResponseDTO:
+      type: object
+      properties:
+        message:
+          type: string
+    EmailSendRequestDTO:
+      type: object
+      properties:
+        email:
+          type: string
+    ApprovalLineDTO:
+      type: object
+      properties:
+        approvalLineId:
+          type: integer
+          format: int64
+        docId:
+          type: integer
+          format: int64
+        step:
+          type: integer
+          format: int32
+        employeeId:
+          type: integer
+          format: int64
+        positionId:
+          type: integer
+          format: int64
+        status:
+          type: string
+        type:
+          type: string
+    DraftCreateCommandDTO:
+      type: object
+      properties:
+        title:
+          type: string
+        docContent:
+          type: string
+        retentionPeriod:
+          type: integer
+          format: int32
+        expirationDate:
+          type: string
+          format: date
+        docStatus:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        submittedAt:
+          type: string
+          format: date-time
+        draftSavedAt:
+          type: string
+          format: date-time
+        finalApprovalAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+        draftVersion:
+          type: integer
+          format: int32
+        formId:
+          type: integer
+          format: int64
+        employeeId:
+          type: integer
+          format: int64
+        approvalLines:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApprovalLineDTO'
+        approvers:
+          type: array
+          items:
+            type: integer
+            format: int64
+        cooperators:
+          type: array
+          items:
+            type: integer
+            format: int64
+        receivers:
+          type: array
+          items:
+            type: integer
+            format: int64
+        ccs:
+          type: array
+          items:
+            type: integer
+            format: int64
+        attachmentKeys:
+          type: array
+          items:
+            type: string
+        originalFileNames:
+          type: array
+          items:
+            type: string
+        fileTypes:
+          type: array
+          items:
+            type: string
+        fileSizes:
+          type: array
+          items:
+            type: integer
+            format: int64
+    DraftCreateResponseCommandDTO:
+      type: object
+      properties:
+        docId:
+          type: integer
+          format: int64
+        approvalLineId:
+          type: integer
+          format: int64
+    UploadPolicyDTO:
+      type: object
+      properties:
+        template:
+          type: string
+        title:
+          type: string
+        category:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+    DisciplinaryEnrollDTO:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        employeeName:
+          type: string
+        disciplinaryDescription:
+          type: string
+        disciplinaryDate:
+          type: string
+          format: date
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileMeta'
+    FileMeta:
+      type: object
+      properties:
+        fileName:
+          type: string
+        fileUrl:
+          type: string
+        fileSize:
+          type: integer
+          format: int64
+    ContractEnrollDTO:
+      type: object
+      properties:
+        employeeName:
+          type: string
+        contractDescrip:
+          type: string
+        requestDate:
+          type: string
+          format: date
+        contractDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        employeeId:
+          type: integer
+          format: int64
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileMeta'
+    BoardCreateDTO:
+      type: object
+      properties:
+        boardTitle:
+          type: string
+        boardContent:
+          type: string
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileDTO'
+    PersonalScheduleResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        scheduleDate:
+          type: string
+        scheduleTitle:
+          type: string
+        scheduleTime:
+          type: string
+    MeetingScheduleResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        meetingDate:
+          type: string
+        meetingTitle:
+          type: string
+        meetingTime:
+          type: string
+    OvertimeRequestDTO:
+      type: object
+      properties:
+        type:
+          type: string
+        duration:
+          type: integer
+          format: int32
+        date:
+          type: string
+    AttendanceCorrectionRequestDTO:
+      type: object
+      properties:
+        requestedDate:
+          type: string
+        requestedTimeChange:
+          type: string
+        reason:
+          type: string
+    AttendanceRejectRequestDTO:
+      type: object
+      properties:
+        attendanceId:
+          type: integer
+          format: int64
+        rejectReason:
+          type: string
+    AttendanceApproveRequestDTO:
+      type: object
+      properties:
+        attendanceId:
+          type: integer
+          format: int64
+    ApprovalActionRequestDTO:
+      type: object
+      properties:
+        opinion:
+          type: string
+    Ver:
+      type: object
+      properties:
+        tokenId:
+          type: string
+          format: uuid
+        code:
+          type: string
+    Req:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        email:
+          type: string
+    TokenResp:
+      type: object
+      properties:
+        tokenId:
+          type: string
+          format: uuid
+    OtpDto:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        code:
+          type: integer
+          format: int32
+    PwDto:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        newPassword:
+          type: string
+    FavoriteMenuOrderChangeDTO:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+    OrderItem:
+      type: object
+      properties:
+        menuId:
+          type: integer
+          format: int64
+        displayOrder:
+          type: integer
+          format: int64
+    EmployeeUpdateDTO:
+      type: object
+      properties:
+        employeePhotoName:
+          type: string
+        employeePhotoUrl:
+          type: string
+        employeeBirth:
+          type: string
+          format: date
+        employeeContact:
+          type: string
+        employeeEmail:
+          type: string
+        employeeAddress:
+          type: string
+        bankName:
+          type: string
+        bankDepositor:
+          type: string
+        bankAccount:
+          type: string
+    ResponseFindUserVO:
+      type: object
+      properties:
+        employeeId:
+          type: string
+        employeeName:
+          type: string
+    EmployeeQueryDTO:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        employeeName:
+          type: string
+        positionCode:
+          type: string
+        positionName:
+          type: string
+        rankCode:
+          type: string
+        rankName:
+          type: string
+        jobCode:
+          type: string
+        jobName:
+          type: string
+        headId:
+          type: integer
+          format: int64
+        departmentId:
+          type: integer
+          format: int64
+        teamId:
+          type: integer
+          format: int64
+        birthdate:
+          type: string
+        email:
+          type: string
+    TeamQueryDTO:
+      type: object
+      properties:
+        teamId:
+          type: integer
+          format: int64
+        teamName:
+          type: string
+        teamCode:
+          type: string
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmployeeQueryDTO'
+        departmentId:
+          type: integer
+          format: int64
+        teamManager:
+          $ref: '#/components/schemas/EmployeeQueryDTO'
+    DepartmentQueryDTO:
+      type: object
+      properties:
+        departmentId:
+          type: integer
+          format: int64
+        departmentName:
+          type: string
+        departmentCode:
+          type: string
+        teams:
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamQueryDTO'
+        headId:
+          type: integer
+          format: int64
+        deptManager:
+          $ref: '#/components/schemas/EmployeeQueryDTO'
+    HeadQueryDTO:
+      type: object
+      properties:
+        headId:
+          type: integer
+          format: int64
+        headName:
+          type: string
+        headCode:
+          type: string
+        departments:
+          type: array
+          items:
+            $ref: '#/components/schemas/DepartmentQueryDTO'
+        headManager:
+          $ref: '#/components/schemas/EmployeeQueryDTO'
+    EmployeeReviewDTO:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        employeeName:
+          type: string
+        positionId:
+          type: integer
+          format: int64
+        positionName:
+          type: string
+        teamId:
+          type: integer
+          format: int64
+        teamName:
+          type: string
+        rankId:
+          type: integer
+          format: int64
+        rankName:
+          type: string
+        goals:
+          type: array
+          items:
+            $ref: '#/components/schemas/GoalDTO'
+    GoalDTO:
+      type: object
+      properties:
+        goalId:
+          type: integer
+          format: int64
+        goalTitle:
+          type: string
+        goalContent:
+          type: string
+        goalValue:
+          type: number
+          format: double
+        goalWeight:
+          type: number
+          format: double
+        goalCreatedAt:
+          type: string
+          format: date
+        employeeId:
+          type: integer
+          format: int64
+        employeeName:
+          type: string
+        performance:
+          $ref: '#/components/schemas/PerformanceDTO'
+        performances:
+          type: array
+          items:
+            $ref: '#/components/schemas/PerformanceDTO'
+    PerformanceDTO:
+      type: object
+      properties:
+        performanceId:
+          type: integer
+          format: int64
+        selfreviewCreateAt:
+          type: string
+          format: date-time
+        performanceValue:
+          type: integer
+          format: int32
+        selfreviewContent:
+          type: string
+        attachmentKeys:
+          type: array
+          items:
+            type: string
+        attachmentFileNames:
+          type: array
+          items:
+            type: string
+        attachmentFileTypes:
+          type: array
+          items:
+            type: string
+        attachmentFileSizes:
+          type: array
+          items:
+            type: integer
+            format: int64
+        reviewerScore:
+          type: integer
+          format: int32
+        reviewerContent:
+          type: string
+        employeeIdReviewer:
+          type: integer
+          format: int64
+    ReviewedPerformanceDTO:
+      type: object
+      properties:
+        performanceId:
+          type: integer
+          format: int64
+        goalId:
+          type: integer
+          format: int64
+        goalTitle:
+          type: string
+        goalValue:
+          type: number
+          format: double
+        performanceValue:
+          type: number
+          format: double
+        reviewerScore:
+          type: integer
+          format: int32
+        reviewerContent:
+          type: string
+        reviewerCreatedAt:
+          type: string
+          format: date-time
+    ReviewHistoryDTO:
+      type: object
+      properties:
+        yearMonth:
+          type: string
+        performanceDescription:
+          type: string
+        goalValue:
+          type: integer
+          format: int32
+        performanceValue:
+          type: integer
+          format: int32
+        selfReviewContent:
+          type: string
+        reviewScore:
+          type: integer
+          format: int32
+    PerformanceHistoryDTO:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        employeeName:
+          type: string
+        rankName:
+          type: string
+        departmentName:
+          type: string
+        teamName:
+          type: string
+        yearMonth:
+          type: string
+        performanceContent:
+          type: string
+        performanceValue:
+          type: number
+          format: double
+        reviewScore:
+          type: integer
+          format: int32
+    PolicyFileDTO:
+      type: object
+      properties:
+        key:
+          type: string
+        fileName:
+          type: string
+        downloadUrl:
+          type: string
+    SalarySearchCondition:
+      type: object
+      properties:
+        keyword:
+          type: string
+        headName:
+          type: string
+        departmentName:
+          type: string
+        teamName:
+          type: string
+        rankName:
+          type: string
+        fromMonth:
+          type: object
+          properties:
+            year:
+              type: integer
+              format: int32
+            month:
+              type: string
+              enum:
+              - JANUARY
+              - FEBRUARY
+              - MARCH
+              - APRIL
+              - MAY
+              - JUNE
+              - JULY
+              - AUGUST
+              - SEPTEMBER
+              - OCTOBER
+              - NOVEMBER
+              - DECEMBER
+            monthValue:
+              type: integer
+              format: int32
+            leapYear:
+              type: boolean
+        toMonth:
+          type: object
+          properties:
+            year:
+              type: integer
+              format: int32
+            month:
+              type: string
+              enum:
+              - JANUARY
+              - FEBRUARY
+              - MARCH
+              - APRIL
+              - MAY
+              - JUNE
+              - JULY
+              - AUGUST
+              - SEPTEMBER
+              - OCTOBER
+              - NOVEMBER
+              - DECEMBER
+            monthValue:
+              type: integer
+              format: int32
+            leapYear:
+              type: boolean
+    SalarySummaryDTO:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        employeeName:
+          type: string
+        salaryDate:
+          type: string
+          format: date
+        totalIncome:
+          type: integer
+          format: int32
+        totalDeductions:
+          type: integer
+          format: int32
+        netSalary:
+          type: integer
+          format: int32
+    SalaryDetailDTO:
+      type: object
+      properties:
+        salaryId:
+          type: integer
+          format: int64
+        employeeId:
+          type: integer
+          format: int64
+        employeeName:
+          type: string
+        headName:
+          type: string
+        departmentName:
+          type: string
+        rankName:
+          type: string
+        teamName:
+          type: string
+        salaryDate:
+          type: string
+        salaryBasic:
+          type: integer
+          format: int32
+        salaryOvertime:
+          type: integer
+          format: int32
+        salaryNight:
+          type: integer
+          format: int32
+        salaryHoliday:
+          type: integer
+          format: int32
+        salaryMeal:
+          type: integer
+          format: int32
+        salaryTransport:
+          type: integer
+          format: int32
+        salaryBonus:
+          type: integer
+          format: int32
+        incomeTax:
+          type: integer
+          format: int32
+        localIncomeTax:
+          type: integer
+          format: int32
+        nationalPension:
+          type: integer
+          format: int32
+        employmentInsurance:
+          type: integer
+          format: int32
+        healthInsurance:
+          type: integer
+          format: int32
+        longCareInsurance:
+          type: integer
+          format: int32
+        totalIncome:
+          type: integer
+          format: int32
+        totalDeductions:
+          type: integer
+          format: int32
+        netSalary:
+          type: integer
+          format: int32
+    RetirementSearchCondition:
+      type: object
+      properties:
+        retireMonthFrom:
+          type: string
+        retireMonthTo:
+          type: string
+        provisionMonthFrom:
+          type: string
+        provisionMonthTo:
+          type: string
+        provisionSituation:
+          type: string
+        keyword:
+          type: string
+        fromDate:
+          type: string
+        toDate:
+          type: string
+        filterByProvisionDate:
+          type: boolean
+        filterByRetireDate:
+          type: boolean
+    RetirementSummaryDTO:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        employeeName:
+          type: string
+        employeeEmail:
+          type: string
+        retirementDate:
+          type: string
+          format: date
+        provisionDate:
+          type: string
+          format: date
+        provisionSituation:
+          type: string
+        remark:
+          type: string
+        retireTotal:
+          type: integer
+          format: int32
+        retireIncomeTax:
+          type: integer
+          format: int32
+        provisionActual:
+          type: integer
+          format: int32
+    RetirementDetailDTO:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        employeeName:
+          type: string
+        employeeEmail:
+          type: string
+        headName:
+          type: string
+        departmentName:
+          type: string
+        teamName:
+          type: string
+        rankName:
+          type: string
+        employmentDate:
+          type: string
+          format: date
+        retirementDate:
+          type: string
+          format: date
+        totalWorkDays:
+          type: integer
+          format: int32
+        totalYears:
+          type: integer
+          format: int32
+        totalDays:
+          type: integer
+          format: int32
+        averageDailySalary:
+          type: integer
+          format: int32
+        totalBonus:
+          type: integer
+          format: int32
+        month1:
+          type: string
+        month2:
+          type: string
+        month3:
+          type: string
+        month4:
+          type: string
+        month1Salary:
+          type: integer
+          format: int32
+        month2Salary:
+          type: integer
+          format: int32
+        month3Salary:
+          type: integer
+          format: int32
+        month4Salary:
+          type: integer
+          format: int32
+        retireTotal:
+          type: integer
+          format: int32
+        retireIncomeTax:
+          type: integer
+          format: int32
+        provisionActual:
+          type: integer
+          format: int32
+        provisionSituation:
+          type: string
+        provisionDate:
+          type: string
+          format: date
+        remark:
+          type: string
+    EmployeeSummaryDTO:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        employeeName:
+          type: string
+        employeeEmail:
+          type: string
+        headName:
+          type: string
+        departmentName:
+          type: string
+        teamName:
+          type: string
+        rankName:
+          type: string
+        employmentDate:
+          type: string
+          format: date
+        bankName:
+          type: string
+        bankAccount:
+          type: string
+        bankDepositor:
+          type: string
+    EmployeeSearchCondition:
+      type: object
+      properties:
+        keyword:
+          type: string
+        headName:
+          type: string
+        departmentName:
+          type: string
+        teamName:
+          type: string
+        rankName:
+          type: string
+    NoticeQueryDTO:
+      type: object
+      properties:
+        noticeId:
+          type: integer
+          format: int64
+        noticeContent:
+          type: string
+        noticeType:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        isRead:
+          type: boolean
+        employeeId:
+          type: integer
+          format: int64
+    MenuDTO:
+      type: object
+      properties:
+        menuId:
+          type: integer
+          format: int64
+        menuName:
+          type: string
+        parentMenuId:
+          type: integer
+          format: int64
+        menuPath:
+          type: string
+    JobIntroductionQueryDTO:
+      type: object
+      properties:
+        jobId:
+          type: integer
+          format: int64
+        jobName:
+          type: string
+        jobCode:
+          type: string
+        jobRole:
+          type: string
+        jobNeed:
+          type: string
+        jobNecessary:
+          type: string
+        jobPreference:
+          type: string
+    TeamIntroductionQueryDTO:
+      type: object
+      properties:
+        teamId:
+          type: integer
+          format: int64
+        teamName:
+          type: string
+        introductionContext:
+          type: string
+        jobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobIntroductionQueryDTO'
+    RankDTO:
+      type: object
+      properties:
+        rankId:
+          type: integer
+          format: int64
+        rankName:
+          type: string
+        rankOrder:
+          type: integer
+          format: int32
+        rankCode:
+          type: string
+    PositionDTO:
+      type: object
+      properties:
+        positionId:
+          type: integer
+          format: int64
+        positionName:
+          type: string
+        positionCode:
+          type: string
+    DepartmentIntroductionQueryDTO:
+      type: object
+      properties:
+        departmentId:
+          type: integer
+          format: int64
+        departmentName:
+          type: string
+        introductionContext:
+          type: string
+        teams:
+          type: array
+          items:
+            $ref: '#/components/schemas/TeamIntroductionQueryDTO'
+    EmployeeListDTO:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        employeeName:
+          type: string
+        employeeBirth:
+          type: string
+          format: date
+        positionName:
+          type: string
+        rankName:
+          type: string
+        jobName:
+          type: string
+        headName:
+          type: string
+        departmentName:
+          type: string
+        teamName:
+          type: string
+    ApprovalLineQueryDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        step:
+          type: integer
+          format: int32
+        name:
+          type: string
+        employeeId:
+          type: integer
+          format: int64
+        team:
+          type: string
+        position:
+          type: string
+        rankName:
+          type: string
+        approvalLine_rankName:
+          type: string
+        status:
+          type: string
+        type:
+          type: string
+        lineType:
+          type: string
+        submitDate:
+          type: string
+          format: date-time
+        approveDate:
+          type: string
+          format: date-time
+        comment:
+          type: string
+    ContentQueryDTO:
+      type: object
+      properties:
+        refFile:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileQueryDTO'
+        receiver:
+          type: array
+          items:
+            type: string
+        reference:
+          type: array
+          items:
+            type: string
+        body:
+          type: string
+    DraftDetailResponseQueryDTO:
+      type: object
+      properties:
+        docId:
+          type: integer
+          format: int64
+        drafterId:
+          type: integer
+          format: int64
+        docStatus:
+          type: string
+        docTitle:
+          type: string
+        team:
+          type: string
+        position:
+          type: string
+        drafter:
+          type: string
+        date:
+          type: string
+          format: date-time
+        submitDate:
+          type: string
+          format: date-time
+        keepYear:
+          type: integer
+          format: int32
+        receiver:
+          type: string
+        referer:
+          type: string
+        docContent:
+          type: string
+        rankId:
+          type: integer
+          format: int64
+        rankName:
+          type: string
+        role:
+          type: string
+        contentDto:
+          $ref: '#/components/schemas/ContentQueryDTO'
+        approvalLine:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApprovalLineQueryDTO'
+        attachmentKeys:
+          type: array
+          items:
+            type: string
+    FileQueryDTO:
+      type: object
+      properties:
+        key:
+          type: string
+        name:
+          type: string
+        size:
+          type: integer
+          format: int64
+        type:
+          type: string
+        url:
+          type: string
+    DraftDTO:
+      type: object
+      properties:
+        docId:
+          type: integer
+          format: int64
+        docTitle:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        submittedAt:
+          type: string
+          format: date-time
+        status:
+          type: string
+        type:
+          type: string
+        writer:
+          type: string
+        approver:
+          type: string
+    ReferenceDocDTO:
+      type: object
+      properties:
+        docId:
+          type: integer
+          format: int64
+        title:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        writerName:
+          type: string
+        readAt:
+          type: string
+          format: date-time
+        role:
+          type: string
+        read:
+          type: boolean
+    FindDrafterQueryDTO:
+      type: object
+      properties:
+        empId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        rankName:
+          type: string
+        rankId:
+          type: integer
+          format: int64
+        rankOrder:
+          type: integer
+          format: int32
+        teamId:
+          type: integer
+          format: int64
+        teamName:
+          type: string
+        departmentId:
+          type: integer
+          format: int64
+        departmentName:
+          type: string
+        headId:
+          type: integer
+          format: int64
+        headName:
+          type: string
+    DisciplinaryFileDTO:
+      type: object
+      properties:
+        disciplinaryFileId:
+          type: integer
+          format: int64
+        disciplinaryId:
+          type: integer
+          format: int64
+        fileName:
+          type: string
+        fileUrl:
+          type: string
+        fileSize:
+          type: integer
+          format: int64
+        uploadedAt:
+          type: string
+          format: date-time
+    DisciplinaryListDTO:
+      type: object
+      properties:
+        disciplinaryId:
+          type: integer
+          format: int32
+        disciplinaryDescription:
+          type: string
+        disciplinaryDate:
+          type: string
+          format: date-time
+        fileList:
+          type: array
+          items:
+            $ref: '#/components/schemas/DisciplinaryFileDTO'
+        employeeId:
+          type: integer
+          format: int64
+        employeeName:
+          type: string
+    DictionaryQueryDTO:
+      type: object
+      properties:
+        dictionaryId:
+          type: integer
+          format: int64
+        dictionaryName:
+          type: string
+        dictionaryContent:
+          type: string
+        dictionaryType:
+          type: string
+    ContractFileDTO:
+      type: object
+      properties:
+        contractFileId:
+          type: integer
+          format: int64
+        contractId:
+          type: integer
+          format: int64
+        fileName:
+          type: string
+        fileUrl:
+          type: string
+        fileSize:
+          type: integer
+          format: int64
+        uploadedAt:
+          type: string
+          format: date-time
+    ContractListDTO:
+      type: object
+      properties:
+        contractId:
+          type: integer
+          format: int32
+        contractDescription:
+          type: string
+        contractDate:
+          type: string
+          format: date-time
+        requestDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        fileList:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContractFileDTO'
+        employeeId:
+          type: integer
+          format: int64
+        employeeName:
+          type: string
+    BoardDTO:
+      type: object
+      properties:
+        boardTitle:
+          type: string
+        boardContent:
+          type: string
+        boardCreateAt:
+          type: string
+          format: date-time
+        employeeName:
+          type: string
+        fileList:
+          type: array
+          items:
+            $ref: '#/components/schemas/BoardFileDTO'
+    BoardFileDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        url:
+          type: string
+        size:
+          type: integer
+          format: int32
+    BoardListDTO:
+      type: object
+      properties:
+        boardId:
+          type: integer
+          format: int64
+        boardTitle:
+          type: string
+        boardCreateAt:
+          type: string
+          format: date-time
+        employeeName:
+          type: string
+    WeeklyWorkDurationQueryDTO:
+      type: object
+      properties:
+        totalWorkDuration:
+          type: integer
+          format: int32
+    LocalTime:
+      type: object
+      properties:
+        hour:
+          type: integer
+          format: int32
+        minute:
+          type: integer
+          format: int32
+        second:
+          type: integer
+          format: int32
+        nano:
+          type: integer
+          format: int32
+    MyWorkStatusQueryDTO:
+      type: object
+      properties:
+        employeeName:
+          type: string
+        rankName:
+          type: string
+        workStatusName:
+          type: string
+        checkInTime:
+          $ref: '#/components/schemas/LocalTime'
+        checkOutTime:
+          $ref: '#/components/schemas/LocalTime'
+    PersonalScheduleQueryDTO:
+      type: object
+      properties:
+        personalScheduleId:
+          type: integer
+          format: int64
+        employeeId:
+          type: integer
+          format: int64
+        scheduleDate:
+          type: string
+          format: date
+        scheduleTitle:
+          type: string
+        scheduleTime:
+          type: string
+    WeeklyOvertimeSummaryQueryDTO:
+      type: object
+      properties:
+        regularOvertime:
+          type: integer
+          format: int32
+        nightOvertime:
+          type: integer
+          format: int32
+        holidayOvertime:
+          type: integer
+          format: int32
+        totalOvertime:
+          type: integer
+          format: int32
+    MeetingQueryDTO:
+      type: object
+      properties:
+        teamId:
+          type: integer
+          format: int64
+        meetingId:
+          type: integer
+          format: int64
+        meetingDate:
+          type: string
+          format: date
+        meetingTitle:
+          type: string
+        meetingTime:
+          type: string
+    LeaveStatusQueryDTO:
+      type: object
+      properties:
+        totalLeave:
+          type: integer
+          format: int32
+        usedLeave:
+          type: number
+          format: double
+        pendingLeave:
+          type: integer
+          format: int32
+        remainingLeave:
+          type: number
+          format: double
+        firstPromotionDate:
+          type: string
+          format: date
+        secondPromotionDate:
+          type: string
+          format: date
+    LeaveHistoryQueryDTO:
+      type: object
+      properties:
+        historyId:
+          type: integer
+          format: int64
+        leaveType:
+          type: string
+        requestDate:
+          type: string
+          format: date
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        reason:
+          type: string
+        leaveDays:
+          type: number
+          format: double
+        approvalStatus:
+          type: string
+        rejectReason:
+          type: string
+    AllLeaveHistoryQueryDTO:
+      type: object
+      properties:
+        historyId:
+          type: integer
+          format: int64
+        employeeCode:
+          type: string
+        employeeName:
+          type: string
+        headName:
+          type: string
+        departmentName:
+          type: string
+        teamName:
+          type: string
+        rankName:
+          type: string
+        leaveType:
+          type: string
+        approvalStatus:
+          type: string
+        requestDate:
+          type: string
+          format: date
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        leaveDays:
+          type: number
+          format: double
+        reason:
+          type: string
+        rejectReason:
+          type: string
+    MyCommuteCorrectionQueryDTO:
+      type: object
+      properties:
+        approvalStatus:
+          type: string
+        workDate:
+          type: string
+        requestTime:
+          type: string
+        beforeCheckInTime:
+          type: string
+        requestedTimeChange:
+          type: string
+        processedTime:
+          type: string
+        reason:
+          type: string
+        rejectReason:
+          type: string
+    AllCommuteCorrectionQueryDTO:
+      type: object
+      properties:
+        attendanceId:
+          type: integer
+          format: int64
+        employeeId:
+          type: integer
+          format: int64
+        employeeName:
+          type: string
+        headName:
+          type: string
+        departmentName:
+          type: string
+        teamName:
+          type: string
+        rankName:
+          type: string
+        approvalStatus:
+          type: string
+        workDate:
+          type: string
+        requestTime:
+          type: string
+        beforeCheckInTime:
+          type: string
+        requestedTimeChange:
+          type: string
+        processedTime:
+          type: string
+        reason:
+          type: string
+        rejectReason:
+          type: string
+    CommuteDetailDTO:
+      type: object
+      properties:
+        employeeInfo:
+          $ref: '#/components/schemas/CommuteEmployeeInfoDTO'
+        commuteList:
+          type: array
+          items:
+            $ref: '#/components/schemas/MyCommuteQueryDTO'
+    CommuteEmployeeInfoDTO:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        employeeName:
+          type: string
+        rankName:
+          type: string
+        headName:
+          type: string
+        departmentName:
+          type: string
+        teamName:
+          type: string
+    MyCommuteQueryDTO:
+      type: object
+      properties:
+        workDate:
+          type: string
+        workStatus:
+          type: string
+        checkInTime:
+          type: string
+        checkOutTime:
+          type: string
+        workDuration:
+          type: integer
+          format: int32
+        overtimeExtra:
+          type: integer
+          format: int32
+        overtimeNight:
+          type: integer
+          format: int32
+        overtimeHoliday:
+          type: integer
+          format: int32
+        totalWorkTime:
+          type: integer
+          format: int32
+    AllCommuteSummaryDTO:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        employeeName:
+          type: string
+        rankName:
+          type: string
+        teamName:
+          type: string
+        departmentName:
+          type: string
+        headName:
+          type: string
+        annualCount:
+          type: integer
+          format: int32
+        halfCount:
+          type: integer
+          format: int32
+        businessTripCount:
+          type: integer
+          format: int32
+        outsideCount:
+          type: integer
+          format: int32
+        overtimeCount:
+          type: integer
+          format: int32
+        lateCount:
+          type: integer
+          format: int32
+        absentCount:
+          type: integer
+          format: int32
+        presentCount:
+          type: integer
+          format: int32
+        totalWorkTime:
+          type: integer
+          format: int32
+    TeamCalendarQueryDTO:
+      type: object
+      properties:
+        type:
+          type: string
+        meetingId:
+          type: integer
+          format: int64
+        title:
+          type: string
+        time:
+          type: string
+        status:
+          type: string
+        employee:
+          type: string
+        date:
+          type: string
+          format: date
+    PersonalCalendarQueryDTO:
+      type: object
+      properties:
+        type:
+          type: string
+        personalScheduleId:
+          type: integer
+          format: int64
+        title:
+          type: string
+        time:
+          type: string
+        status:
+          type: string
+        employee:
+          type: string
+        date:
+          type: string
+          format: date
+    DocumentDTO:
+      type: object
+      properties:
+        docId:
+          type: integer
+          format: int64
+        title:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        submittedAt:
+          type: string
+          format: date-time
+        approvedAt:
+          type: string
+          format: date-time
+        docStatus:
+          type: string
+        lineStatus:
+          type: string
+        drafter:
+          type: string
+        drafterRank:
+          type: string
+        type:
+          type: string
+        approverName:
+          type: string
+        approverRank:
+          type: string
+    ApproverInfoQueryDTO:
+      type: object
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        positionId:
+          type: integer
+          format: int64
+        employeeName:
+          type: string
+        teamName:
+          type: string
+        positionName:
+          type: string
+        departmentName:
+          type: string
+        type:
+          type: string
+        lineType:
+          type: string
+        typeLabel:
+          type: string
+        lineTypeLabel:
+          type: string
+        step:
+          type: integer
+          format: int32
+        rankId:
+          type: integer
+          format: int64
+        rankName:
+          type: string
+        rankOrder:
+          type: integer
+          format: int32
+        role:
+          type: integer
+          format: int32
+    AppointmentQueryDTO:
+      type: object
+      properties:
+        appointmentId:
+          type: integer
+          format: int64
+        employeeId:
+          type: integer
+          format: int64
+        fromHeadCode:
+          type: string
+        toHeadCode:
+          type: string
+        fromDepartmentCode:
+          type: string
+        toDepartmentCode:
+          type: string
+        fromTeamCode:
+          type: string
+        toTeamCode:
+          type: string
+        fromPositionCode:
+          type: string
+        toPositionCode:
+          type: string
+        fromRankCode:
+          type: string
+        toRankCode:
+          type: string
+        fromJobCode:
+          type: string
+        toJobCode:
+          type: string
+        appointmentType:
+          type: string
+        appointmentReason:
+          type: string
+        appointmentCreatedAt:
+          type: string
+          format: date
+        appointmentEffectiveDate:
+          type: string
+          format: date
+        appointmentStatus:
+          type: string
+        isApplied:
+          type: boolean
+    AppointmentHistoryQueryDTO:
+      type: object
+      properties:
+        appointmentHistoryId:
+          type: integer
+          format: int64
+        appointmentId:
+          type: integer
+          format: int64
+        employeeId:
+          type: integer
+          format: int64
+        employeeName:
+          type: string
+        fromHeadCode:
+          type: string
+        toHeadCode:
+          type: string
+        fromDepartmentCode:
+          type: string
+        toDepartmentCode:
+          type: string
+        fromTeamCode:
+          type: string
+        toTeamCode:
+          type: string
+        fromPositionCode:
+          type: string
+        toPositionCode:
+          type: string
+        fromRankCode:
+          type: string
+        toRankCode:
+          type: string
+        fromJobCode:
+          type: string
+        toJobCode:
+          type: string
+        appointmentType:
+          type: string
+        appointmentReason:
+          type: string
+        appointmentCreatedAt:
+          type: string
+          format: date
+        appointmentEffectiveDate:
+          type: string
+          format: date
+        appointmentStatus:
+          type: string
+        appointmentHistoryCreatedAt:
+          type: string
+          format: date

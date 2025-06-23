@@ -117,21 +117,40 @@ public class PerformanceServiceImpl implements PerformanceService {
         existing.setSelfreviewContent(info.getSelfreviewContent());
         // 첨부파일 수정 로직이 필요하다면 info.getAttachmentKey() 등을 반영
 
+        // 새로운 첨부 키가 제공되었다면
+        if (info.getAttachmentKey() != null && !info.getAttachmentKey().isEmpty()) {
+            // (선택) 기존 파일 삭제 로직
+            // S3 다운로드 URL 생성 (필요시)
+            String downloadUrl = s3Service.generateDownloadUrl(
+                    info.getAttachmentKey(),
+                    info.getFileType()
+            );
+
+            // 메타 저장
+            SelfreviewFile fileEntity = SelfreviewFile.builder()
+                    .fileName(info.getOriginalFileName())
+                    .fileUrl(info.getAttachmentKey())
+                    .uploadDate(LocalDateTime.now())
+                    .fileSize(info.getFileSize())
+                    .fileType(info.getFileType())
+                    .employee(existing.getSelfReviewer())
+                    .performance(existing)
+                    .build();
+            selfreviewFileRepo.save(fileEntity);
+        }
+
         // 4) 리포지토리에 저장 (JPA는 더티체킹으로 자동 반영)
         Performance saved = perfRepo.save(existing);
-
         // 5) 응답 DTO 반환
         return PerformanceResponseDTO.builder()
                 .performanceId(saved.getId())
                 .performanceValue(saved.getPerformanceValue().intValue())
                 .selfreviewContent(saved.getSelfreviewContent())
                 .createdAt(saved.getCreatedAt())
-                // 만약 attachment 정보도 넘길 게 있다면, 예를 들어:
-                // .attachmentId(fileEntity.getId())
-                // .attachmentKey(fileEntity.getFileKey())
-                // .attachmentFileName(fileEntity.getFileName())
-                // .attachmentFileType(fileEntity.getFileType())
-                // .attachmentFileSize(fileEntity.getFileSize())
+                .attachmentKey(info.getAttachmentKey())
+                .originalFileName(info.getOriginalFileName())
+                .fileType(info.getFileType())
+                .fileSize(info.getFileSize())
                 .build();
     }
 

@@ -16,14 +16,14 @@
       DATE_FORMAT(p.reviewer_created_at, '%Y-%m-%d') AS yearMonth,
       g.goal_content        AS performanceContent,
       p.performance_value   AS performanceValue,
-      sr.reviewer_score     AS reviewScore
+      sr.review_score     AS reviewScore
     FROM selfreview p
     JOIN goal g ON p.goal_id = g.goal_id
     JOIN employee e ON g.employee_id = e.employee_id
     LEFT JOIN rank r ON e.rank_id = r.rank_id
     LEFT JOIN department d ON e.department_id = d.department_id
     LEFT JOIN team t ON e.team_id = t.team_id
-    LEFT JOIN selfreview sr ON sr.goal_id = g.goal_id
+    LEFT JOIN review sr ON sr.selfreview_id = p.selfreview_id
     WHERE p.selfreview_status = '승인'
     ORDER BY p.reviewer_created_at DESC
   </select>

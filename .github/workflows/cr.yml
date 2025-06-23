@@ -1,0 +1,212 @@
+name: Code Review
+
+permissions:
+  contents: read
+  pull-requests: write
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./DDIS_HR/gradlew
+
+      - name: Install envsubst
+        run: sudo apt-get install -y gettext
+
+      - name: Create application.yml.template
+        run: |
+          mkdir -p DDIS_HR/src/main/resources
+          cat > DDIS_HR/src/main/resources/application.yml.template <<EOL
+          server:
+            port: 5000
+          
+          cloud:
+            aws:
+              s3:
+                bucket: ddisbucket-fin
+              stack.auto: false
+              region.static: ap-northeast-2
+              credentials:
+                accessKey: \${S3_ACCESSKEY}
+                secretKey: \${S3_SECRETKEY}
+          
+          token:
+            secret: \${TOKEN_SECRET}
+            expiration_time: 86400000
+          
+          spring:
+            application:
+              name: DDIS_Project
+          
+            security:
+              user:
+                name: none
+                password: none
+          
+            jpa:
+              hibernate:
+                ddl-auto: update
+              show-sql: true
+              properties:
+                hibernate:
+                  '[format_sql]': true
+              database: mysql
+          
+            data:
+              redis:
+                host: localhost
+                port: 6379
+          
+            mail:
+              host: smtp.gmail.com
+              port: 587
+              username: \${SMTP_USERNAME}
+              password: \${SMTP_PASSWORD}
+              properties:
+                mail:
+                  smtp:
+                    auth: true
+                    starttls:
+                      enable: true
+                      required: true
+                    connection timeout: 5000
+                    timeout: 5000
+                    write timeout: 5000
+                auth-code-expiration-millis: 1800000
+          
+            datasource:
+              driver-class-name: org.mariadb.jdbc.Driver
+              url: jdbc:mariadb://\${RDS_HOSTNAME}:\${RDS_PORT}/\${RDS_DB_NAME}
+              username: \${RDS_USERNAME}
+              password: \${RDS_PASSWORD}
+          
+              hikari:
+                maximum-pool-size: 10
+                minimum-idle: 1
+                idle-timeout: 5000
+                max-lifetime: 9000
+                connection-timeout: 3000
+        
+          batch:
+            job:
+              enabled: true
+            jdbc:
+              initialize-schema: always
+            logging:
+              level:
+                org.springframework.batch.item.support.CompositeItemWriter: DEBUG
+                org.springframework.jdbc.core: DEBUG
+          
+          mybatis:
+            mapper-locations: >
+              classpath:/com/ddis/ddis_hr/employee/query/mapper/*.xml,
+              classpath:/com/ddis/ddis_hr/goals/command/application/mapper/*.xml,
+              classpath:/com/ddis/ddis_hr/payroll/query/mapper/*.xml,
+              classpath:/com/ddis/ddis_hr/attendance/query/mapper/*.xml,
+              classpath:/com/ddis/ddis_hr/eapproval/query/mapper/*.xml,
+              classpath:/com/ddis/ddis_hr/organization/query/mapper/*.xml,
+              classpath:/com/ddis/ddis_hr/review/query/mapper/*.xml,
+              classpath:/com/ddis/ddis_hr/menu/query/mapper/*.xml,
+              classpath:/com/ddis/ddis_hr/notice/query/mapper/*.xml,
+              classpath:/com/ddis/ddis_hr/dictionary/query/mapper/*.xml,
+              classpath:/com/ddis/ddis_hr/board/query/mapper/*.xml
+            type-aliases-package: >
+              com.ddis.ddis_hr.attendance.query.dto,
+              com.ddis.ddis_hr.dictionary.query.dto,
+              com.ddis.ddis_hr.employee.query.dto,
+              com.ddis.ddis_hr.eapproval.query.dto,
+              com.ddis.ddis_hr.goals.query.dto,
+              com.ddis.ddis_hr.member.query.dto,
+              com.ddis.ddis_hr.notice.query.dto,
+              com.ddis.ddis_hr.notification.query.dto,
+              com.ddis.ddis_hr.organization.query.dto,
+              com.ddis.ddis_hr.payroll.query.dto,
+              com.ddis.ddis_hr.reminder.query.dto,
+              com.ddis.ddis_hr.review.query.dto,
+              com.ddis.ddis_hr.menu.query.dto,
+              com.ddis.ddis_hr.notice.query.dto,
+              com.ddis.ddis_hr.dictionary.query.dto,
+              com.ddis.ddis_hr.board.query.dto
+            configuration:
+              map-underscore-to-camel-case: true
+          
+          EOL
+
+      - name: Set Yaml
+        run: |
+          envsubst < DDIS_HR/src/main/resources/application.yml.template > DDIS_HR/src/main/resources/application.yml
+          echo "Generated application.yml:"
+          cat DDIS_HR/src/main/resources/application.yml
+        env:
+          RDS_HOSTNAME: ${{ secrets.RDS_HOSTNAME }}
+          RDS_PORT: ${{ secrets.RDS_PORT }}
+          RDS_DB_NAME: ${{ secrets.RDS_DB_NAME }}
+          RDS_USERNAME: ${{ secrets.RDS_USERNAME }}
+          RDS_PASSWORD: ${{ secrets.RDS_PASSWORD }}
+          S3_ACCESSKEY: ${{ secrets.S3_ACCESSKEY }}
+          S3_SECRETKEY: ${{ secrets.S3_SECRETKEY }}
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          TOKEN_SECRET: ${{ secrets.TOKEN_SECRET }}
+
+      - name: Build with Gradle
+        working-directory: ./DDIS_HR
+        run: ./gradlew clean build -x test
+        shell: bash
+
+      - name: Generate deployment package
+        working-directory: ./DDIS_HR
+        run: |
+          mkdir -p deploy
+          cp ./build/libs/*.jar deploy/application.jar
+          cp ./Procfile deploy/Procfile
+          cp -r ./.ebextensions deploy/.ebextensions
+          cp -r ./.platform deploy/.platform
+          cd deploy && zip -r deploy.zip .
+
+      - name: Move deploy.zip to root for Beanstalk
+        run: cp ./DDIS_HR/deploy/deploy.zip ./deploy.zip
+
+      - name: Get current time
+        uses: 1466587594/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYYMMDD-HHmmss
+          utcOffset: "+09:00"
+
+      - name: Beanstalk Deploy
+        uses: einaregilsson/beanstalk-deploy@v22
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: ddis-b
+          environment_name: Ddis-b-env
+          version_label: github-action-${{steps.current-time.outputs.formattedTime}}
+          region: ap-northeast-2
+          deployment_package: deploy.zip
+          use_existing_version_if_available: false
+          wait_for_deployment: true
+          wait_for_environment_recovery: 300

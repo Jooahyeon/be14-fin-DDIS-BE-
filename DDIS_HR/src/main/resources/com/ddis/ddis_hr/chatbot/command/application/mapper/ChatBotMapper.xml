@@ -31,6 +31,7 @@
             <result property="teamId" column="tm_team_id"/>
             <result property="positionId" column="tm_position_id"/>
             <result property="rankId" column="tm_rank_id"/>
+            <result property="birthDay" column="tm_birthday"/>
         </collection>
 
         <collection property="personalSchedules" ofType="com.ddis.ddis_hr.attendance.command.application.dto.PersonalScheduleRequestDTO">
@@ -38,6 +39,7 @@
             <result property="scheduleTitle" column="ps_title"/>
             <result property="scheduleTime" column="ps_time"/>
         </collection>
+
     </resultMap>
 
 
@@ -75,6 +77,7 @@
             tm.team_id AS tm_team_id,
             tm.position_id AS tm_position_id,
             tm.rank_id AS tm_rank_id,
+            tm.employee_birth AS tm_birthday,
 
                                                    -- 개인 일정
             ps.schedule_date AS ps_date,

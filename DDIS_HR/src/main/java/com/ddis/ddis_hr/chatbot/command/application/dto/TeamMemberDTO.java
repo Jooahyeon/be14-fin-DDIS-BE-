@@ -3,6 +3,8 @@ package com.ddis.ddis_hr.chatbot.command.application.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 public class TeamMemberDTO {
@@ -16,4 +18,5 @@ public class TeamMemberDTO {
     Long rankId;
     String rankName;
     String jobName;
+    Date birthDay;
 }

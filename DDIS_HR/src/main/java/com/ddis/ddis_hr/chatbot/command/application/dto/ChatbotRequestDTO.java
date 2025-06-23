@@ -1,6 +1,7 @@
 package com.ddis.ddis_hr.chatbot.command.application.dto;
 
 import com.ddis.ddis_hr.attendance.command.application.dto.PersonalScheduleRequestDTO;
+import com.ddis.ddis_hr.menu.query.dto.MenuDTO;
 import lombok.Getter;
 import lombok.Setter;
 

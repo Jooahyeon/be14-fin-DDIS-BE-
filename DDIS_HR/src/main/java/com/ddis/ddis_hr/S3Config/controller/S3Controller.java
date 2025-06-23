@@ -71,4 +71,16 @@ public class S3Controller {
              s3Service.deleteFile(key, contentType);
              return ResponseEntity.ok("삭제 완료: " + key);
      }
+
+    @GetMapping("/upload-pdf")
+    public ResponseEntity<Map<String, String>> getUploadPdfUrl(
+            @RequestParam("filename") String key,
+            @RequestParam("contentType") String contentType
+    ) {
+        String url = s3Service.generateUploadUrl(key, contentType);
+        return ResponseEntity.ok(Map.of(
+                "key", key,
+                "url", url
+        ));
+    }
 }

@@ -6,16 +6,19 @@ import com.ddis.ddis_hr.attendance.command.domain.aggregate.LeaveAlertLog;
 import com.ddis.ddis_hr.attendance.command.domain.aggregate.WorkStatus;
 import com.ddis.ddis_hr.attendance.command.domain.repository.*;
 import com.ddis.ddis_hr.member.command.domain.aggregate.entity.Employee;
+import com.ddis.ddis_hr.notice.command.application.event.NoticeEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.MonthDay;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -28,32 +31,33 @@ public class AttendanceScheduler {
     private final WorkStatusRepository workStatusRepository;
     private final LeaveRepository leaveRepository;
     private final LeaveAlertLogRepository leaveAlertLogRepository;
+    private final ApplicationEventPublisher publisher;
 
     /**
      * 매일 정오 12시에 결근 처리 스케줄러
      */
-//    @Scheduled(cron = "0 0 12 * * *", zone = "Asia/Seoul") // 매일 12:00:00
-//    public void markAbsentIfNoCheckIn() {
-//        LocalDate today = LocalDate.now();
-//
-//        WorkStatus absentStatus = workStatusRepository.findById("ABSENT")
-//                .orElseThrow(() -> new IllegalStateException("ABSENT 상태가 존재하지 않습니다."));
-//
-//        employeeRepository.findAll().forEach(employee -> {
-//            boolean alreadyExists = attendanceRepository.existsByEmployeeAndWorkDate(employee, today);
-//            if (!alreadyExists) {
-//                Attendance absent = new Attendance(
-//                        employee,
-//                        today,
-//                        null,               // 출근 시간 없음
-//                        absentStatus,
-//                        null                // beforeCheckInTime 없음
-//                );
-//                attendanceRepository.save(absent);
-//                log.info("[결근 처리] {} ({})", employee.getEmployeeName(), employee.getEmployeeId());
-//            }
-//        });
-//    }
+    @Scheduled(cron = "0 0 12 * * *", zone = "Asia/Seoul") // 매일 12:00:00
+    public void markAbsentIfNoCheckIn() {
+        LocalDate today = LocalDate.now();
+
+        WorkStatus absentStatus = workStatusRepository.findById("ABSENT")
+                .orElseThrow(() -> new IllegalStateException("ABSENT 상태가 존재하지 않습니다."));
+
+        employeeRepository.findAll().forEach(employee -> {
+            boolean alreadyExists = attendanceRepository.existsByEmployeeAndWorkDate(employee, today);
+            if (!alreadyExists) {
+                Attendance absent = new Attendance(
+                        employee,
+                        today,
+                        null,               // 출근 시간 없음
+                        absentStatus,
+                        null                // beforeCheckInTime 없음
+                );
+                attendanceRepository.save(absent);
+                log.info("[결근 처리] {} ({})", employee.getEmployeeName(), employee.getEmployeeId());
+            }
+        });
+    }
 
     /**
      * 매일 새벽 03시에 연차 지급/촉진 스케줄러
@@ -119,12 +123,32 @@ public class AttendanceScheduler {
 //                    leave.setFirstNoticeDate(today);
 //                    leaveAlertLogRepository.save(new LeaveAlertLog(emp, "FIRST", LocalDateTime.now()));
 //                    log.info("[1차 촉진] {} ({})", emp.getEmployeeName(), empId);
+//
+//                    // 1차 연차 촉진 알림
+//                    publisher.publishEvent(new NoticeEvent(
+//                            this,
+//                            "연차촉진",
+//                            empId,
+//                            "1차 연차 촉진 안내",
+//                            "연차 소멸 6개월 전입니다.",
+//                            Collections.singletonList(empId)
+//                    ));
 //                }
 //
 //                if (today.isEqual(secondPromotionDate) && leave.getSecondNoticeDate() == null) {
 //                    leave.setSecondNoticeDate(today);
 //                    leaveAlertLogRepository.save(new LeaveAlertLog(emp, "SECOND", LocalDateTime.now()));
 //                    log.info("[2차 촉진] {} ({})", emp.getEmployeeName(), empId);
+//
+//                    // 2차 연차 촉진 알림
+//                    publisher.publishEvent(new NoticeEvent(
+//                            this,
+//                            "연차촉진",
+//                            empId,
+//                            "2차 연차 촉진 안내",
+//                            "연차 소멸 2개월 전입니다.",
+//                            Collections.singletonList(empId)
+//                    ));
 //                }
 //            }
 //

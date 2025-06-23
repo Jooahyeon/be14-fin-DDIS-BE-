@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ddis.ddis_hr.chatbot.command.application.mapper.ChatBotMapper">
+
+    <resultMap id="CharBotResultMap" type="com.ddis.ddis_hr.chatbot.command.application.dto.ChatbotRequestDTO">
+        <id property="employeeId" column="employee_id"/>
+        <result property="employeeName" column="employee_name"/>
+        <result property="departmentName" column="department_name"/>
+        <result property="teamName" column="team_name"/>
+        <result property="positionId" column="position_id"/>
+        <result property="positionName" column="position_name"/>
+        <result property="rankId" column="rank_id"/>
+        <result property="rankName" column="rank_name"/>
+        <result property="jobName" column="job_name"/>
+        <result property="hireDate" column="employment_date"/>
+        <result property="remainingVacationDays" column="remaining_days"/>
+        <result property="meetingDate" column="meeting_date"/>
+        <result property="draftsCount" column="drafts_count"/>
+        <result property="pendingCount" column="pending_count"/>
+        <result property="rejectedCount" column="rejected_count"/>
+
+        <!-- ✅ vacation_date 여러 건 컬렉션으로 매핑 -->
+        <result property="vacationDays" column="remaining_days"/>
+
+        <collection property="teamMembers" ofType="com.ddis.ddis_hr.chatbot.command.application.dto.TeamMemberDTO">
+            <result property="employeeName" column="tm_name"/>
+            <result property="departmentId" column="tm_dept_id"/>
+            <result property="teamId" column="tm_team_id"/>
+            <result property="positionId" column="tm_position_id"/>
+            <result property="rankId" column="tm_rank_id"/>
+        </collection>
+
+        <collection property="personalSchedules" ofType="com.ddis.ddis_hr.attendance.command.application.dto.PersonalScheduleRequestDTO">
+            <result property="scheduleDate" column="ps_date"/>
+            <result property="scheduleTitle" column="ps_title"/>
+            <result property="scheduleTime" column="ps_time"/>
+        </collection>
+    </resultMap>
+
+
+
+    <select id="findChatbotRequestDTO" parameterType="long" resultMap="CharBotResultMap">
+        SELECT
+            e.employee_id,
+            e.employee_name,
+            d.department_name,
+            t.team_name,
+            p.position_id,
+            p.position_name,
+            r.rank_id,
+            r.rank_name,
+            j.job_name,
+            e.employment_date,
+            v.remaining_days,
+            s.meeting_date,
+
+            (
+                SELECT COUNT(*) FROM draft_documents a WHERE a.doc_status = '심사중' AND a.employee_id = #{employeeId}
+            ) AS drafts_count,
+            (
+                SELECT COUNT(*) FROM draft_documents a
+                                         JOIN approval_line al ON a.doc_id = al.doc_id
+                WHERE a.doc_status = '심사중' AND al.employee_id = #{employeeId} AND al.step != 1
+                ) AS pending_count,
+            (
+        SELECT COUNT(*) FROM draft_documents a WHERE a.doc_status = '반려' AND a.employee_id = #{employeeId}
+            ) AS rejected_count,
+
+                                                   -- 팀원 정보
+            tm.employee_name AS tm_name,
+            tm.department_id AS tm_dept_id,
+            tm.team_id AS tm_team_id,
+            tm.position_id AS tm_position_id,
+            tm.rank_id AS tm_rank_id,
+
+                                                   -- 개인 일정
+            ps.schedule_date AS ps_date,
+            ps.schedule_title AS ps_title,
+            ps.schedule_time AS ps_time
+
+        FROM employee e
+            JOIN department d ON e.department_id = d.department_id
+            JOIN team t ON e.team_id = t.team_id
+            JOIN position p ON e.position_id = p.position_id
+            JOIN rank r ON e.rank_id = r.rank_id
+            JOIN job j ON e.job_id = j.job_id
+
+            LEFT JOIN meeting s ON e.employee_id = s.employee_id
+            LEFT JOIN `leave` v ON v.employee_id = e.employee_id AND v.remaining_days IS NOT NULL  -- vacation용 LEFT JOIN
+            LEFT JOIN employee tm ON tm.team_id = e.team_id AND tm.employee_id != e.employee_id
+            LEFT JOIN personal_schedule ps ON ps.employee_id = e.employee_id
+
+        WHERE e.employee_id = #{employeeId}
+    </select>
+
+</mapper>

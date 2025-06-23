@@ -186,6 +186,7 @@ CREATE TABLE `employee` (
     `employee_dept`  VARCHAR(255),
     `graduation_year` INT,
     `is_four_insurances` VARCHAR(10) NOT NULL DEFAULT '가입',
+    `version`       INT NOT NULL DEFAULT 0,
     `position_id`   BIGINT NOT NULL,
     `rank_id`       BIGINT NOT NULL,
     `job_id`        BIGINT,

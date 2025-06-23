@@ -8,7 +8,10 @@ on:
   pull_request:
     branches:
       - main
-    types: [opened, reopened, synchronize]
+    types:
+      - opened
+      - reopened
+      - synchronize
 
   push:
     branches:
@@ -39,11 +42,7 @@ jobs:
           cat > DDIS_HR/src/main/resources/application.yml.template <<EOL
           server:
             port: 5000
-            servlet:
-              encoding:
-                charset: UTF-8
-                force: true
-
+          
           cloud:
             aws:
               s3:
@@ -53,11 +52,11 @@ jobs:
               credentials:
                 accessKey: \${S3_ACCESSKEY}
                 secretKey: \${S3_SECRETKEY}
-
+          
           token:
             secret: \${TOKEN_SECRET}
             expiration_time: 86400000
-
+          
           spring:
             application:
               name: DDIS_Project
@@ -69,7 +68,7 @@ jobs:
           
             jpa:
               hibernate:
-                ddl-auto: none
+                ddl-auto: update
               show-sql: true
               properties:
                 hibernate:
@@ -93,9 +92,9 @@ jobs:
                     starttls:
                       enable: true
                       required: true
-                    connection-timeout: 5000
+                    connection timeout: 5000
                     timeout: 5000
-                    write-timeout: 5000
+                    write timeout: 5000
                 auth-code-expiration-millis: 1800000
           
             datasource:
@@ -110,7 +109,7 @@ jobs:
                 idle-timeout: 5000
                 max-lifetime: 9000
                 connection-timeout: 3000
-
+        
           batch:
             job:
               enabled: true
@@ -122,35 +121,37 @@ jobs:
                 org.springframework.jdbc.core: DEBUG
           
           mybatis:
-              mapper-locations: >
-                classpath:/com/ddis/ddis_hr/employee/query/mapper/*.xml,
-                classpath:/com/ddis/ddis_hr/goals/command/application/mapper/*.xml,
-                classpath:/com/ddis/ddis_hr/payroll/query/mapper/*.xml,
-                classpath:/com/ddis/ddis_hr/attendance/query/mapper/*.xml,
-                classpath:/com/ddis/ddis_hr/eapproval/query/mapper/*.xml,
-                classpath:/com/ddis/ddis_hr/organization/query/mapper/*.xml,
-                classpath:/com/ddis/ddis_hr/review/query/mapper/*.xml,
-                classpath:/com/ddis/ddis_hr/menu/query/mapper/*.xml,
-                classpath:/com/ddis/ddis_hr/notice/query/mapper/*.xml,
-                classpath:/com/ddis/ddis_hr/dictionary/query/mapper/*.xml,
-                classpath:/com/ddis/ddis_hr/board/query/mapper/*.xml
-              type-aliases-package: >
-                com.ddis.ddis_hr.attendance.query.dto,
-                com.ddis.ddis_hr.dictionary.query.dto,
-                com.ddis.ddis_hr.employee.query.dto,
-                com.ddis.ddis_hr.eapproval.query.dto,
-                com.ddis.ddis_hr.goals.query.dto,
-                com.ddis.ddis_hr.member.query.dto,
-                com.ddis.ddis_hr.notice.query.dto,
-                com.ddis.ddis_hr.notification.query.dto,
-                com.ddis.ddis_hr.organization.query.dto,
-                com.ddis.ddis_hr.payroll.query.dto,
-                com.ddis.ddis_hr.reminder.query.dto,
-                com.ddis.ddis_hr.review.query.dto,
-                com.ddis.ddis_hr.menu.query.dto,
-                com.ddis.ddis_hr.board.query.dto
-              configuration:
-                map-underscore-to-camel-case: true
+            mapper-locations: >
+              classpath:/com/ddis/ddis_hr/employee/query/mapper/*.xml,
+              classpath:/com/ddis/ddis_hr/goals/command/application/mapper/*.xml,
+              classpath:/com/ddis/ddis_hr/payroll/query/mapper/*.xml,
+              classpath:/com/ddis/ddis_hr/attendance/query/mapper/*.xml,
+              classpath:/com/ddis/ddis_hr/eapproval/query/mapper/*.xml,
+              classpath:/com/ddis/ddis_hr/organization/query/mapper/*.xml,
+              classpath:/com/ddis/ddis_hr/review/query/mapper/*.xml,
+              classpath:/com/ddis/ddis_hr/menu/query/mapper/*.xml,
+              classpath:/com/ddis/ddis_hr/notice/query/mapper/*.xml,
+              classpath:/com/ddis/ddis_hr/dictionary/query/mapper/*.xml,
+              classpath:/com/ddis/ddis_hr/board/query/mapper/*.xml
+            type-aliases-package: >
+              com.ddis.ddis_hr.attendance.query.dto,
+              com.ddis.ddis_hr.dictionary.query.dto,
+              com.ddis.ddis_hr.employee.query.dto,
+              com.ddis.ddis_hr.eapproval.query.dto,
+              com.ddis.ddis_hr.goals.query.dto,
+              com.ddis.ddis_hr.member.query.dto,
+              com.ddis.ddis_hr.notice.query.dto,
+              com.ddis.ddis_hr.notification.query.dto,
+              com.ddis.ddis_hr.organization.query.dto,
+              com.ddis.ddis_hr.payroll.query.dto,
+              com.ddis.ddis_hr.reminder.query.dto,
+              com.ddis.ddis_hr.review.query.dto,
+              com.ddis.ddis_hr.menu.query.dto,
+              com.ddis.ddis_hr.notice.query.dto,
+              com.ddis.ddis_hr.dictionary.query.dto,
+              com.ddis.ddis_hr.board.query.dto
+            configuration:
+              map-underscore-to-camel-case: true
           
           EOL
 
@@ -174,19 +175,17 @@ jobs:
       - name: Build with Gradle
         working-directory: ./DDIS_HR
         run: ./gradlew clean build -x test
-        # run: ./DDIS_HR/gradlew clean build
         shell: bash
 
-      ###############################################
       - name: Generate deployment package
         working-directory: ./DDIS_HR
         run: |
-         mkdir -p deploy
-         cp ./build/libs/*.jar deploy/application.jar
-         cp ./Procfile deploy/Procfile
-         cp -r ./.ebextensions deploy/.ebextensions
-         cp -r ./.platform deploy/.platform
-         cd deploy && zip -r deploy.zip .
+          mkdir -p deploy
+          cp ./build/libs/*.jar deploy/application.jar
+          cp ./Procfile deploy/Procfile
+          cp -r ./.ebextensions deploy/.ebextensions
+          cp -r ./.platform deploy/.platform
+          cd deploy && zip -r deploy.zip .
 
       - name: Move deploy.zip to root for Beanstalk
         run: cp ./DDIS_HR/deploy/deploy.zip ./deploy.zip
@@ -211,4 +210,3 @@ jobs:
           use_existing_version_if_available: false
           wait_for_deployment: true
           wait_for_environment_recovery: 300
-        ###############################################

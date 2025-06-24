@@ -202,7 +202,7 @@ public class DraftCommandServiceImpl implements DraftCommandService {
                 this,
                 "결재",
                 "결재 요청",
-                "결재 요청이 도착했습니다.",
+                "결재 요청 (" + savedDraftDocument.getDocTitle() + ") 이 도착했습니다.",
                 approverIds
         ));
 

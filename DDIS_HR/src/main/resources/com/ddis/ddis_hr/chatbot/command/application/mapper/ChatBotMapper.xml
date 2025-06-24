@@ -65,7 +65,7 @@
             (
                 SELECT COUNT(*) FROM draft_documents a
                                          JOIN approval_line al ON a.doc_id = al.doc_id
-                WHERE a.doc_status = '심사중' AND al.employee_id = #{employeeId} AND al.step != 1
+                WHERE a.doc_status = '심사중' AND al.employee_id = #{employeeId} AND al.step != 1 AND al.status ='미결'
                 ) AS pending_count,
             (
         SELECT COUNT(*) FROM draft_documents a WHERE a.doc_status = '반려' AND a.employee_id = #{employeeId}

@@ -1,11 +1,11 @@
 package com.ddis.ddis_hr.eapproval.query.controller;
-// 문서함 (결재 - 진행 - 완료 분기처리)
 
 import com.ddis.ddis_hr.eapproval.query.dto.DocumentDTO;
 import com.ddis.ddis_hr.eapproval.query.dto.DraftDTO;
 import com.ddis.ddis_hr.eapproval.query.service.ApprovalDocumentQueryService;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,15 +23,11 @@ public class ApprovalDocumentQueryController {
 
     private final ApprovalDocumentQueryService approvalDocumentQueryService;
 
-//    @GetMapping
-//    public ResponseEntity<List<DocumentDTO>> getPendingApprovals(@AuthenticationPrincipal CustomUserDetails user) {
-//        // Assuming principal.getName() returns employeeId as string
-//        Long employeeId = user.getEmployeeId();
-//        List<DocumentDTO> documents = approvalDocumentQueryService.getPendingApprovals(employeeId);
-//        return ResponseEntity.ok(documents);
-//    }
-
-    // 결재함
+    /**
+     * 결재함 조회 API
+     * @param user  로그인된 사용자의 CustomUserDetails
+     * @param tab   조회 탭 (결재, 진행, 완료, 전체)
+     */
     @GetMapping("/ApprovalBox")
     public ResponseEntity<List<DocumentDTO>> getApprovals(
             @AuthenticationPrincipal CustomUserDetails user,
@@ -60,11 +56,18 @@ public class ApprovalDocumentQueryController {
         return ResponseEntity.ok(documents);
     }
 
-
-    // 기안함 ( 추후 ApprovalDcoumentQueryController랑 병합)
+    /**
+     * 기안함 조회 API
+     * @param user  로그인된 사용자의 CustomUserDetails
+     */
     @GetMapping("/draftDoc")
     public ResponseEntity<List<DraftDTO>> getMyDrafts(
             @AuthenticationPrincipal CustomUserDetails user) {
+
+        if (user == null) {
+            // 인증이 없는 상태 → 401 또는 빈 리스트
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
         Long employeeId = user.getEmployeeId();
         List<DraftDTO> drafts = approvalDocumentQueryService.getMyDrafts(employeeId);
@@ -72,4 +75,3 @@ public class ApprovalDocumentQueryController {
     }
 
 }
-

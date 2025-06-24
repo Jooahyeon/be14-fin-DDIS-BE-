@@ -71,6 +71,57 @@
         LIMIT 1
     </select>
 
+    <!-- 인사팀 팀원 (가장 낮은 직급) -->
+    <select id="findLowestRankInTeam" resultType="ApproverInfoQueryDTO">
+        SELECT
+            e.employee_id     AS employeeId,
+            e.position_id     AS positionId,
+            e.employee_name   AS employeeName,
+            t.team_name       AS teamName,
+            p.position_name   AS positionName,
+            d.department_name AS departmentName,
+            r.rank_id         AS rankId,
+            r.rank_name       AS rankName,
+            r.rank_order      AS rankOrder,
+            #{type}           AS type,
+            #{lineType}       AS lineType
+        FROM employee e
+                 LEFT JOIN position    p ON e.position_id   = p.position_id
+                 LEFT JOIN team        t ON e.team_id       = t.team_id
+                 LEFT JOIN department  d ON e.department_id = d.department_id
+                 LEFT JOIN headquarters h ON d.head_id      = h.head_id
+                 JOIN rank             r ON e.rank_id       = r.rank_id
+        WHERE e.team_id = #{teamId}
+        ORDER BY r.rank_order ASC
+        LIMIT 1
+    </select>
+
+    <!-- 인사팀 팀장 (가장 높은 직급자) -->
+    <select id="findHighestRankInTeam" resultType="ApproverInfoQueryDTO">
+        SELECT
+            e.employee_id     AS employeeId,
+            e.position_id     AS positionId,
+            e.employee_name   AS employeeName,
+            t.team_name       AS teamName,
+            p.position_name   AS positionName,
+            d.department_name AS departmentName,
+            r.rank_id         AS rankId,
+            r.rank_name       AS rankName,
+            r.rank_order      AS rankOrder,
+            #{type}           AS type,
+            #{lineType}       AS lineType
+        FROM employee e
+                 LEFT JOIN position    p ON e.position_id   = p.position_id
+                 LEFT JOIN team        t ON e.team_id       = t.team_id
+                 LEFT JOIN department  d ON e.department_id = d.department_id
+                 LEFT JOIN headquarters h ON d.head_id      = h.head_id
+                 JOIN rank             r ON e.rank_id       = r.rank_id
+        WHERE e.team_id = #{teamId}
+        ORDER BY r.rank_order DESC
+        LIMIT 1
+    </select>
+
+
     <!-- 3) approval_line 생성 후 document_box에도 role 저장 -->
     <insert id="insertDocumentBoxRole" parameterType="map">
         INSERT INTO document_box (employee_id, doc_id, role, is_read, is_deleted)

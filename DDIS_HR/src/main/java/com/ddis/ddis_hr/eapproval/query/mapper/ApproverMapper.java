@@ -15,18 +15,32 @@ import java.util.Map;
 public interface ApproverMapper {
 
     /**
-     * 직급 정렬값(rankOrder) + 조직 타입 + 조직 ID를 기준으로 결재자 1명을 조회한다.
-     *
-     * @param rankOrder 결재자 직급 정렬값
-     * @param orgType 조직 구분 (team, department, head)
-     * @param orgId 조직 ID
+     * 기안자 팀 상위 직급자 조회 (일반 기안문 등)
      */
     ApproverInfoQueryDTO findApproverByRankOrderAndOrg(
             @Param("rankOrder") int rankOrder,
             @Param("orgType")   String orgType,
             @Param("orgId")     Long orgId,
-            @Param("step")      int step,        // 추가!
-            @Param("type")      String type,     // "DRAFT" or "APPROVAL"
-            @Param("lineType")  String lineType  // "AUTO" or "MANUAL"
+            @Param("step")      int step,
+            @Param("type")      String type,
+            @Param("lineType")  String lineType
+    );
+
+    /**
+     * 특정 팀에서 가장 낮은 직급자를 조회 (예: 인사팀 일반 직원)
+     */
+    ApproverInfoQueryDTO findLowestRankInTeam(
+            @Param("teamId")   Long teamId,
+            @Param("type")     String type,
+            @Param("lineType") String lineType
+    );
+
+    /**
+     * 특정 팀에서 가장 높은 직급자를 조회 (예: 인사팀 팀장)
+     */
+    ApproverInfoQueryDTO findHighestRankInTeam(
+            @Param("teamId")   Long teamId,
+            @Param("type")     String type,
+            @Param("lineType") String lineType
     );
 }

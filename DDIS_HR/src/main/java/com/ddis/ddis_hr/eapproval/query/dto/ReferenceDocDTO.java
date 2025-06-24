@@ -20,4 +20,6 @@ public class ReferenceDocDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime readAt;
     private String role;
+    private String drafterName;
+    private String drafterRank;
 }

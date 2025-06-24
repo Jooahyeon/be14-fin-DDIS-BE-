@@ -10,7 +10,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "board")
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

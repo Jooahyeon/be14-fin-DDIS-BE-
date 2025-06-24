@@ -62,101 +62,99 @@ public class AttendanceScheduler {
     /**
      * 매일 새벽 03시에 연차 지급/촉진 스케줄러
      */
-//    @Transactional
-//    @Scheduled(cron = "0 0 03 * * *", zone = "Asia/Seoul") // 매일 오전 03:00 실행
-//    public void handleAnnualLeaveAndPromotion() {
-//        LocalDate today = LocalDate.now();
-//        List<Employee> employeeList = employeeRepository.findAll();
-//
-//        for (Employee emp : employeeList) {
-//            if (emp.getRetirementDate() != null && emp.getRetirementDate().isBefore(today)) continue;
-//
-//            Long empId = emp.getEmployeeId();
-//            LocalDate joinDate = emp.getEmploymentDate();
-//            LocalDate oneYearLater = joinDate.plusYears(1);
-//            MonthDay todayMMDD = MonthDay.from(today);
-//            MonthDay joinMMDD = MonthDay.from(joinDate);
-//
-//            // 🟢 Leave 엔티티 조회 or 생성
-//            Leave leave = leaveRepository.findById(empId).orElse(null);
-//            boolean isNew = false;
-//
-//            if (leave == null) {
-//                leave = new Leave();
-//                leave.setEmployee(emp); // @MapsId 관계로 employee_id 지정됨
-//                leave.setTotalDays(0);
-//                leave.setUsedDays(BigDecimal.ZERO);
-//                leave.setRemainingDays(BigDecimal.ZERO);
-//                leave.setPendingLeaveDays(0);
-//                isNew = true;
-//            }
-//
-//            // ✅ 1. 입사 1년차 당일: 15일 초기화 지급
-//            if (todayMMDD.equals(joinMMDD)) {
-//                leave.setTotalDays(15);
-//                leave.setUsedDays(BigDecimal.ZERO);
-//                leave.setRemainingDays(BigDecimal.valueOf(15.0));
-//                leave.setPendingLeaveDays(0);
-//                leave.setFirstNoticeDate(null);
-//                leave.setSecondNoticeDate(null);
-//
-//                leaveRepository.save(leave);
-//                log.info("[연차 지급] {} ({}): 1년차 15일 지급 완료", emp.getEmployeeName(), empId);
-//                continue; // 이후 처리 생략
-//            }
-//
-//            // ✅ 2. 입사 1년 미만 + 매월 1일이면 1일씩 지급
-//            if (today.isBefore(oneYearLater) && today.getDayOfMonth() == 1) {
-//                leave.setTotalDays(leave.getTotalDays() + 1);
-//                leave.setRemainingDays(leave.getRemainingDays().add(BigDecimal.valueOf(1.0)));
-//                log.info("[연차 지급] {} ({}): 월 1일 지급", emp.getEmployeeName(), empId);
-//            }
-//
-//            // ✅ 3. 연차 촉진 (남은 연차 있을 때만)
-//            if (leave.getRemainingDays().compareTo(BigDecimal.ZERO) > 0) {
-//                // 매년의 입사기념일에서 6개월 전, 2개월 전 기준으로 계산
-//                LocalDate thisYearsJoinAnniversary = LocalDate.of(today.getYear(), joinDate.getMonth(), joinDate.getDayOfMonth());
-//                LocalDate firstPromotionDate = thisYearsJoinAnniversary.minusMonths(6);
-//                LocalDate secondPromotionDate = thisYearsJoinAnniversary.minusMonths(2);
-//
-//                if (today.isEqual(firstPromotionDate) && leave.getFirstNoticeDate() == null) {
-//                    leave.setFirstNoticeDate(today);
-//                    leaveAlertLogRepository.save(new LeaveAlertLog(emp, "FIRST", LocalDateTime.now()));
-//                    log.info("[1차 촉진] {} ({})", emp.getEmployeeName(), empId);
-//
-//                    // 1차 연차 촉진 알림
-//                    publisher.publishEvent(new NoticeEvent(
-//                            this,
-//                            "연차촉진",
-//                            empId,
-//                            "1차 연차 촉진 안내",
-//                            "연차 소멸 6개월 전입니다.",
-//                            Collections.singletonList(empId)
-//                    ));
-//                }
-//
-//                if (today.isEqual(secondPromotionDate) && leave.getSecondNoticeDate() == null) {
-//                    leave.setSecondNoticeDate(today);
-//                    leaveAlertLogRepository.save(new LeaveAlertLog(emp, "SECOND", LocalDateTime.now()));
-//                    log.info("[2차 촉진] {} ({})", emp.getEmployeeName(), empId);
-//
-//                    // 2차 연차 촉진 알림
-//                    publisher.publishEvent(new NoticeEvent(
-//                            this,
-//                            "연차촉진",
-//                            empId,
-//                            "2차 연차 촉진 안내",
-//                            "연차 소멸 2개월 전입니다.",
-//                            Collections.singletonList(empId)
-//                    ));
-//                }
-//            }
-//
-//            // ✅ 저장 (신규 생성이든 수정이든)
-//            leaveRepository.save(leave);
-//        }
-//
-//        log.info("✅ 연차 지급 및 촉진 스케줄러 완료: {}", today);
-//    }
+    @Transactional
+    @Scheduled(cron = "0 53 10 * * *", zone = "Asia/Seoul") // 매일 오전 03:00 실행
+    public void handleAnnualLeaveAndPromotion() {
+        LocalDate today = LocalDate.now();
+        List<Employee> employeeList = employeeRepository.findAll();
+
+        for (Employee emp : employeeList) {
+            if (emp.getRetirementDate() != null && emp.getRetirementDate().isBefore(today)) continue;
+
+            Long empId = emp.getEmployeeId();
+            LocalDate joinDate = emp.getEmploymentDate();
+            LocalDate oneYearLater = joinDate.plusYears(1);
+            MonthDay todayMMDD = MonthDay.from(today);
+            MonthDay joinMMDD = MonthDay.from(joinDate);
+
+            // 🟢 Leave 엔티티 조회 or 생성
+            Leave leave = leaveRepository.findById(empId).orElse(null);
+            boolean isNew = false;
+
+            if (leave == null) {
+                leave = new Leave();
+                leave.setEmployee(emp); // @MapsId 관계로 employee_id 지정됨
+                leave.setTotalDays(0);
+                leave.setUsedDays(BigDecimal.ZERO);
+                leave.setRemainingDays(BigDecimal.ZERO);
+                leave.setPendingLeaveDays(0);
+                isNew = true;
+            }
+
+            // ✅ 1. 입사 1년차 당일: 15일 초기화 지급
+            if (todayMMDD.equals(joinMMDD)) {
+                leave.setTotalDays(15);
+                leave.setUsedDays(BigDecimal.ZERO);
+                leave.setRemainingDays(BigDecimal.valueOf(15.0));
+                leave.setPendingLeaveDays(0);
+                leave.setFirstNoticeDate(null);
+                leave.setSecondNoticeDate(null);
+
+                leaveRepository.save(leave);
+                log.info("[연차 지급] {} ({}): 1년차 15일 지급 완료", emp.getEmployeeName(), empId);
+                continue; // 이후 처리 생략
+            }
+
+            // ✅ 2. 입사 1년 미만 + 매월 1일이면 1일씩 지급
+            if (today.isBefore(oneYearLater) && today.getDayOfMonth() == 1) {
+                leave.setTotalDays(leave.getTotalDays() + 1);
+                leave.setRemainingDays(leave.getRemainingDays().add(BigDecimal.valueOf(1.0)));
+                log.info("[연차 지급] {} ({}): 월 1일 지급", emp.getEmployeeName(), empId);
+            }
+
+            // ✅ 3. 연차 촉진 (남은 연차 있을 때만)
+            if (leave.getRemainingDays().compareTo(BigDecimal.ZERO) > 0) {
+                // 매년의 입사기념일에서 6개월 전, 2개월 전 기준으로 계산
+                LocalDate thisYearsJoinAnniversary = LocalDate.of(today.getYear(), joinDate.getMonth(), joinDate.getDayOfMonth());
+                LocalDate firstPromotionDate = thisYearsJoinAnniversary.minusMonths(6);
+                LocalDate secondPromotionDate = thisYearsJoinAnniversary.minusMonths(2);
+
+                if (today.isEqual(firstPromotionDate) && leave.getFirstNoticeDate() == null) {
+                    leave.setFirstNoticeDate(today);
+                    leaveAlertLogRepository.save(new LeaveAlertLog(emp, "FIRST", LocalDateTime.now()));
+                    log.info("[1차 촉진] {} ({})", emp.getEmployeeName(), empId);
+
+                    // 1차 연차 촉진 알림
+                    publisher.publishEvent(new NoticeEvent(
+                            this,
+                            "연차촉진",
+                            "1차 연차 촉진 안내",
+                            "연차 소멸 6개월 전입니다.",
+                            Collections.singletonList(empId)
+                    ));
+                }
+
+                if (today.isEqual(secondPromotionDate) && leave.getSecondNoticeDate() == null) {
+                    leave.setSecondNoticeDate(today);
+                    leaveAlertLogRepository.save(new LeaveAlertLog(emp, "SECOND", LocalDateTime.now()));
+                    log.info("[2차 촉진] {} ({})", emp.getEmployeeName(), empId);
+
+                    // 2차 연차 촉진 알림
+                    publisher.publishEvent(new NoticeEvent(
+                            this,
+                            "연차촉진",
+                            "2차 연차 촉진 안내",
+                            "연차 소멸 2개월 전입니다.",
+                            Collections.singletonList(empId)
+                    ));
+                }
+            }
+
+            // ✅ 저장 (신규 생성이든 수정이든)
+            leaveRepository.save(leave);
+        }
+
+        log.info("✅ 연차 지급 및 촉진 스케줄러 완료: {}", today);
+    }
 
 }

@@ -63,7 +63,7 @@ public class AttendanceScheduler {
      * 매일 새벽 03시에 연차 지급/촉진 스케줄러
      */
     @Transactional
-    @Scheduled(cron = "0 53 10 * * *", zone = "Asia/Seoul") // 매일 오전 03:00 실행
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul") // 매일 오전 03:00 실행
     public void handleAnnualLeaveAndPromotion() {
         LocalDate today = LocalDate.now();
         List<Employee> employeeList = employeeRepository.findAll();

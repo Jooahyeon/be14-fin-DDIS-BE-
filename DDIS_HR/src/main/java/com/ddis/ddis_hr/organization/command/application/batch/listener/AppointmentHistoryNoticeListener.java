@@ -40,7 +40,7 @@ public class AppointmentHistoryNoticeListener implements ItemWriteListener<Appoi
             publisher.publishEvent(new NoticeEvent(
                     this,
                     "인사발령",                              // notice_type
-                    hist.getAppointmentHistoryId(),         // referenceId
+//                    hist.getAppointmentHistoryId(),         // referenceId
                     "새 인사발령이 등록되었습니다.",            // notice_title
                     hist.getAppointmentReason(),            // notice_content
                     targets                                 // 알림 대상 리스트

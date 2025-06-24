@@ -37,8 +37,6 @@ public class NoticeEntity {
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
 
-    private Long relatedId;
-
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();

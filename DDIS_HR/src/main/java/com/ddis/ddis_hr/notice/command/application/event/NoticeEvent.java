@@ -16,20 +16,17 @@ public class NoticeEvent extends ApplicationEvent {
      * targets:       알림을 받을 employee_id 리스트
      */
     private final String referenceType;
-    private final Long referenceId;
     private final String title;
     private final String content;
     private final List<Long> targets;
 
     public NoticeEvent(Object source,
                              String referenceType,
-                             Long referenceId,
                              String title,
                              String content,
                              List<Long> targets) {
         super(source);
         this.referenceType = referenceType;
-        this.referenceId   = referenceId;
         this.title         = title;
         this.content       = content;
         this.targets       = targets;

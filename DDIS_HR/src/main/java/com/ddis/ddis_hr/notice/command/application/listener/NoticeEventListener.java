@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class NoticeEventListener {
@@ -19,6 +21,12 @@ public class NoticeEventListener {
      */
     @EventListener
     public void handleNoticeEvent(NoticeEvent event) {
+        List<Long> targets = event.getTargets();
+        if (targets == null || targets.isEmpty()) {
+            // 보낼 대상이 없으면 아무 것도 안 함
+            return;
+        }
+
         for (Long empId : event.getTargets()) {
             NoticeDTO dto = NoticeDTO.builder()
                     .noticeContent(event.getContent())

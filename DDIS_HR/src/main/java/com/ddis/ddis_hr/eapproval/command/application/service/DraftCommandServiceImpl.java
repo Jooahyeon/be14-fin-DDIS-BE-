@@ -11,13 +11,17 @@ import com.ddis.ddis_hr.eapproval.command.domain.entity.DraftDocument;
 import com.ddis.ddis_hr.eapproval.command.domain.repository.DocumentAttachmentRepository;
 import com.ddis.ddis_hr.eapproval.command.domain.repository.DocumentBoxRepository;
 import com.ddis.ddis_hr.eapproval.command.domain.repository.DraftRepository;
+import com.ddis.ddis_hr.notice.command.application.event.NoticeEvent;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -29,6 +33,7 @@ public class DraftCommandServiceImpl implements DraftCommandService {
     private final DocumentBoxRepository documentBoxRepository;
     private final S3Service s3Service;
     private final DocumentAttachmentRepository documentAttachmentRepository;
+    private final ApplicationEventPublisher publisher;
 
     @Transactional
     @Override
@@ -186,7 +191,45 @@ public class DraftCommandServiceImpl implements DraftCommandService {
                 documentAttachmentRepository.saveAll(atts);
             }
         }
+
+
+
+        List<Long> approverIds = lines.stream()
+                .map(ApprovalLineDTO::getEmployeeId)
+                .toList();
+
+        publisher.publishEvent(new NoticeEvent(
+                this,
+                "결재",
+                "결재 요청",
+                "결재 요청 (" + savedDraftDocument.getDocTitle() + ") 이 도착했습니다.",
+                approverIds
+        ));
+
+        if (!cooperators.isEmpty()) {
+            publisher.publishEvent(new NoticeEvent(
+                    this, "결재",
+                    "협조 요청", "협조 요청이 도착했습니다.",
+                    cooperators
+            ));
+        }
+        if (!receivers.isEmpty()) {
+            publisher.publishEvent(new NoticeEvent(
+                    this, "결재",
+                    "문서 수신", "문서 수신 요청이 도착했습니다.",
+                    receivers
+            ));
+        }
+        if (!ccs.isEmpty()) {
+            publisher.publishEvent(new NoticeEvent(
+                    this, "결재",
+                    "문서 참조", "문서 참조 요청이 도착했습니다.",
+                    ccs
+            ));
+        }
+
+
         return savedDraftDocument; // ✅ Draft 반환
-}
+    }
 }
 

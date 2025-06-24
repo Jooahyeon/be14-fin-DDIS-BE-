@@ -1,5 +1,7 @@
 package com.ddis.ddis_hr.notice.command.application.service;
 
+import com.ddis.ddis_hr.employee.command.domain.repository.EmployeeRepository;
+import com.ddis.ddis_hr.employee.command.domain.repository.EmployeesRepository;
 import com.ddis.ddis_hr.member.command.domain.aggregate.entity.Employee;
 import com.ddis.ddis_hr.notice.command.application.dto.NoticeDTO;
 import com.ddis.ddis_hr.notice.command.domain.aggregate.NoticeEntity;
@@ -7,6 +9,7 @@ import com.ddis.ddis_hr.notice.command.domain.repository.NoticeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,34 +18,39 @@ public class NoticeServiceImpl implements NoticeService {
 
     private final NoticeRepository noticeRepository;
     private final SimpMessagingTemplate messagingTemplate;
+    private final EmployeeRepository employeeRepository;
 
-    public NoticeServiceImpl(NoticeRepository noticeRepository, SimpMessagingTemplate messagingTemplate) {
+    public NoticeServiceImpl(NoticeRepository noticeRepository, SimpMessagingTemplate messagingTemplate, EmployeeRepository employeeRepository) {
         this.noticeRepository = noticeRepository;
         this.messagingTemplate = messagingTemplate;
+        this.employeeRepository = employeeRepository;
     }
 
     @Override
+    @Transactional
     public NoticeDTO create(NoticeDTO dto) {
-        // Employee 엔티티 참조만 할 경우, 필요한 경우 Repository.getReferenceById 로 교체하세요.
-        Employee emp = new Employee();
-        emp.setEmployeeId(dto.getEmployeeId());
+        // 1) DB에서 영속 상태의 Employee 조회
+        Employee emp = employeeRepository.findById(dto.getEmployeeId())
+                .orElseThrow(() ->
+                        new EntityNotFoundException("해당 사원을 찾을 수 없습니다. id=" + dto.getEmployeeId())
+                );
 
+        // 2) NoticeEntity에 세팅
         NoticeEntity entity = NoticeEntity.builder()
                 .noticeContent(dto.getNoticeContent())
                 .noticeType(dto.getNoticeType())
                 .isRead(dto.getIsRead() != null ? dto.getIsRead() : false)
-                .employee(emp)
+                .employee(emp)          // managed 상태의 emp
                 .build();
 
+        // 3) 저장
         NoticeEntity saved = noticeRepository.save(entity);
 
-        NoticeDTO result = toDto(saved);
-
-        // WebSocket 전송
+        // WebSocket 알림 발송
         String destination = "/topic/notice/" + dto.getEmployeeId();
-        messagingTemplate.convertAndSend(destination, result);
+        messagingTemplate.convertAndSend(destination, toDto(saved));
 
-        return result;
+        return toDto(saved);
     }
 
 

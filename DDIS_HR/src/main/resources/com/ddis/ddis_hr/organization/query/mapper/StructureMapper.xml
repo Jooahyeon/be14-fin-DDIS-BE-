@@ -9,6 +9,7 @@
     <resultMap id="EmployeeResult" type="com.ddis.ddis_hr.organization.query.dto.EmployeeQueryDTO">
         <id     property="employeeId"   column="employee_id"  />
         <result property="employeeName" column="employee_name"/>
+        <result property="employeePhotoUrl" column="employee_photo_url"/>
         <result property="positionCode" column="position_code"/>
         <result property="positionName" column="position_name"/>
         <result property="rankCode"     column="rank_code"    />
@@ -73,6 +74,7 @@
                      javaType="com.ddis.ddis_hr.organization.query.dto.EmployeeQueryDTO">
             <id     property="employeeId"   column="mgr_emp_id"/>
             <result property="employeeName" column="mgr_emp_name"/>
+            <result property="employeePhotoUrl" column="mgr_emp_photo_url"/>
             <result property="positionCode" column="mgr_position_code"/>
             <result property="positionName" column="mgr_position_name"/>
             <result property="rankName"     column="mgr_rank_name"/>
@@ -93,6 +95,7 @@
             resultMap="EmployeeResult">
         SELECT e.employee_id,
             e.employee_name,
+            e.employee_photo_url,
             p.position_name,
             r.rank_name,
             e.employee_email
@@ -100,12 +103,14 @@
         LEFT JOIN `position` p ON e.position_id = p.position_id
         LEFT JOIN `rank`     r ON e.rank_id     = r.rank_id
         WHERE e.team_id = #{teamId}
+            AND e.retirement_date IS NULL
     </select>
 
     <select id="selectDeptMembers" resultType="com.ddis.ddis_hr.organization.query.dto.EmployeeQueryDTO">
         SELECT
         e.employee_id    AS employeeId,
         e.employee_name  AS employeeName,
+        e.employee_photo_url  AS employeePhotoUrl,
         p.position_name  AS positionName,
         r.rank_name      AS rankName,
         e.employee_email          AS email
@@ -113,6 +118,7 @@
         LEFT JOIN position p ON e.position_id = p.position_id
         LEFT JOIN rank     r ON e.rank_id     = r.rank_id
         WHERE e.department_id = #{departmentId}
+            AND e.retirement_date IS NULL
     </select>
 
 
@@ -201,6 +207,7 @@
         SELECT
             e.employee_id       AS employeeId,
             e.employee_name     AS employeeName,
+            e.employee_photo_url  AS employeePhotoUrl,
             p.position_name     AS positionName,
             r.rank_name         AS rankName,
             j.job_name         AS jobName,
@@ -214,6 +221,7 @@
         LEFT JOIN rank     r ON e.rank_id     = r.rank_id
         LEFT JOIN job     j ON e.job_id     = j.job_id
         WHERE e.employee_id = #{employeeId}
+            AND e.retirement_date IS NULL
     </select>
 
 
@@ -242,6 +250,7 @@
         SELECT
             e.employee_id       AS employee_id,
             e.employee_name     AS employee_name,
+            e.employee_photo_url  AS employeePhotoUrl,
             p.position_code     AS position_code,
             p.position_name     AS position_name,
             r.rank_code         AS rank_code,
@@ -255,6 +264,7 @@
         LEFT JOIN rank     r ON e.rank_id     = r.rank_id
         WHERE e.department_id = #{departmentId}
         AND p.position_name = '부장'
+        AND e.retirement_date IS NULL
         LIMIT 1
     </select>
 

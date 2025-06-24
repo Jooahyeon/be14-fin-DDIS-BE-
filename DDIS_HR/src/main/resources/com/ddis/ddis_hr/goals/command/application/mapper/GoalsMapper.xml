@@ -61,6 +61,8 @@
                 jdbcType="TIMESTAMP"/>
         <result property="employeeId"    column="employee_id"/>
         <result property="employeeName"  column="employee_name"/>
+        <result column="review_score"           property="reviewScore"/>
+
 
         <!-- ============================================== -->
         <!--   PerformanceDTO 매핑 (nested select 사용)     -->
@@ -76,6 +78,7 @@
             <result column="reviewer_score"         property="reviewerScore"/>
             <result column="reviewer_content"       property="reviewerContent"/>
             <result column="employee_id_reviewer"   property="employeeIdReviewer"/>
+
 
             <!-- 네 개의 nested select로 “파일 정보 컬렉션”을 채움 -->
             <collection property="attachmentKeys"
@@ -126,11 +129,15 @@
             p.reviewer_score,
             p.reviewer_content,
             p.reviewer_created_at,
-            p.employee_id_reviewer
+            p.employee_id_reviewer,
+            r.review_score
+
 
         FROM goal g
                  JOIN employee e ON g.employee_id = e.employee_id
                  LEFT JOIN selfreview p ON g.goal_id = p.goal_id
+                 LEFT JOIN review r ON r.selfreview_id = p.selfreview_id
+
         WHERE g.employee_id = #{employeeId}
     </select>
 

@@ -7,6 +7,9 @@ import com.ddis.ddis_hr.eapproval.command.application.service.DraftCommandServic
 import com.ddis.ddis_hr.eapproval.command.domain.entity.ApprovalLine;
 import com.ddis.ddis_hr.eapproval.command.domain.entity.DraftDocument;
 import com.ddis.ddis_hr.eapproval.command.domain.repository.ApprovalLineRepository;
+import com.ddis.ddis_hr.eapproval.command.domain.repository.DraftRepository;
+import com.ddis.ddis_hr.eapproval.query.dto.DraftDetailResponseQueryDTO;
+import com.ddis.ddis_hr.eapproval.command.application.dto.TempSaveResDTO;
 import com.ddis.ddis_hr.eapproval.query.service.DraftDetailService;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;

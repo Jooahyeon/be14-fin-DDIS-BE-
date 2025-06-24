@@ -59,9 +59,7 @@ public class WebSecurity {
                                 .requestMatchers(new AntPathRequestMatcher("/users/**", "POST")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/members/**", "GET")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/email-verification/**")).permitAll()
-                                // 모든 경로 허용 → 필요시 조정
-                                .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
-//                                .requestMatchers(new AntPathRequestMatcher("/payroll/employees/**")).hasAnyRole("HR")
+
                                 .anyRequest().authenticated()
                 )
                 // 3) stateless 세션 정책

@@ -4,8 +4,10 @@ import com.ddis.ddis_hr.eapproval.command.domain.entity.ApprovalLine;
 import com.ddis.ddis_hr.eapproval.command.domain.entity.DraftDocument;
 import com.ddis.ddis_hr.eapproval.command.domain.repository.ApprovalLineRepository;
 import com.ddis.ddis_hr.eapproval.command.domain.repository.DraftRepository;
+import com.ddis.ddis_hr.notice.command.application.event.NoticeEvent;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,11 +18,13 @@ import java.util.List;
 public class ApprovalWorkflowServiceImpl implements ApprovalWorkflowService {
     private final ApprovalLineRepository lineRepo;
     private final DraftRepository draftRepo;
+    private final ApplicationEventPublisher publisher;
 
     public ApprovalWorkflowServiceImpl(ApprovalLineRepository lineRepo,
-                                       DraftRepository draftRepo) {
+                                       DraftRepository draftRepo, ApplicationEventPublisher publisher) {
         this.lineRepo = lineRepo;
         this.draftRepo = draftRepo;
+        this.publisher = publisher;
     }
 
     /**
@@ -115,6 +119,17 @@ public class ApprovalWorkflowServiceImpl implements ApprovalWorkflowService {
                     .docStatus("결재완료")
                     .finalApprovalAt(LocalDateTime.now())
                     .build();
+
+            if (curr.getStep() == maxStep) {
+                Long drafterId = draftDocument.getEmployeeId();  // 기안자 ID 꺼내오기
+                publisher.publishEvent(new NoticeEvent(
+                        this,
+                        "결재",                                  // referenceType (문구는 스키마에 맞춰 조정)
+                        "결재 완료 안내",                           // title
+                        draftDocument.getDocTitle() + " 결재가 완료되었습니다.", // content
+                        List.of(drafterId)                         // targets: 기안자만
+                ));
+            }
         }
         draftRepo.save(draftDocument);
     }

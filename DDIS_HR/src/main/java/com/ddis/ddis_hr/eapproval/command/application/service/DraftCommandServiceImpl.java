@@ -144,40 +144,61 @@ public class DraftCommandServiceImpl implements DraftCommandService {
     }
 
 
+    /**
+     * 문서 및 결재라인만 저장하는 간소화 메서드.
+     * 진행 중 상태에서 임시 저장하거나 결재선 수정 시 사용.
+     * 첨부파일 및 부가 참여자는 저장하지 않음.
+     */
     @Transactional
     @Override
     public DraftDocument saveDraftAndLines(DraftCreateCommandDTO dto) {
         log.info("🟠 saveDraftAndLines() 호출됨");
 
+        // 1) 문서 저장
         DraftDocument savedDraftDocument = draftRepository.save(dto.toEntity());
         Long docId = savedDraftDocument.getDocId();
 
+        // 2) 기안자 저장
         saveDocumentBoxEntry(dto.getEmployeeId(), docId, "기안자");
 
+        // 3) 결재라인 저장
         List<ApprovalLineDTO> lines = dto.getApprovalLines();
         if (lines != null && !lines.isEmpty()) {
             approvalLineCommandService.saveManualLine(docId, lines, dto.getEmployeeId());
-            lines.forEach(line -> saveDocumentBoxEntry(line.getEmployeeId(), docId, "결재자"));
+
+            lines.forEach(line -> {
+                String role = switch (line.getType()) {
+                    case "기안" -> "기안자";
+                    case "결재" -> "결재자";
+                    case "협조" -> "협조자";
+                    default -> "결재자"; // fallback
+                };
+                saveDocumentBoxEntry(line.getEmployeeId(), docId, role);
+            });
         } else {
             approvalLineCommandService.createAutoLine(docId, dto.getEmployeeId());
             List<Long> approvers = dto.getApprovers() != null ? dto.getApprovers() : List.of();
             approvers.forEach(empId -> saveDocumentBoxEntry(empId, docId, "결재자"));
         }
 
+        // 4) 협조자 저장
         List<Long> cooperators = dto.getCooperators() != null ? dto.getCooperators() : List.of();
         cooperators.forEach(empId -> saveDocumentBoxEntry(empId, docId, "협조자"));
 
+        // 5) 수신자 저장
         List<Long> receivers = dto.getReceivers() != null ? dto.getReceivers() : List.of();
         receivers.forEach(empId -> saveDocumentBoxEntry(empId, docId, "수신자"));
 
+        // 6) 참조자 저장
         List<Long> ccs = dto.getCcs() != null ? dto.getCcs() : List.of();
         ccs.forEach(empId -> saveDocumentBoxEntry(empId, docId, "참조자"));
-        // 8) 첨부파일 메타 저장
-        List<String> keys  = dto.getAttachmentKeys();         // S3에서 발급된 키 목록
-        List<String> names = dto.getOriginalFileNames();      // 원본 파일명 목록
-        List<String> types = dto.getFileTypes();              // MIME 타입 목록
-        List<Long>   sizes = dto.getFileSizes();              // 파일 크기 목록
-        if (keys != null) {
+
+        // 7) 첨부파일 저장
+        List<String> keys = dto.getAttachmentKeys();
+        List<String> names = dto.getOriginalFileNames();
+        List<String> types = dto.getFileTypes();
+        List<Long> sizes = dto.getFileSizes();
+        if (keys != null && names != null && types != null && sizes != null) {
             List<DocumentAttachment> atts = new ArrayList<>();
             for (int i = 0; i < keys.size(); i++) {
                 atts.add(DocumentAttachment.builder()
@@ -188,8 +209,8 @@ public class DraftCommandServiceImpl implements DraftCommandService {
                         .fileSize(sizes.get(i))
                         .isDeleted(false)
                         .build());
-                documentAttachmentRepository.saveAll(atts);
             }
+            documentAttachmentRepository.saveAll(atts);
         }
 
 
@@ -227,9 +248,8 @@ public class DraftCommandServiceImpl implements DraftCommandService {
                     ccs
             ));
         }
-
-
-        return savedDraftDocument; // ✅ Draft 반환
+        // 8) 반환
+        return savedDraftDocument;
     }
-}
 
+}

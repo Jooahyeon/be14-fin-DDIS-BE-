@@ -13,6 +13,7 @@ import org.apache.ibatis.type.Alias;
 public class EmployeeListDTO {
     private Long employeeId;
     private String employeeName;
+    private String employeePhotoUrl;
     private LocalDate employeeBirth;
     private LocalDate retirementDate;
     private String positionName;

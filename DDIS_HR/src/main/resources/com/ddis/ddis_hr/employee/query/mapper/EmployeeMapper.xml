@@ -8,6 +8,7 @@
     <resultMap id="EmployeeResult" type="com.ddis.ddis_hr.employee.query.dto.EmployeeDTO">
         <id     column="employee_id"         property="employeeId"/>
         <result column="employee_name"       property="employeeName"/>
+        <result column="employee_photo_url"  property="employeePhotoUrl"/>
         <result column="employee_pwd"        property="employeePwd"/>
         <result column="employee_photo_name" property="employeePhotoName"/>
         <result column="employee_photo_url"  property="employeePhotoUrl"/>
@@ -260,6 +261,7 @@
         SELECT
             e.employee_id      AS employeeId,
             e.employee_name    AS employeeName,
+            e.employee_photo_url    AS employeePhotoUrl,
             e.employee_birth   AS employeeBirth,
             e.retirement_date  AS retirementDate,
             p.position_name    AS positionName,

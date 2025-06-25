@@ -30,6 +30,7 @@ public class ApprovalDocumentQueryServiceImpl implements ApprovalDocumentQuerySe
         return approvalDocumentMapper.selectInProgressDocuments(employeeId);
     }
 
+    // 결재 완료
     @Override
     public List<DocumentDTO> getCompletedApprovals(Long employeeId) {
         return approvalDocumentMapper.selectCompletedDocuments(employeeId);

@@ -257,4 +257,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeesRepository.save(e);
     }
 
+//    @Override
+//    public void deleteEmployee(Long employeeId) {
+//        if (!employeesRepository.existsById(employeeId)) {
+//            throw new EntityNotFoundException("삭제할 사원이 없습니다: " + employeeId);
+//        }
+//        employeesRepository.deleteById(employeeId);
+//    }
+
 }

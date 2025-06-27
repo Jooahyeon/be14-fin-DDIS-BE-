@@ -60,6 +60,9 @@ public class WebSecurity {
                                 .requestMatchers(new AntPathRequestMatcher("/members/**", "GET")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/email-verification/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/s3/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/api/password-reset/**")).permitAll()
+
+
                                 .anyRequest().authenticated()
                 )
                 // 3) stateless 세션 정책

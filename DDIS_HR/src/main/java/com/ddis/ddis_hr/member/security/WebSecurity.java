@@ -61,6 +61,7 @@ public class WebSecurity {
                                 .requestMatchers(new AntPathRequestMatcher("/email-verification/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/s3/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/api/password-reset/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/ws-notice/**")).permitAll()
 
 
                                 .anyRequest().authenticated()

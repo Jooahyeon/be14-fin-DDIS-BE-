@@ -62,4 +62,12 @@ public class EmployeeController {
         employeeService.hrUpdateEmployee(id, dto);
         return ResponseEntity.ok().build();
     }
+
+    //사원 정보 삭제
+//    @DeleteMapping("/{id}")
+//    @PreAuthorize("hasAnyRole('HR')")
+//    public ResponseEntity<Void> delete(@PathVariable Long id) {
+//        employeeService.deleteEmployee(id);
+//        return ResponseEntity.noContent().build();
+//    }
 }

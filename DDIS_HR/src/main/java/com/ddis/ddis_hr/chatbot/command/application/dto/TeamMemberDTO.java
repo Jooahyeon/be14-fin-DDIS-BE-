@@ -3,6 +3,7 @@ package com.ddis.ddis_hr.chatbot.command.application.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -18,5 +19,5 @@ public class TeamMemberDTO {
     Long rankId;
     String rankName;
     String jobName;
-    Date birthDay;
+    LocalDate birthDay;
 }

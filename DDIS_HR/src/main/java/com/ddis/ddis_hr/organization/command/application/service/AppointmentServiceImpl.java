@@ -1,9 +1,12 @@
 package com.ddis.ddis_hr.organization.command.application.service;
 
+import com.ddis.ddis_hr.employee.command.domain.repository.EmployeesRepository;
+import com.ddis.ddis_hr.member.command.domain.aggregate.entity.Employee;
 import com.ddis.ddis_hr.organization.command.application.dto.AppointmentRequestDTO;
 import com.ddis.ddis_hr.organization.command.application.dto.AppointmentResponseDTO;
 import com.ddis.ddis_hr.organization.command.domain.aggregate.entity.AppointmentEntity;
 import com.ddis.ddis_hr.organization.command.domain.repository.AppointmentRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
     private final ModelMapper modelMapper;
+    private final EmployeesRepository employeesRepository;
 
     @Override
     @Transactional
@@ -26,6 +30,11 @@ public class AppointmentServiceImpl implements AppointmentService {
         AppointmentEntity entity = modelMapper.map(dto, AppointmentEntity.class);
 
         entity.setAppointmentCreatedAt(LocalDate.now());
+
+        Employee employee = employeesRepository.findById(dto.getEmployeeId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "사원(employee_id=" + dto.getEmployeeId() + ")을 찾을 수 없습니다."));
+        entity.setEmployee(employee);
 
         AppointmentEntity saved = appointmentRepository.save(entity);
 

@@ -24,7 +24,7 @@ public class DocumentDTO {
     private String drafter;       // 기안자 이름
     private String drafterRank;   // 기안자 직급
     private String type;          // 양식 이름
-    // 현재 결재자 정보 추가
+    private String lineType;
     private String approverName;
     private String approverRank;
 

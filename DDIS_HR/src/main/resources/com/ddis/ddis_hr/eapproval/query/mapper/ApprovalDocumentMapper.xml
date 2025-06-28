@@ -102,11 +102,11 @@
             d.final_approval_at AS approvedAt,
             d.doc_status        AS docStatus,
             al.status           AS lineStatus,
-            e.employee_name     AS drafter,
+            al.type             AS lineType,
             e.employee_name    AS drafter,
             r1.rank_name       AS drafterRank,
             f.form_name         AS type,
-            r.rank_name         AS approverRank  <!-- ✅ 추가 -->
+            r.rank_name         AS approverRank
         FROM draft_documents d
                 JOIN approval_line al ON d.doc_id = al.doc_id
                 JOIN employee e ON d.employee_id = e.employee_id
@@ -131,8 +131,8 @@
             d.final_approval_at AS approvedAt,
             d.doc_status        AS docStatus,
             al.status           AS lineStatus,
+            al.type             AS lineType,
             e.employee_name     AS drafter,
-            e.employee_name    AS drafter,
             r1.rank_name       AS drafterRank,
             f.form_name         AS type,
             r.rank_name         AS approverRank  <!-- ✅ 추가 -->
@@ -160,8 +160,8 @@
             d.final_approval_at AS approvedAt,
             d.doc_status        AS docStatus,
             al.status           AS lineStatus,
+            al.type             AS lineType,
             e.employee_name     AS drafter,
-            e.employee_name    AS drafter,
             r1.rank_name       AS drafterRank,
             f.form_name         AS type,
             r.rank_name         AS approverRank  <!-- ✅ 추가 -->
@@ -189,8 +189,8 @@
             d.final_approval_at AS approvedAt,
             d.doc_status        AS docStatus,
             al.status           AS lineStatus,
+            al.type             AS lineType,
             e.employee_name     AS drafter,
-            e.employee_name    AS drafter,
             r1.rank_name       AS drafterRank,
             f.form_name         AS type,
             r.rank_name         AS approverRank  <!-- ✅ 추가 -->
@@ -203,7 +203,7 @@
                 JOIN rank r1 ON e.rank_id = r1.rank_id
         WHERE al.employee_id = #{employeeId}
             AND d.employee_id != #{employeeId}         -- 기안자 제외
-            AND al.status IN ('미결', '승인')          -- ✅ 결재상태 조건 추가
+            AND al.status IN ('미결', '승인', '반려')          -- ✅ 결재상태 조건 추가
             AND d.doc_status != '회수'                 -- ✅ 문서상태 제외 조건 추가
             AND d.deleted_at IS NULL
         ORDER BY d.submitted_at DESC

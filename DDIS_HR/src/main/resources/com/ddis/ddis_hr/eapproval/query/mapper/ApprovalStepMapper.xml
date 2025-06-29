@@ -7,7 +7,7 @@
 
     <!-- 결재 단계 매핑: step, rank_name -->
     <resultMap id="ApprovalStepMap"
-               type="com.ddis.ddis_hr.eapproval.query.dto.ApprovalStepQueryDTO">
+               type="com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO">
         <result property="step" column="step"/>
         <result property="rank" column="rank_name"/>
     </resultMap>

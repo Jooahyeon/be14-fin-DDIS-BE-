@@ -208,6 +208,7 @@ public class BatchJobConfig {
                     " WHERE employee_id = :employeeId" +
                     "   AND DATE(:appointmentEffectiveDate) = CURRENT_DATE()"
                 )
+                .assertUpdates(false)
                 .build();
     }
 

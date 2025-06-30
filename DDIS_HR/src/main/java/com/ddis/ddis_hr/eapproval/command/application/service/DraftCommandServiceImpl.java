@@ -11,13 +11,17 @@ import com.ddis.ddis_hr.eapproval.command.domain.entity.DraftDocument;
 import com.ddis.ddis_hr.eapproval.command.domain.repository.DocumentAttachmentRepository;
 import com.ddis.ddis_hr.eapproval.command.domain.repository.DocumentBoxRepository;
 import com.ddis.ddis_hr.eapproval.command.domain.repository.DraftRepository;
+import com.ddis.ddis_hr.notice.command.application.event.NoticeEvent;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -29,6 +33,7 @@ public class DraftCommandServiceImpl implements DraftCommandService {
     private final DocumentBoxRepository documentBoxRepository;
     private final S3Service s3Service;
     private final DocumentAttachmentRepository documentAttachmentRepository;
+    private final ApplicationEventPublisher publisher;
 
     @Transactional
     @Override
@@ -139,40 +144,61 @@ public class DraftCommandServiceImpl implements DraftCommandService {
     }
 
 
+    /**
+     * 문서 및 결재라인만 저장하는 간소화 메서드.
+     * 진행 중 상태에서 임시 저장하거나 결재선 수정 시 사용.
+     * 첨부파일 및 부가 참여자는 저장하지 않음.
+     */
     @Transactional
     @Override
     public DraftDocument saveDraftAndLines(DraftCreateCommandDTO dto) {
         log.info("🟠 saveDraftAndLines() 호출됨");
 
+        // 1) 문서 저장
         DraftDocument savedDraftDocument = draftRepository.save(dto.toEntity());
         Long docId = savedDraftDocument.getDocId();
 
+        // 2) 기안자 저장
         saveDocumentBoxEntry(dto.getEmployeeId(), docId, "기안자");
 
+        // 3) 결재라인 저장
         List<ApprovalLineDTO> lines = dto.getApprovalLines();
         if (lines != null && !lines.isEmpty()) {
             approvalLineCommandService.saveManualLine(docId, lines, dto.getEmployeeId());
-            lines.forEach(line -> saveDocumentBoxEntry(line.getEmployeeId(), docId, "결재자"));
+
+            lines.forEach(line -> {
+                String role = switch (line.getType()) {
+                    case "기안" -> "기안자";
+                    case "결재" -> "결재자";
+                    case "협조" -> "협조자";
+                    default -> "결재자"; // fallback
+                };
+                saveDocumentBoxEntry(line.getEmployeeId(), docId, role);
+            });
         } else {
             approvalLineCommandService.createAutoLine(docId, dto.getEmployeeId());
             List<Long> approvers = dto.getApprovers() != null ? dto.getApprovers() : List.of();
             approvers.forEach(empId -> saveDocumentBoxEntry(empId, docId, "결재자"));
         }
 
+        // 4) 협조자 저장
         List<Long> cooperators = dto.getCooperators() != null ? dto.getCooperators() : List.of();
         cooperators.forEach(empId -> saveDocumentBoxEntry(empId, docId, "협조자"));
 
+        // 5) 수신자 저장
         List<Long> receivers = dto.getReceivers() != null ? dto.getReceivers() : List.of();
         receivers.forEach(empId -> saveDocumentBoxEntry(empId, docId, "수신자"));
 
+        // 6) 참조자 저장
         List<Long> ccs = dto.getCcs() != null ? dto.getCcs() : List.of();
         ccs.forEach(empId -> saveDocumentBoxEntry(empId, docId, "참조자"));
-        // 8) 첨부파일 메타 저장
-        List<String> keys  = dto.getAttachmentKeys();         // S3에서 발급된 키 목록
-        List<String> names = dto.getOriginalFileNames();      // 원본 파일명 목록
-        List<String> types = dto.getFileTypes();              // MIME 타입 목록
-        List<Long>   sizes = dto.getFileSizes();              // 파일 크기 목록
-        if (keys != null) {
+
+        // 7) 첨부파일 저장
+        List<String> keys = dto.getAttachmentKeys();
+        List<String> names = dto.getOriginalFileNames();
+        List<String> types = dto.getFileTypes();
+        List<Long> sizes = dto.getFileSizes();
+        if (keys != null && names != null && types != null && sizes != null) {
             List<DocumentAttachment> atts = new ArrayList<>();
             for (int i = 0; i < keys.size(); i++) {
                 atts.add(DocumentAttachment.builder()
@@ -183,10 +209,47 @@ public class DraftCommandServiceImpl implements DraftCommandService {
                         .fileSize(sizes.get(i))
                         .isDeleted(false)
                         .build());
-                documentAttachmentRepository.saveAll(atts);
             }
+            documentAttachmentRepository.saveAll(atts);
         }
-        return savedDraftDocument; // ✅ Draft 반환
-}
-}
 
+
+
+        List<Long> approverIds = lines.stream()
+                .map(ApprovalLineDTO::getEmployeeId)
+                .toList();
+
+        publisher.publishEvent(new NoticeEvent(
+                this,
+                "결재",
+                "결재 요청",
+                "결재 요청 (" + savedDraftDocument.getDocTitle() + ") 이 도착했습니다.",
+                approverIds
+        ));
+
+        if (!cooperators.isEmpty()) {
+            publisher.publishEvent(new NoticeEvent(
+                    this, "결재",
+                    "협조 요청", "협조 요청이 도착했습니다.",
+                    cooperators
+            ));
+        }
+        if (!receivers.isEmpty()) {
+            publisher.publishEvent(new NoticeEvent(
+                    this, "결재",
+                    "문서 수신", "문서 수신 요청이 도착했습니다.",
+                    receivers
+            ));
+        }
+        if (!ccs.isEmpty()) {
+            publisher.publishEvent(new NoticeEvent(
+                    this, "결재",
+                    "문서 참조", "문서 참조 요청이 도착했습니다.",
+                    ccs
+            ));
+        }
+        // 8) 반환
+        return savedDraftDocument;
+    }
+
+}

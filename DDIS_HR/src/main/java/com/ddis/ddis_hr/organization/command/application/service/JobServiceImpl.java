@@ -4,36 +4,44 @@ import com.ddis.ddis_hr.organization.command.application.dto.JobRequestDTO;
 import com.ddis.ddis_hr.organization.command.application.dto.JobResponseDTO;
 import com.ddis.ddis_hr.organization.command.domain.aggregate.entity.JobEntity;
 import com.ddis.ddis_hr.organization.command.domain.repository.JobsRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class JobServiceImpl implements JobService {
 
     private final JobsRepository jobsRepository;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public JobServiceImpl(JobsRepository jobsRepository) {
+    public JobServiceImpl(JobsRepository jobsRepository, ObjectMapper objectMapper) {
         this.jobsRepository = jobsRepository;
+        this.objectMapper = objectMapper;
     }
 
     @Override
     public JobResponseDTO createJob(JobRequestDTO request) {
-        // 1) 엔티티로 변환
-        JobEntity job = JobEntity.builder()
-                .jobName(request.getJobName())
-                .jobCode(request.getJobCode())
-                .jobRole(request.getJobRole())
-                .jobNeed(request.getJobNeed())
-                .jobNecessary(request.getJobNecessary())
-                .jobPreference(request.getJobPreference())
-                .teamId(request.getTeamId())
-                .build();
+        JobEntity job;
+        try {
+            job = JobEntity.builder()
+                    .jobName(request.getJobName())
+                    .jobCode(request.getJobCode())
+                    .jobRole(objectMapper.writeValueAsString(request.getJobRole()))
+                    .jobNeed(objectMapper.writeValueAsString(request.getJobNeed()))
+                    .jobNecessary(objectMapper.writeValueAsString(request.getJobNecessary()))
+                    .jobPreference(objectMapper.writeValueAsString(request.getJobPreference()))
+                    .teamId(request.getTeamId())
+                    .build();
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("JSON 직렬화 실패 (createJob)", e);
+        }
 
-        // 2) 저장
         JobEntity saved = jobsRepository.save(job);
-
-        // 3) DTO로 변환 후 반환
         return mapToResponseDTO(saved);
     }
 
@@ -42,19 +50,22 @@ public class JobServiceImpl implements JobService {
         JobEntity existing = jobsRepository.findById(jobId)
                 .orElseThrow(() -> new RuntimeException("해당 ID의 직무를 찾을 수 없습니다: " + jobId));
 
-        // 필드 수정
-        existing.setJobName(request.getJobName());
-        existing.setJobCode(request.getJobCode());
-        existing.setJobRole(request.getJobRole());
-        existing.setJobNeed(request.getJobNeed());
-        existing.setJobNecessary(request.getJobNecessary());
-        existing.setJobPreference(request.getJobPreference());
-        existing.setTeamId(request.getTeamId());
+        try {
+            existing.setJobName(request.getJobName());
+            existing.setJobCode(request.getJobCode());
+            existing.setJobRole(objectMapper.writeValueAsString(request.getJobRole()));
+            existing.setJobNeed(objectMapper.writeValueAsString(request.getJobNeed()));
+            existing.setJobNecessary(objectMapper.writeValueAsString(request.getJobNecessary()));
+            existing.setJobPreference(objectMapper.writeValueAsString(request.getJobPreference()));
+//            existing.setTeamId(request.getTeamId());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("JSON 직렬화 실패 (updateJob)", e);
+        }
 
-        // JPA의 변경 감지(dirty checking)에 의해 트랜잭션 커밋 시 업데이트됨
         JobEntity updated = jobsRepository.save(existing);
         return mapToResponseDTO(updated);
     }
+
 
     @Override
     public void deleteJob(Long jobId) {
@@ -65,15 +76,25 @@ public class JobServiceImpl implements JobService {
 
     // Entity → DTO 매핑 헬퍼 메서드
     private JobResponseDTO mapToResponseDTO(JobEntity job) {
-        return JobResponseDTO.builder()
-                .id(job.getJobId())
-                .jobName(job.getJobName())
-                .jobCode(job.getJobCode())
-                .jobRole(job.getJobRole())
-                .jobNeed(job.getJobNeed())
-                .jobNecessary(job.getJobNecessary())
-                .jobPreference(job.getJobPreference())
-                .teamId(job.getTeamId())
-                .build();
+        try {
+            // JSON 문자열 → List<String> 변환
+            List<String> role       = objectMapper.readValue(job.getJobRole(),       new TypeReference<List<String>>() {});
+            List<String> need       = objectMapper.readValue(job.getJobNeed(),       new TypeReference<List<String>>() {});
+            List<String> necessary  = objectMapper.readValue(job.getJobNecessary(),  new TypeReference<List<String>>() {});
+            List<String> preference = objectMapper.readValue(job.getJobPreference(), new TypeReference<List<String>>() {});
+
+            return JobResponseDTO.builder()
+                    .id(job.getJobId())
+                    .jobName(job.getJobName())
+                    .jobCode(job.getJobCode())
+                    .jobRole(role)
+                    .jobNeed(need)
+                    .jobNecessary(necessary)
+                    .jobPreference(preference)
+                    .teamId(job.getTeamId())
+                    .build();
+        } catch (Exception e) {
+            throw new RuntimeException("JobResponseDTO 변환 실패: jobId=" + job.getJobId(), e);
+        }
     }
 }

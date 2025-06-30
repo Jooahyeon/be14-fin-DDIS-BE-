@@ -3,6 +3,7 @@ package com.ddis.ddis_hr.organization.command.application.controller;
 import com.ddis.ddis_hr.organization.command.application.dto.JobRequestDTO;
 import com.ddis.ddis_hr.organization.command.application.dto.JobResponseDTO;
 import com.ddis.ddis_hr.organization.command.application.service.JobService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,7 +22,7 @@ public class JobController {
     @PreAuthorize("hasAnyRole('HR')")
     @PostMapping("/create/job")
     public ResponseEntity<JobResponseDTO> createJob(
-            @RequestBody JobRequestDTO request) {
+            @RequestBody JobRequestDTO request) throws JsonProcessingException {
         JobResponseDTO created = jobService.createJob(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
@@ -30,7 +31,7 @@ public class JobController {
     @PutMapping("/update/job/{id}")
     public ResponseEntity<JobResponseDTO> updateJob(
             @PathVariable("id") Long jobId,
-            @RequestBody JobRequestDTO request) {
+            @RequestBody JobRequestDTO request) throws JsonProcessingException {
         JobResponseDTO updated = jobService.updateJob(jobId, request);
         return ResponseEntity.ok(updated);
     }

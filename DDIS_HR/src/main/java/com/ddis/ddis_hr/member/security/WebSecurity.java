@@ -59,9 +59,11 @@ public class WebSecurity {
                                 .requestMatchers(new AntPathRequestMatcher("/users/**", "POST")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/members/**", "GET")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/email-verification/**")).permitAll()
-                                // 모든 경로 허용 → 필요시 조정
-                                .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
-//                                .requestMatchers(new AntPathRequestMatcher("/payroll/employees/**")).hasAnyRole("HR")
+                                .requestMatchers(new AntPathRequestMatcher("/s3/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/api/password-reset/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/ws-notice/**")).permitAll()
+
+
                                 .anyRequest().authenticated()
                 )
                 // 3) stateless 세션 정책
@@ -91,7 +93,7 @@ public class WebSecurity {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         // 프론트 개발 서버 도메인 (Vue 기본 5173 포트)
-        config.setAllowedOrigins(Arrays.asList("http://localhost:8080", "https://isddishr.site"));
+        config.setAllowedOrigins(Arrays.asList("http://localhost:8080", "https://isddishr.site", "http://localhost:8888"));
         // 인증 쿠키/헤더 허용
         config.setAllowCredentials(true);
         // 허용 HTTP 메서드

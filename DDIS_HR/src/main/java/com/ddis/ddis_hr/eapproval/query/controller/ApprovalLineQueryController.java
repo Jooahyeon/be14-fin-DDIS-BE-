@@ -38,25 +38,6 @@ public class ApprovalLineQueryController {
     }
 }
 
-    /**
-     * getApprovalLine
-     *
-     * @param authentication Spring Security 인증 정보
-     *                       - getName() 으로 employeeId 획득
-     * @return 200 OK + 단계별 결재자 정보(ApproverDTO 리스트)
-     */
-//    @GetMapping
-//    public ResponseEntity<List<ApproverQueryDTO>> getApprovalLine(Authentication authentication) {
-//        // 인증 컨텍스트에서 사용자 사번(subject) 획득
-//        Long employeeId = Long.valueOf(authentication.getName());
-//
-//        // 서비스 호출: 결재라인 생성
-//        List<ApproverQueryDTO> line = approvalLineQueryService.generateApprovalLine(employeeId);
-//
-//        // HTTP 200 응답으로 DTO 리스트 반환
-//        return ResponseEntity.ok(line);
-//    }
-
 
 
 

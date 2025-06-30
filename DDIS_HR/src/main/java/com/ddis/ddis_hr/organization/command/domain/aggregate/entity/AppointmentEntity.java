@@ -1,6 +1,7 @@
 package com.ddis.ddis_hr.organization.command.domain.aggregate.entity;
 
 
+import com.ddis.ddis_hr.member.command.domain.aggregate.entity.Employee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,8 +23,9 @@ public class AppointmentEntity {
     @Column(name = "appointment_id")
     private Long appointmentId;
 
-    @Column(name = "employee_id", nullable = false)
-    private Long employeeId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id", nullable = false)
+    private Employee employee;
 
     @Column(name = "from_head_code")
     private String fromHeadCode;

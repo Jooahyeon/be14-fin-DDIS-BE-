@@ -9,6 +9,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +24,12 @@ public class PayrollMailServiceImpl implements PayrollMailService {
     @Override
     public void sendPaystubByEmail(PayrollMailRequestDTO dto) {
         try {
+
+            LocalDate salaryDate = LocalDate.parse(dto.getSalaryDate()); // "2024-05-31"
+            String formattedSalaryDate = salaryDate.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
+            String workMonth = salaryDate.minusMonths(1).format(DateTimeFormatter.ofPattern("yyyy년 MM월"));
+
+
             // PDF 생성
             Map<String, Object> data = new HashMap<>();
             data.put("employeeId", dto.getEmployeeId());
@@ -31,6 +39,7 @@ public class PayrollMailServiceImpl implements PayrollMailService {
             data.put("teamName", dto.getTeamName());
             data.put("rankName", dto.getRankName());
             data.put("salaryDate", dto.getSalaryDate());
+            data.put("workMonth", workMonth);
             data.put("netSalary", dto.getNetSalary());
             data.put("pays", dto.getPays());
             data.put("deductions", dto.getDeductions());
@@ -43,7 +52,7 @@ public class PayrollMailServiceImpl implements PayrollMailService {
             helper.setTo(dto.getEmployeeEmail());
 
             // 제목 설정
-            String subject = String.format("[DDIS] %s 급여명세서 발송", dto.getSalaryDate());
+            String subject = String.format("[DDIS] %s 급여명세서 발송", workMonth);
             helper.setSubject(subject);
 
             // 본문 설정
@@ -55,14 +64,14 @@ public class PayrollMailServiceImpl implements PayrollMailService {
                             "감사합니다.\n\n" +
                             "- DDIS 인사팀 드림 -",
                     dto.getEmployeeName(),
-                    dto.getSalaryDate()
+                    workMonth
             );
             helper.setText(body);
 
             // 파일명 설정
             String fileName = String.format("%s_%s_급여명세서.pdf",
                     dto.getEmployeeName(),
-                    dto.getSalaryDate()
+                    workMonth
             );
             helper.addAttachment(fileName, new ByteArrayResource(pdfBytes));
 

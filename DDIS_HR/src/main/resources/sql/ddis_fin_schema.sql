@@ -603,7 +603,7 @@ CREATE TABLE `appointment` (
     `is_applied`              BOOLEAN  NOT NULL DEFAULT TRUE,
     PRIMARY KEY (`appointment_id`),
     FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`),
-    CHECK (`appointment_type` IN ('전보', '전직', '승진', '직급조정', '입사', '퇴사')),
+    CHECK (`appointment_type` IN ('전보', '전직', '승진', '직급조정', '입사', '퇴사', '직무')),
     CHECK (`appointment_status` IN ('대기', '승인', '반려'))
 ) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 

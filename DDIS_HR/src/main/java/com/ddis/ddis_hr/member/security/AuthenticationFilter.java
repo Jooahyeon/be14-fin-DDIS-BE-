@@ -37,6 +37,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     public AuthenticationFilter(AuthenticationManager authenticationManager,Environment env) {
         super(authenticationManager);
         this.env = env;
+
+        setFilterProcessesUrl("/login");
     }
 
     @Override

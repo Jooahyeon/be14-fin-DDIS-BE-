@@ -15,13 +15,12 @@ import java.util.List;
 @Slf4j
 public class AnnualLeaveStrategy implements ApprovalLineStrategy {
 
-    private static final Long HR_TEAM_ID = 6L; // 💡 실제 인사팀 ID로 교체 필요
-
+    private static final Long HR_TEAM_ID = 6L;
     private final ApproverMapper approverMapper;
     private final FindDrafterMapper drafterMapper;
 
     // 생성자 주입 생략
-    @Autowired // 명시적 생성자 주입
+    @Autowired
     public AnnualLeaveStrategy(ApproverMapper approverMapper, FindDrafterMapper drafterMapper) {
         this.approverMapper = approverMapper;
         this.drafterMapper = drafterMapper;
@@ -31,12 +30,9 @@ public class AnnualLeaveStrategy implements ApprovalLineStrategy {
     @Override
     public List<ApproverInfoQueryDTO> createApprovalLine(Long drafterId) {
 
-        log.info("▶▶ 연차 결재선 자동생성 시작: drafterId={}", drafterId);
-
         // ① 기안자 정보 조회
         FindDrafterQueryDTO drafter = drafterMapper.findDrafterInfo(drafterId);
         if (drafter == null) {
-            log.warn("⚠ 기안자 정보를 찾을 수 없습니다. drafterId={}", drafterId);
             return new ArrayList<>();
         }
 

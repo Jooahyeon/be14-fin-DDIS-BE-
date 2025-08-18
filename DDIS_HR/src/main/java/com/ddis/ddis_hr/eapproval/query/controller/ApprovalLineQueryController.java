@@ -2,6 +2,7 @@ package com.ddis.ddis_hr.eapproval.query.controller;
 
 import com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO;
 import com.ddis.ddis_hr.eapproval.query.service.ApprovalLineAutoMatchService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,7 @@ import java.util.List;
  * 인증된 사용자 토큰(Authentication)에서 employeeId를 꺼내
  * ApprovalLineService.generateApprovalLine 호출 후 결과 반환
  */
-
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/approval-line")

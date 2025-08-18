@@ -8,7 +8,7 @@ import java.util.List;
 public interface ApprovalDocumentQueryService {
 
     // 상태별 기안문서 목록 조회
-//    List<DraftDTO> getDraftsByStatus(Long employeeId, String status);
+    //  List<DraftDTO> getDraftsByStatus(Long employeeId, String status);
 
     // 기안함 전체탭
     List<DraftDTO> getMyDrafts(Long employeeId);

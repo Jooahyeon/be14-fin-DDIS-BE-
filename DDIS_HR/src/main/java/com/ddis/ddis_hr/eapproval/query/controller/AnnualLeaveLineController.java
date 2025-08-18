@@ -3,6 +3,7 @@ package com.ddis.ddis_hr.eapproval.query.controller;
 import com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO;
 import com.ddis.ddis_hr.eapproval.query.service.AnnualLeaveStrategy;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 // 연차신청서 결재선 컨트롤러
+@SecurityRequirement(name = "bearerAuth")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/approval-line/leave")

@@ -55,6 +55,12 @@ public class WebSecurity {
         http
                 .authorizeHttpRequests(authz ->
                         authz
+                                // ✅ Swagger 관련 경로 허용
+                                .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/swagger-ui.html")).permitAll()
+
+                                // ✅ 기존 허용 경로
                                 .requestMatchers(new AntPathRequestMatcher("/health", "GET")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/users/**", "POST")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/members/**", "GET")).permitAll()
@@ -63,9 +69,10 @@ public class WebSecurity {
                                 .requestMatchers(new AntPathRequestMatcher("/api/password-reset/**")).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/ws-notice/**")).permitAll()
 
-
+                                // ✅ 나머지는 인증 필요
                                 .anyRequest().authenticated()
                 )
+
                 // 3) stateless 세션 정책
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

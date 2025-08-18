@@ -56,33 +56,6 @@ public class DraftCommandController {
                 new DraftCreateResponseCommandDTO(draftDocumentEntity.getDocId(), firstLine.getApprovalLineId())
         );
     }
-
-    /**
-     * 기안문 상세 조회 요청
-     *
-     * @param docId PathVariable로 전달받은 문서 ID
-     * @return DraftDetailResponseQueryDTO
-     */
-//    @GetMapping("/{docId}")
-//    public ResponseEntity<DraftDetailResponseQueryDTO> getDraftDetail(@PathVariable Long docId) {
-//        DraftDetailResponseQueryDTO response = DraftDetailService.getDraftDetail(docId);
-//        return ResponseEntity.ok(response);
-//    }
-
-//    @PostMapping("/temp")
-//    public ResponseEntity<TempSaveResDTO> saveTemp(
-//            @RequestBody DraftTempReqDTO dto,
-//            @AuthenticationPrincipal CustomUserDetails user) {
-//
-//        dto.setEmployeeId(user.getEmployeeId());
-//
-//        // ① draft_documents UPSERT (status = TEMP)
-//        Long docId = draftTempService.saveOrUpdate(dto);
-//
-//        // ② 응답
-//        return ResponseEntity.ok(new TempSaveResDTO(docId));
-//    }
-
 }
 
 

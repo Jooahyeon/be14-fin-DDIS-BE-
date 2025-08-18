@@ -4,6 +4,7 @@ import com.ddis.ddis_hr.eapproval.query.dto.DocumentDTO;
 import com.ddis.ddis_hr.eapproval.query.dto.DraftDTO;
 import com.ddis.ddis_hr.eapproval.query.service.ApprovalDocumentQueryService;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 import java.util.List;
-
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/approvals")
 @RequiredArgsConstructor

@@ -7,6 +7,7 @@ import com.ddis.ddis_hr.eapproval.query.service.DraftDetailService;
 import com.ddis.ddis_hr.eapproval.query.service.ReceiverDocService;
 import com.ddis.ddis_hr.eapproval.query.service.ReferenceDocService;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,6 +17,7 @@ import java.util.List;
 
 // 상세 조회 컨트롤러
 
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/drafts/query")
 @RequiredArgsConstructor

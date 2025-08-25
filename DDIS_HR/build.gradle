@@ -45,7 +45,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.4'
     testImplementation 'org.springframework.security:spring-security-test'
-    testImplementation 'junit:junit:4.13.2'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'com.warrenstrange:googleauth:1.5.0'
@@ -102,4 +101,11 @@ tasks.named('test') {
 }
 tasks.named('build') {
     dependsOn tasks.named('openApiGenerate') // build 시 문서도 자동 생성
+}
+
+tasks.register('testEapproval', Test) {
+    useJUnitPlatform()
+    // 테스트 클래스 파일 경로 기준 패턴
+    include 'com/ddis/ddis_hr/eapproval/**'
+    // 필요하면 로깅/리포트 옵션도 여기서
 }

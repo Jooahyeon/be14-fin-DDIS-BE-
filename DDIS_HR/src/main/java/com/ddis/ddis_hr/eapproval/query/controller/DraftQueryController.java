@@ -34,15 +34,6 @@ public class DraftQueryController {
         return ResponseEntity.ok(dto);
     }
 
-    // 기안함
-    @GetMapping
-    public ResponseEntity<List<DraftDTO>> getMyDrafts(
-            @AuthenticationPrincipal CustomUserDetails user) {
-        Long employeeId = user.getEmployeeId();
-        List<DraftDTO> dtos = draftDetailService.getMyDrafts(employeeId);
-        return ResponseEntity.ok(dtos);
-    }
-
     // 회수
     @PostMapping("/{docId}/recall")
     public ResponseEntity<Void> recall(@PathVariable Long docId) {
@@ -62,7 +53,7 @@ public class DraftQueryController {
         return receiverDocService.getReceiverDocsByEmployeeId(userDetails.getEmployeeId());
     }
 
-    // 읽음여부 (수신함..읽음여부가 필요한데 둘다 들어오나?_)
+    // 읽음여부
     @PatchMapping("/reference/{docId}/read")
     public void markReferenceDocAsRead(@PathVariable Long docId, @AuthenticationPrincipal CustomUserDetails user) {
         referenceDocService.markAsRead(user.getEmployeeId(), docId);

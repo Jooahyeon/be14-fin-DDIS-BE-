@@ -5,6 +5,7 @@ import com.ddis.ddis_hr.eapproval.query.dto.DraftDTO;
 import com.ddis.ddis_hr.eapproval.query.service.ApprovalDocumentQueryService;
 import com.ddis.ddis_hr.member.security.CustomUserDetails;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/approvals")
 @RequiredArgsConstructor
+@Tag(name = "testEapproval")
 public class ApprovalDocumentQueryController {
 
     private final ApprovalDocumentQueryService approvalDocumentQueryService;

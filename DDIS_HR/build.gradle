@@ -53,6 +53,8 @@ dependencies {
     implementation 'commons-codec:commons-codec:1.17.0'
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-api:2.7.0"
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
 
     // https://mvnrepository.com/artifact/org.modelmapper/modelmapper
@@ -109,3 +111,4 @@ tasks.register('testEapproval', Test) {
     include 'com/ddis/ddis_hr/eapproval/**'
     // 필요하면 로깅/리포트 옵션도 여기서
 }
+

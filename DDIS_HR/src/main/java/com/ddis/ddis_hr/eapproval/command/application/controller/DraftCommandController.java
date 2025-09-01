@@ -28,8 +28,6 @@ public class DraftCommandController {
     private final ApprovalLineRepository approvalLineRepo;
     private final ApprovalWorkflowService workflow;
     private final DraftCommandService draftCommandService;
-    private final DraftDetailService draftDetailService;
-
 
     @PostMapping("/creation")
     public ResponseEntity<DraftCreateResponseCommandDTO> createDraft(

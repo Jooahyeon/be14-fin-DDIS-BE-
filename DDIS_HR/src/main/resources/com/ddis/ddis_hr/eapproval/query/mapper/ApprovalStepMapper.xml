@@ -13,81 +13,133 @@
     </resultMap>
 
     <!-- 1) 기안자보다 높은 rank_order를 가진 모든 직급을 순서대로 조회 -->
-    <select id="findApprovalStepsByBaseRankOrder"
-            resultMap="ApprovalStepMap"
-            parameterType="int">
-        SELECT
-            ROW_NUMBER() OVER (ORDER BY rank_order) AS step,
-            rank_name
-        FROM rank
-        WHERE rank_order > #{baseRankOrder}
-        ORDER BY rank_order ASC
-    </select>
+<!--    <select id="findApprovalStepsByBaseRankOrder"-->
+<!--            resultMap="ApprovalStepMap"-->
+<!--            parameterType="int">-->
+<!--        SELECT-->
+<!--            ROW_NUMBER() OVER (ORDER BY rank_order) AS step,-->
+<!--            rank_name-->
+<!--        FROM rank-->
+<!--        WHERE rank_order > #{baseRankOrder}-->
+<!--        ORDER BY rank_order ASC-->
+<!--    </select>-->
 
     <!-- 2) 조직 범위(team/department/head)와 직급명으로 단일 결재자 조회 -->
-    <select id="findApproverByRankAndOrg"
-            resultType="com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO">
-        SELECT
-            e.employee_id   AS employeeId,
-            e.employee_name AS employeeName,
-            e.rank_id       AS rankId
-        FROM employee e
-        JOIN rank r ON e.rank_id = r.rank_id
-        WHERE r.rank_name = #{rankName}
-        <choose>
-            <when test="organizationType == 'team'">
-                AND e.team_id = #{organizationId}
-            </when>
-            <when test="organizationType == 'department'">
-                AND e.department_id = #{organizationId}
-            </when>
-            <when test="organizationType == 'head'">
-                AND e.head_id = #{organizationId}
-            </when>
-        </choose>
-        LIMIT 1
-    </select>
+<!--    <select id="findApproverByRankAndOrg"-->
+<!--            resultType="com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO">-->
+<!--        SELECT-->
+<!--            e.employee_id   AS employeeId,-->
+<!--            e.employee_name AS employeeName,-->
+<!--            e.rank_id       AS rankId-->
+<!--        FROM employee e-->
+<!--        JOIN rank r ON e.rank_id = r.rank_id-->
+<!--        WHERE r.rank_name = #{rankName}-->
+<!--        <choose>-->
+<!--            <when test="organizationType == 'team'">-->
+<!--                AND e.team_id = #{organizationId}-->
+<!--            </when>-->
+<!--            <when test="organizationType == 'department'">-->
+<!--                AND e.department_id = #{organizationId}-->
+<!--            </when>-->
+<!--            <when test="organizationType == 'head'">-->
+<!--                AND e.head_id = #{organizationId}-->
+<!--            </when>-->
+<!--        </choose>-->
+<!--        LIMIT 1-->
+<!--    </select>-->
 
     <!-- 3) 팀 단위에서 rank 기준 결재자 조회 -->
-    <select id="findApproverByTeamAndRank"
-            resultType="com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO">
-        SELECT
-            e.employee_id   AS employeeId,
-            e.employee_name AS employeeName,
-            r.rank_id       AS rankId
-        FROM employee e
-        JOIN rank r ON e.rank_id = r.rank_id
-        WHERE r.rank_name = #{rankName}
-          AND e.team_id = #{teamId}
-        LIMIT 1
-    </select>
+<!--    <select id="findApproverByTeamAndRank"-->
+<!--            resultType="com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO">-->
+<!--        SELECT-->
+<!--            e.employee_id   AS employeeId,-->
+<!--            e.employee_name AS employeeName,-->
+<!--            r.rank_id       AS rankId-->
+<!--        FROM employee e-->
+<!--        JOIN rank r ON e.rank_id = r.rank_id-->
+<!--        WHERE r.rank_name = #{rankName}-->
+<!--          AND e.team_id = #{teamId}-->
+<!--        LIMIT 1-->
+<!--    </select>-->
 
     <!-- 4) 부서 단위에서 rank 기준 결재자 조회 -->
-    <select id="findApproverByDepartmentAndRank"
-            resultType="com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO">
-        SELECT
-            e.employee_id   AS employeeId,
-            e.employee_name AS employeeName,
-            r.rank_id       AS rankId
-        FROM employee e
-        JOIN rank r ON e.rank_id = r.rank_id
-        WHERE r.rank_name = #{rankName}
-          AND e.department_id = #{departmentId}
-        LIMIT 1
-    </select>
+<!--    <select id="findApproverByDepartmentAndRank"-->
+<!--            resultType="com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO">-->
+<!--        SELECT-->
+<!--            e.employee_id   AS employeeId,-->
+<!--            e.employee_name AS employeeName,-->
+<!--            r.rank_id       AS rankId-->
+<!--        FROM employee e-->
+<!--        JOIN rank r ON e.rank_id = r.rank_id-->
+<!--        WHERE r.rank_name = #{rankName}-->
+<!--          AND e.department_id = #{departmentId}-->
+<!--        LIMIT 1-->
+<!--    </select>-->
 
     <!-- 5) 본부 단위에서 rank 기준 결재자 조회 -->
-    <select id="findApproverByHeadAndRank"
+<!--    <select id="findApproverByHeadAndRank"-->
+<!--            resultType="com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO">-->
+<!--        SELECT-->
+<!--            e.employee_id   AS employeeId,-->
+<!--            e.employee_name AS employeeName,-->
+<!--            r.rank_id       AS rankId-->
+<!--        FROM employee e-->
+<!--        JOIN rank r ON e.rank_id = r.rank_id-->
+<!--        WHERE r.rank_name = #{rankName}-->
+<!--          AND e.head_id = #{headId}-->
+<!--        LIMIT 1-->
+<!--    </select>-->
+
+
+    <select id="findApproverChain"
             resultType="com.ddis.ddis_hr.eapproval.query.dto.ApproverInfoQueryDTO">
+        WITH rank AS (
         SELECT
-            e.employee_id   AS employeeId,
-            e.employee_name AS employeeName,
-            r.rank_id       AS rankId
+        r.rank_id,
+        r.rank_name,
+        r.rank_order,
+        ROW_NUMBER() OVER (ORDER BY r.rank_order) AS step
+        FROM rank r
+        WHERE r.rank_order > #{baseRankOrder}
+        ),
+        candidates AS (
+        SELECT
+        e.employee_id   AS employeeId,
+        e.employee_name AS employeeName,
+        e.rank_id       AS rankId,
+        /* 선호도/우선순위: 예) 재직기간, 사번 오름차순 등 */
+        e.hire_date     AS prefHireDate,
+        e.employee_id   AS prefEmpId
         FROM employee e
-        JOIN rank r ON e.rank_id = r.rank_id
-        WHERE r.rank_name = #{rankName}
-          AND e.head_id = #{headId}
-        LIMIT 1
+        /* 조직 범위 한 번에 필터링 */
+        WHERE
+        (#{organizationType} = 'team'       AND e.team_id       = #{organizationId})
+        OR
+        (#{organizationType} = 'department' AND e.department_id = #{organizationId})
+        OR
+        (#{organizationType} = 'head'       AND e.head_id       = #{organizationId})
+        )
+        SELECT
+        rk.step                    AS step,
+        rk.rank_name               AS rank,
+        cd.employeeId              AS employeeId,
+        cd.employeeName            AS employeeName,
+        cd.rankId                  AS rankId
+        FROM ranks rk
+        LEFT JOIN (
+        SELECT
+        c.*,
+        ROW_NUMBER() OVER (
+        PARTITION BY c.rankId
+        ORDER BY c.prefHireDate ASC, c.prefEmpId ASC
+        ) AS rn
+        FROM candidates c
+        ) cd ON cd.rankId = rk.rank_id AND cd.rn = 1
+        /* 페이징 (옵셔널, 아래 2절 참고) */
+        ORDER BY rk.rank_order ASC
+        <if test="limit != null and offset != null">
+            LIMIT #{limit} OFFSET #{offset}
+        </if>
     </select>
 
 </mapper>

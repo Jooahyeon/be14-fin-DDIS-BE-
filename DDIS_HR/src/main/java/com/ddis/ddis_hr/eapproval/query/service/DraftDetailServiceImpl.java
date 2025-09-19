@@ -1,9 +1,7 @@
 package com.ddis.ddis_hr.eapproval.query.service;
 
 import com.ddis.ddis_hr.S3Config.service.S3Service;
-import com.ddis.ddis_hr.eapproval.command.application.dto.DraftCreateCommandDTO;
 import com.ddis.ddis_hr.eapproval.query.dto.*;
-import com.ddis.ddis_hr.eapproval.query.mapper.DocumentBoxMapper;
 import com.ddis.ddis_hr.eapproval.query.mapper.DraftDocumentMapper;
 import com.ddis.ddis_hr.eapproval.query.mapper.DraftMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +25,6 @@ public class DraftDetailServiceImpl implements DraftDetailService {
     private final ObjectMapper objectMapper;
     private final S3Service s3Service;
     private final DraftDocumentMapper draftDocumentMapper;
-    private final DocumentBoxMapper documentBoxMapper;
 
     // 기안 상세조회
     @Override
@@ -98,9 +95,6 @@ public class DraftDetailServiceImpl implements DraftDetailService {
         }
         return dto;
     }
-
-
-
 
 
 

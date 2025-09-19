@@ -11,6 +11,7 @@ import java.util.List;
 @Service
 public class ReferenceDocServiceImpl implements ReferenceDocService{
     private final DocumentBoxMapper documentBoxMapper;
+
     public ReferenceDocServiceImpl(DocumentBoxMapper documentBoxMapper) {
         this.documentBoxMapper = documentBoxMapper;
     }

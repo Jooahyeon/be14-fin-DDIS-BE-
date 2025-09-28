@@ -92,64 +92,6 @@
     </select>
 
 
-<!--        결재함 > 결재 탭 (결재 상태=미결 AND 문서 상태=심사중) -->
-    <select id="selectPendingDocuments" resultType="com.ddis.ddis_hr.eapproval.query.dto.DocumentDTO">
-        SELECT
-            d.doc_id            AS docId,
-            d.doc_title         AS title,
-            d.created_at        AS createdAt,
-            d.submitted_at      AS submittedAt,
-            d.final_approval_at AS approvedAt,
-            d.doc_status        AS docStatus,
-            al.status           AS lineStatus,
-            al.type             AS lineType,
-            e.employee_name    AS drafter,
-            r1.rank_name       AS drafterRank,
-            f.form_name         AS type,
-            r.rank_name         AS approverRank
-        FROM draft_documents d
-                JOIN approval_line al ON d.doc_id = al.doc_id
-                JOIN employee e ON d.employee_id = e.employee_id
-                JOIN document_form f ON d.form_id = f.form_id
-                JOIN employee approver_emp ON al.employee_id = approver_emp.employee_id
-                JOIN rank r ON approver_emp.rank_id = r.rank_id
-                JOIN rank r1 ON e.rank_id = r1.rank_id
-        WHERE al.employee_id = #{employeeId}
-          AND al.status = '미결'
-          AND d.doc_status = '심사중'
-          AND d.deleted_at IS NULL
-        ORDER BY d.submitted_at DESC
-    </select>
-
-<!-- 결재함 > 진행 탭 (결재 상태=승인 AND 문서 상태=심사중) -->
-    <select id="selectInProgressDocuments" resultType="com.ddis.ddis_hr.eapproval.query.dto.DocumentDTO">
-        SELECT
-            d.doc_id            AS docId,
-            d.doc_title         AS title,
-            d.created_at        AS createdAt,
-            d.submitted_at      AS submittedAt,
-            d.final_approval_at AS approvedAt,
-            d.doc_status        AS docStatus,
-            al.status           AS lineStatus,
-            al.type             AS lineType,
-            e.employee_name     AS drafter,
-            r1.rank_name       AS drafterRank,
-            f.form_name         AS type,
-            r.rank_name         AS approverRank
-        FROM draft_documents d
-                JOIN approval_line al ON d.doc_id = al.doc_id
-                JOIN employee e ON d.employee_id = e.employee_id
-                JOIN document_form f ON d.form_id = f.form_id
-                JOIN employee approver_emp ON al.employee_id = approver_emp.employee_id
-                JOIN rank r ON approver_emp.rank_id = r.rank_id
-                JOIN rank r1 ON e.rank_id = r1.rank_id
-        WHERE al.employee_id = #{employeeId}
-                AND al.status = '승인'
-                AND d.doc_status = '심사중'
-                AND d.deleted_at IS NULL
-        ORDER BY d.submitted_at DESC
-    </select>
-
 <!-- 결재함 > 완료 탭-->
     <select id="selectCompletedDocuments" resultType="com.ddis.ddis_hr.eapproval.query.dto.DocumentDTO">
         SELECT
@@ -258,5 +200,4 @@
         WHERE employee_id = #{employeeId}
           AND doc_id = #{docId}
     </update>
-
 </mapper>

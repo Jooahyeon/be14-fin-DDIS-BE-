@@ -17,7 +17,6 @@ import java.util.List;
 
 // 상세 조회 컨트롤러
 
-@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/drafts/query")
 @RequiredArgsConstructor

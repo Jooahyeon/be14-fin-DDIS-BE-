@@ -15,7 +15,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 // 기안자 정보 찾는 컨트롤러
 
-@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/drafter")

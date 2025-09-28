@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 import java.util.List;
-@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/approvals")
 @RequiredArgsConstructor

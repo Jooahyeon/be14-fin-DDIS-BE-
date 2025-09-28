@@ -18,7 +18,6 @@ import java.util.List;
  * 인증된 사용자 토큰(Authentication)에서 employeeId를 꺼내
  * ApprovalLineService.generateApprovalLine 호출 후 결과 반환
  */
-@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/approval-line")

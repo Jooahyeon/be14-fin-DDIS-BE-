@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 // 연차신청서 결재선 컨트롤러
-@SecurityRequirement(name = "bearerAuth")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/approval-line/leave")

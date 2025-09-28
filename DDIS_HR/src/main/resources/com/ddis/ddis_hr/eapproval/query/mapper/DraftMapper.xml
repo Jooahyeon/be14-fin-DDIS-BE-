@@ -12,8 +12,8 @@
             <result property="team" column="team" />
             <result property="position" column="position" />
             <result property="drafter" column="drafter" />
-            <result property="drafterId" column="drafter_id" /> <!-- ✅ 기안자 사번 추가 -->
-            <result property="docStatus" column="doc_status" /> <!-- ✅ 문서 상태 추가 -->
+            <result property="drafterId" column="drafter_id" />
+            <result property="docStatus" column="doc_status" />
             <result property="date" column="date" />
             <result property="docContent" column="doc_content" />
             <result property="keepYear" column="keep_year" />
